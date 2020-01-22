@@ -7,11 +7,6 @@ public class TemplateHighAvailabilityIntegrationTest extends TemplateBaseTest {
 
 	@Test
 	void testSingleSuccessTest() {
-		givenHighAvailabilityScenario();
-		whenCreateDeployment();
-	}
-
-	private void givenHighAvailabilityScenario() {
-		givenTemplate(Templates.RHPAM_AUTHORING_HA);
+		whenLoadTemplate(Templates.RHPAM_AUTHORING_HA);
 	}
 }

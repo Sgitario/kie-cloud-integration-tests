@@ -21,58 +21,57 @@ import org.apache.commons.io.IOUtils;
 import org.jboss.logging.MDC;
 import org.kie.cloud.tests.clients.openshift.OpenshiftClient;
 import org.kie.cloud.tests.config.templates.TemplateDefinition;
-import org.kie.cloud.tests.config.templates.TemplateInstance;
 import org.kie.cloud.tests.config.templates.TemplateListConfiguration;
+import org.kie.cloud.tests.config.templates.TemplateRequest;
+import org.kie.cloud.tests.context.Deployment;
 import org.kie.cloud.tests.context.TestContext;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import io.fabric8.kubernetes.client.utils.Serialization;
 import io.fabric8.openshift.api.model.Template;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class TemplateService {
 
 	private static final String MDC_KEY = "template";
 	private static final String PARAM_VALUE_DEFAULT = "1";
 
-	@Autowired
-	private TemplateListConfiguration templateListConfiguration;
+	private final TemplateListConfiguration templateListConfiguration;
+	private final OpenshiftClient openshift;
+	private final ExpressionEvaluator evaluator;
+	private final List<PostLoadDeploymentService> postProcessors;
 
-	@Autowired
-	private OpenshiftClient openshift;
-
-	@Autowired
-	private ExpressionEvaluator evaluator;
-
-	@Autowired
-	private List<PostLoadTemplateService> postProcessors;
-
-	public void loadTemplate(TestContext context, String templateName) {
-		MDC.put(MDC_KEY, templateName);
+	public void loadTemplate(TemplateRequest request) {
+		MDC.put(MDC_KEY, request.getTemplate());
 		log.info("Loading template ... ");
-		TemplateDefinition definition = loadTemplateDefinition(templateName);
-		preLoad(context, definition);
-		TemplateInstance instance = loadAndProcess(context, definition);
-		postLoad(instance, definition, context);
+		TemplateDefinition definition = loadTemplateDefinition(request.getTemplate());
+		preLoad(request, definition);
+		List<Deployment> deployments = loadAndProcess(request, definition);
+		postLoad(request, deployments);
 		log.info("Template loaded OK ");
 		MDC.remove(MDC_KEY);
 	}
 
-	private void preLoad(TestContext context, TemplateDefinition definition) {
-		loadCustomResources(context, definition);
+	private void preLoad(TemplateRequest request, TemplateDefinition definition) {
+		loadCustomResources(request.getContext(), definition);
 	}
 
-	private TemplateInstance loadAndProcess(TestContext context, TemplateDefinition definition) {
-		Map<String, String> parameters = prepareParameters(context, definition);
+	private List<Deployment> loadAndProcess(TemplateRequest request, TemplateDefinition definition) {
+		Map<String, String> parameters = prepareParameters(request, definition);
 		InputStream content = loadContent(definition, parameters);
-		return openshift.loadTemplate(context.getProject(), content, parameters);
+		return openshift.loadTemplate(request.getContext().getProject(), content, parameters);
 	}
 
-	private void postLoad(TemplateInstance templateInstance, TemplateDefinition definition, TestContext testContext) {
-		postProcessors.forEach(p -> p.process(templateInstance, definition, testContext));
+	private void postLoad(TemplateRequest request, List<Deployment> deployments) {
+		if (deployments == null) {
+			return;
+		}
+
+		deployments.forEach(deployment -> postProcessors.forEach(p -> p.process(request.getContext(), deployment)));
 	}
 
 	private TemplateDefinition loadTemplateDefinition(String templateName) {
@@ -124,15 +123,15 @@ public class TemplateService {
 		return findParam(template, paramName);
 	}
 
-	private Map<String, String> prepareParameters(TestContext testContext, TemplateDefinition definition) {
+	private Map<String, String> prepareParameters(TemplateRequest request, TemplateDefinition definition) {
 		Map<String, String> parameters = new HashMap<>();
 		for (Entry<String, String> entry : definition.getParams().entrySet()) {
-			String value = evaluator.resolveValue(entry.getKey(), entry.getValue(), testContext);
+			String value = evaluator.resolveValue(entry.getKey(), entry.getValue(), request.getContext());
 
 			parameters.put(entry.getKey(), value);
 		}
 
-		parameters.putAll(testContext.getParams());
+		parameters.putAll(request.getExtraParams());
 		parameters.entrySet()
 				.forEach(entry -> log.info("Property for template '{}':'{}'", entry.getKey(), entry.getValue()));
 

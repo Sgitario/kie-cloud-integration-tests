@@ -11,8 +11,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.assertj.core.api.Assertions;
-import org.kie.cloud.tests.config.templates.Deployment;
-import org.kie.cloud.tests.config.templates.TemplateInstance;
+import org.kie.cloud.tests.context.Deployment;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -62,7 +61,7 @@ public class OpenshiftClient {
 		}
 	}
 
-	public TemplateInstance loadTemplate(Project project, InputStream is, Map<String, String> parameters) {
+	public List<Deployment> loadTemplate(Project project, InputStream is, Map<String, String> parameters) {
 		if (dryRunMode) {
 			return null;
 		}
@@ -77,7 +76,7 @@ public class OpenshiftClient {
 					.collect(Collectors.toList());
 
 			log.trace("Template loaded OK ");
-			return new TemplateInstance(template, deployments);
+			return deployments;
 		}
 	}
 

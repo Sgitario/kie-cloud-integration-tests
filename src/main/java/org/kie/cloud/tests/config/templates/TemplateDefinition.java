@@ -13,5 +13,4 @@ public class TemplateDefinition {
 	private Map<String, String> params;
 	private Resource customImageStreamsFile;
 	private Resource customSecretsFile;
-	private Output output;
 }

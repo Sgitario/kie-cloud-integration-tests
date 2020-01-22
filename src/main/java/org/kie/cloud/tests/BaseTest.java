@@ -64,8 +64,8 @@ public abstract class BaseTest {
 		return openshift;
 	}
 
-	protected String getParamContext(String paramName) {
-		return testContext.getParams().get(paramName);
+	protected String getDeploymentParam(String deploymentName, String paramName) {
+		return testContext.getDeployment(deploymentName).getEnvironmentVariable(paramName);
 	}
 
 	private void runConfigurers(BiConsumer<TestConfig, TestContext> stage) {
