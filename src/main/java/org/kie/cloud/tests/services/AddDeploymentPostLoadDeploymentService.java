@@ -5,7 +5,9 @@ import org.kie.cloud.tests.context.TestContext;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AddDeploymentPostLoadDeploymentService implements PostLoadDeploymentService {
@@ -13,7 +15,9 @@ public class AddDeploymentPostLoadDeploymentService implements PostLoadDeploymen
 	@Override
 	public void process(TestContext testContext, Deployment deployment) {
 		testContext.putDeployment(deployment);
-
+		deployment.getEnvironmentVariables().forEach((k, v) -> {
+			log.info("Output '{}'= '{}'", k, v);
+		});
 	}
 
 }

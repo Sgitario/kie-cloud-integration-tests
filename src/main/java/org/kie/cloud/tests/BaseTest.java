@@ -14,6 +14,7 @@ import org.kie.cloud.tests.config.TestConfig;
 import org.kie.cloud.tests.context.TestContext;
 import org.kie.cloud.tests.services.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -39,6 +40,9 @@ public abstract class BaseTest {
 	@Autowired
 	private List<TestConfig> testConfigurers;
 
+	@Value("${test.project.on.test.after.delete}")
+	private boolean deleteProjectAfter;
+
 	protected TestContext testContext;
 
 	@BeforeEach
@@ -51,7 +55,10 @@ public abstract class BaseTest {
 	@AfterEach
 	public void clearDown() {
 		runConfigurers(TestConfig::after);
-		projectService.deleteProject(testContext);
+
+		if (deleteProjectAfter) {
+			projectService.deleteProject(testContext);
+		}
 	}
 
 	@EnableConfigurationProperties

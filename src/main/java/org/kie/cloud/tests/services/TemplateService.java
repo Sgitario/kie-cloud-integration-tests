@@ -104,8 +104,8 @@ public class TemplateService {
 		if (m.find()) {
 			String doubleQuoteParam = m.group();
 			String paramName = doubleQuoteParam.substring(3, doubleQuoteParam.length() - 2);
-			String value = findParamValueFromContent(paramName, content)
-					.orElseGet(findParamFromParameters(paramName, parameters));
+			String value = findParamFromParameters(paramName, parameters)
+					.orElseGet(findParamValueFromContent(paramName, content));
 			String newContent = m.replaceAll(value);
 			return replaceDoubleQuoteParams(newContent, parameters);
 		}
@@ -113,14 +113,16 @@ public class TemplateService {
 		return content;
 	}
 
-	private Supplier<String> findParamFromParameters(String paramName, Map<String, String> parameters) {
-		return () -> parameters.getOrDefault(paramName, PARAM_VALUE_DEFAULT);
+	private Optional<String> findParamFromParameters(String paramName, Map<String, String> parameters) {
+		return Optional.ofNullable(parameters.get(paramName));
 	}
 
-	private Optional<String> findParamValueFromContent(String paramName, String content) {
-		String cutContent = content.substring(0, content.indexOf("objects:"));
-		Template template = Serialization.unmarshal(cutContent, Template.class);
-		return findParam(template, paramName);
+	private Supplier<String> findParamValueFromContent(String paramName, String content) {
+		return () -> {
+			String cutContent = content.substring(0, content.indexOf("objects:"));
+			Template template = Serialization.unmarshal(cutContent, Template.class);
+			return findParam(template, paramName).orElse(PARAM_VALUE_DEFAULT);
+		};
 	}
 
 	private Map<String, String> prepareParameters(TemplateRequest request, TemplateDefinition definition) {
@@ -132,8 +134,7 @@ public class TemplateService {
 		}
 
 		parameters.putAll(request.getExtraParams());
-		parameters.entrySet()
-				.forEach(entry -> log.info("Property for template '{}':'{}'", entry.getKey(), entry.getValue()));
+		parameters.entrySet().forEach(entry -> log.info("Property '{}'= '{}'", entry.getKey(), entry.getValue()));
 
 		return parameters;
 	}
