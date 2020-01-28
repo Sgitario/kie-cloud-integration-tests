@@ -15,8 +15,8 @@ public class AddDeploymentPostLoadDeploymentService implements PostLoadDeploymen
 	@Override
 	public void process(TestContext testContext, Deployment deployment) {
 		testContext.putDeployment(deployment);
-		deployment.getEnvironmentVariables().forEach((k, v) -> {
-			log.info("Output '{}'= '{}'", k, v);
+		deployment.getEnvironmentVariables().keySet().stream().sorted().forEach(key -> {
+			log.info("Output '{}'= '{}'", key, deployment.getEnvironmentVariable(key));
 		});
 	}
 
