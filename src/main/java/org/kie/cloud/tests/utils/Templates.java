@@ -2,11 +2,12 @@ package org.kie.cloud.tests.utils;
 
 public final class Templates {
 
-	public static final String RHPAM_AUTHORING_HA = "rhpam-authoring-ha";
-	public static final String RHPAM_PROD = "rhpam-prod";
-	public static final String SSO = "sso";
+    public static final String RHPAM_AUTHORING_HA = "rhpam-authoring-ha";
+    public static final String RHPAM_AUTHORING = "rhpam-authoring";
+    public static final String RHPAM_PROD = "rhpam-prod";
+    public static final String SSO = "sso";
 
-	private Templates() {
+    private Templates() {
 
-	}
+    }
 }

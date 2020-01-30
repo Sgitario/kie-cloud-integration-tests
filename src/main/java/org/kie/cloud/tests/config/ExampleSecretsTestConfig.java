@@ -1,7 +1,5 @@
 package org.kie.cloud.tests.config;
 
-import static org.junit.Assert.assertNotNull;
-
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +10,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Component;
+
+import static org.junit.Assert.assertNotNull;
 
 @Component
 public class ExampleSecretsTestConfig implements TestConfig {
