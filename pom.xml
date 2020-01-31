@@ -30,7 +30,7 @@
 
 		<dependency>
 			<groupId>cz.xtf</groupId>
-			<artifactId>core</artifactId>
+			<artifactId>builder</artifactId>
 			<version>${xtf.version}</version>
 		</dependency>
 

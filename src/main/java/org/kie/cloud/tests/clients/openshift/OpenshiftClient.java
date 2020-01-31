@@ -7,16 +7,14 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.stream.Collectors;
 
+import cz.xtf.builder.builders.SecretBuilder;
 import cz.xtf.core.openshift.OpenShift;
 import cz.xtf.core.openshift.OpenShifts;
-import io.fabric8.kubernetes.api.model.ObjectMeta;
-import io.fabric8.kubernetes.api.model.Secret;
 import io.fabric8.openshift.api.model.DeploymentConfig;
 import io.fabric8.openshift.api.model.Template;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.kie.cloud.tests.context.Deployment;
-import org.kie.cloud.tests.utils.Base64Utils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -59,17 +57,12 @@ public class OpenshiftClient {
 
         log.debug("Loading secret ... '{}'", secretName);
         try (OpenShift openShift = OpenShifts.master(project.getName())) {
-            Secret secret = new Secret();
-            secret.setMetadata(new ObjectMeta());
-            secret.getMetadata().setName(secretName);
-
-            Map<String, String> data = new HashMap<>();
+            SecretBuilder sb = new SecretBuilder(secretName);
             for (Entry<String, String> entry : secrets.entrySet()) {
-                data.put(entry.getKey(), Base64Utils.encode(entry.getValue()));
+                sb.addRawData(entry.getKey(), entry.getValue());
             }
 
-            secret.setData(data);
-            openShift.createSecret(secret);
+            openShift.createSecret(sb.build());
             log.debug("Secret loaded OK ");
         }
     }
