@@ -12,7 +12,7 @@ import org.kie.cloud.tests.utils.Templates;
 
 
 @Slf4j
-public class TemplateAuthoringWithSingleSignOnIntegrationTest extends TemplateBaseTest {
+public class AuthoringWithSingleSignOnIntegrationTest extends BaseTest {
 
     private static final String AUTH_URL_PROPERTY = "SSO_URL";
     private static final String REALM_PROPERTY = "SSO_REALM";
