@@ -1,38 +1,38 @@
 package org.kie.cloud.tests.clients.openshift;
 
+import java.util.Map;
+import java.util.Optional;
+
 import javax.annotation.PostConstruct;
 
-import org.springframework.beans.factory.annotation.Value;
+import cz.xtf.core.config.OpenShiftConfig;
+import lombok.Data;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-import cz.xtf.core.config.OpenShiftConfig;
-
+@Data
 @Component
+@ConfigurationProperties("client.openshift")
 public class OpenshiftConfiguration {
 
-	@Value("${client.openshift.url}")
-	private String url;
-	@Value("${client.openshift.master.username}")
-	private String masterUsername;
-	@Value("${client.openshift.master.password}")
-	private String masterPassword;
-	@Value("${client.openshift.admin.username}")
-	private String adminUsername;
-	@Value("${client.openshift.admin.password}")
-	private String adminPassword;
-	@Value("${client.openshift.version}")
-	private String version;
-	@Value("${client.openshift.namespace}")
-	private String namespace;
+    private Map<String, OpenshiftProperties> config;
 
-	@PostConstruct
-	public void init() {
-		System.setProperty(OpenShiftConfig.OPENSHIFT_URL, url);
-		System.setProperty(OpenShiftConfig.OPENSHIFT_MASTER_USERNAME, masterUsername);
-		System.setProperty(OpenShiftConfig.OPENSHIFT_MASTER_PASSWORD, masterPassword);
-		System.setProperty(OpenShiftConfig.OPENSHIFT_ADMIN_USERNAME, adminUsername);
-		System.setProperty(OpenShiftConfig.OPENSHIFT_ADMIN_PASSWORD, adminPassword);
-		System.setProperty(OpenShiftConfig.OPENSHIFT_VERSION, version);
-		System.setProperty(OpenShiftConfig.OPENSHIFT_NAMESPACE, namespace);
-	}
+    private String selected;
+
+
+    @PostConstruct
+    public void init() {
+
+        OpenshiftProperties properties = config.get(selected);
+
+        System.setProperty(OpenShiftConfig.OPENSHIFT_URL, properties.getUrl());
+        System.setProperty(OpenShiftConfig.OPENSHIFT_MASTER_USERNAME, properties.getMasterUsername());
+        System.setProperty(OpenShiftConfig.OPENSHIFT_MASTER_PASSWORD, properties.getMasterPassword());
+        System.setProperty(OpenShiftConfig.OPENSHIFT_ADMIN_USERNAME, properties.getAdminUsername());
+        System.setProperty(OpenShiftConfig.OPENSHIFT_ADMIN_PASSWORD, properties.getAdminPassword());
+        System.setProperty(OpenShiftConfig.OPENSHIFT_VERSION, properties.getVersion());
+        System.setProperty(OpenShiftConfig.OPENSHIFT_NAMESPACE, properties.getNamespace());
+
+        Optional.ofNullable(properties.getToken()).ifPresent(val -> System.setProperty(OpenShiftConfig.OPENSHIFT_MASTER_TOKEN, val));
+    }
 }
