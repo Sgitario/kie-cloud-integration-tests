@@ -29,8 +29,10 @@ public abstract class SingleSignOnBaseTest extends BaseTest {
     private static final String AUTH_URL_PROPERTY = "SSO_URL";
     private static final String REALM_PROPERTY = "SSO_REALM";
     private static final String USERNAME_PROPERTY = "SSO_USERNAME";
-    private static final String CLIENT_NAME_PROPERTY = "BUSINESS_CENTRAL_SSO_CLIENT";
+    private static final String PASSWORD_PROPERTY = "SSO_PASSWORD";
     private static final String[] ROLES = new String[]{"admin", "kie-server", "rest-all"};
+    private static final String BUSINESS_CENTRAL_CLIENT = "business-central-client";
+    private static final String KIE_SERVER_CLIENT = "kie-server-client";
 
     protected abstract String childScenario();
 
@@ -38,12 +40,12 @@ public abstract class SingleSignOnBaseTest extends BaseTest {
         Map<String, String> extraParams = new HashMap<>();
         extraParams.put(AUTH_URL_PROPERTY, ssoAuthUrl());
         extraParams.put(REALM_PROPERTY, getSsoDeploymentParam(REALM_PROPERTY));
-        extraParams.put("BUSINESS_CENTRAL_SSO_CLIENT", "business-central-client");
+        extraParams.put(USERNAME_PROPERTY, getSsoDeploymentParam("SSO_SERVICE_USERNAME"));
+        extraParams.put(PASSWORD_PROPERTY, getSsoDeploymentParam("SSO_SERVICE_PASSWORD"));
+        extraParams.put("BUSINESS_CENTRAL_SSO_CLIENT", BUSINESS_CENTRAL_CLIENT);
         extraParams.put("BUSINESS_CENTRAL_SSO_SECRET", "business-central-secret");
-        extraParams.put("KIE_SERVER_SSO_CLIENT", "kie-server-client");
+        extraParams.put("KIE_SERVER_SSO_CLIENT", KIE_SERVER_CLIENT);
         extraParams.put("KIE_SERVER_SSO_SECRET", "kie-server-secret");
-        extraParams.put("SSO_USERNAME", getSsoDeploymentParam("SSO_SERVICE_USERNAME"));
-        extraParams.put("SSO_PASSWORD", getSsoDeploymentParam("SSO_SERVICE_PASSWORD"));
         return extraParams;
     }
 
@@ -58,6 +60,14 @@ public abstract class SingleSignOnBaseTest extends BaseTest {
         deployNextScenario();
     }
 
+    protected String getSsoUsername() {
+        return getSsoDeploymentParam(USERNAME_PROPERTY);
+    }
+
+    protected String getSsoPassword() {
+        return getSsoDeploymentParam(PASSWORD_PROPERTY);
+    }
+
     private void deployNextScenario() {
         whenLoadTemplate(childScenario(), childExtraParams());
     }
@@ -67,10 +77,12 @@ public abstract class SingleSignOnBaseTest extends BaseTest {
         String realm = getSsoDeploymentParam(REALM_PROPERTY);
         log.info("Creating roles and users in SSO at URL {} in Realm {}", authUrl, realm);
         SsoClient sso = SsoClient.get(authUrl, realm);
-        sso.createClient(getSsoDeploymentParam(CLIENT_NAME_PROPERTY));
+        sso.createClient(BUSINESS_CENTRAL_CLIENT);
+        sso.createClient(KIE_SERVER_CLIENT);
         Stream.of(ROLES).forEach(sso::createRole);
-        sso.addRolesToUser(getSsoDeploymentParam(USERNAME_PROPERTY), ROLES);
+        sso.addRolesToUser(getSsoUsername(), ROLES);
     }
+
 
     private String ssoAuthUrl() {
         return String.format("https://secure-sso-%s.project.openshiftdomain/auth", projectName());

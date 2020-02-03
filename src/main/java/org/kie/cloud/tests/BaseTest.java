@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BiConsumer;
 
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -17,8 +18,9 @@ import org.kie.cloud.tests.config.TestConfig;
 import org.kie.cloud.tests.context.TestContext;
 import org.kie.cloud.tests.loader.Loader;
 import org.kie.cloud.tests.services.KieServerControllerClientService;
+import org.kie.cloud.tests.services.KieServerExecutionClientService;
 import org.kie.cloud.tests.services.ProjectService;
-import org.kie.server.controller.client.KieServerControllerClient;
+import org.kie.cloud.tests.utils.AwaitilityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -29,6 +31,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 @Slf4j
@@ -37,7 +40,6 @@ import static org.junit.jupiter.api.Assertions.fail;
 @ContextConfiguration
 @TestInstance(Lifecycle.PER_CLASS)
 public abstract class BaseTest {
-
 
 	@Autowired
 	private ProjectService projectService;
@@ -57,8 +59,13 @@ public abstract class BaseTest {
     @Autowired
     private ApplicationContext appContext;
 
+    @Getter
     @Autowired
     private KieServerControllerClientService kieServerControllerClientService;
+
+    @Getter
+    @Autowired
+    private KieServerExecutionClientService kieServerExecutionClientService;
 
     private TestContext testContext;
 
@@ -80,8 +87,18 @@ public abstract class BaseTest {
 		}
 	}
 
-    public KieServerControllerClient getKieServerControllerClient() {
-        return kieServerControllerClientService.getClient();
+    public void tryAssert(Runnable action, String message) {
+        AwaitilityUtils.awaits().until(() -> {
+            try {
+                action.run();
+                assertTrue(true);
+            } catch (Exception ex) {
+                fail(message);
+                return false;
+            }
+
+            return true;
+        });
     }
 
     protected abstract String scenario();

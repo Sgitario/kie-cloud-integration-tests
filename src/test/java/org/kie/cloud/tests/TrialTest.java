@@ -1,9 +1,11 @@
 package org.kie.cloud.tests;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.kie.cloud.tests.steps.LoginSteps;
 import org.kie.cloud.tests.utils.Scenarios;
 
+@DisplayName("RHPAM Trial")
 public class TrialTest extends BaseTest implements LoginSteps {
 
     @Override
@@ -13,6 +15,7 @@ public class TrialTest extends BaseTest implements LoginSteps {
 
 	@Test
     void canLogin() {
-        shouldCanLogin();
+        thenCanLoginInKieServerControllerUsingDefaultUser();
+        thenCanLoginInKieServerExecutionUsingDefaultUser();
 	}
 }

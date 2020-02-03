@@ -13,9 +13,11 @@ public class AuthoringHighAvailabilityIntegrationTest extends BaseTest implement
         return Scenarios.RHPAM_AUTHORING_HA;
     }
 
+    @DisplayName("Can login using credentials from the secret")
     @Test
     void canLogin() {
-        shouldCanLogin();
+        thenCanLoginInKieServerControllerUsingDefaultUser();
+        thenCanLoginInKieServerExecutionUsingDefaultUser();
     }
 
 }

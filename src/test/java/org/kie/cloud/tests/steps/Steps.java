@@ -14,18 +14,8 @@
  */
 package org.kie.cloud.tests.steps;
 
-import org.kie.server.controller.api.model.spec.ServerTemplateList;
-import org.kie.server.controller.client.KieServerControllerClient;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+public interface Steps {
 
-public interface LoginSteps {
-
-    KieServerControllerClient getKieServerControllerClient();
-
-    public default void shouldCanLogin() {
-        KieServerControllerClient client = getKieServerControllerClient();
-        ServerTemplateList list = client.listServerTemplates();
-        assertNotNull(list);
-    }
+    void tryAssert(Runnable action, String message);
 }

@@ -12,7 +12,7 @@ public final class AwaitilityUtils {
 	}
 
 	public static final ConditionFactory awaits() {
-		return Awaitility.with().pollDelay(1, TimeUnit.SECONDS).and().pollInterval(5, TimeUnit.SECONDS).await()
+        return Awaitility.with().catchUncaughtExceptions().pollDelay(1, TimeUnit.SECONDS).and().pollInterval(5, TimeUnit.SECONDS).await()
 				.atMost(30, TimeUnit.SECONDS);
 	}
 }

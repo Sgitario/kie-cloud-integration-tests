@@ -35,7 +35,27 @@
    <version>${xtf.version}</version>
   </dependency>
 
-  <!-- Kie Server Controller -->
+  <!-- Kie Server api -->
+  <dependency>
+   <groupId>org.kie.server</groupId>
+   <artifactId>kie-server-client</artifactId>
+   <version>${kie.controller.version}</version>
+  </dependency>
+  <dependency>
+   <groupId>org.kie.server</groupId>
+   <artifactId>kie-server-api</artifactId>
+   <version>${kie.controller.version}</version>
+   <exclusions>
+    <exclusion>
+     <groupId>com.fasterxml.jackson.core</groupId>
+     <artifactId>jackson-core</artifactId>
+    </exclusion>
+    <exclusion>
+     <groupId>com.fasterxml.jackson.core</groupId>
+     <artifactId>jackson-databind</artifactId>
+    </exclusion>
+   </exclusions>
+  </dependency>
   <dependency>
    <groupId>org.kie.server</groupId>
    <artifactId>kie-server-controller-api</artifactId>

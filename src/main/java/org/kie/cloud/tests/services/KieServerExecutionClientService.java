@@ -18,31 +18,38 @@ import lombok.RequiredArgsConstructor;
 import org.kie.cloud.tests.context.Deployment;
 import org.kie.cloud.tests.context.TestContext;
 import org.kie.cloud.tests.properties.CredentialsProperties;
-import org.kie.server.controller.client.KieServerControllerClient;
-import org.kie.server.controller.client.KieServerControllerClientFactory;
+import org.kie.server.client.KieServicesClient;
+import org.kie.server.client.KieServicesFactory;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class KieServerControllerClientService implements PostLoadDeploymentService {
+public class KieServerExecutionClientService implements PostLoadDeploymentService {
 
-    private static final String URL = "http://insecure-%s-%s.project.openshiftdomain/rest/controller";
-    private static final String ROUTE_PARAM = "WORKBENCH_ROUTE_NAME";
+    private static final String URL = "http://insecure-%s-%s.project.openshiftdomain/services/rest/server";
+    private static final String ROUTE_PARAM = "KIE_SERVER_ROUTE_NAME";
 
     private final CredentialsProperties credentials;
+    private String username;
+    private String password;
     private String url;
-    private KieServerControllerClient client;
+    private KieServicesClient client;
 
-    public KieServerControllerClient client() {
+    public synchronized KieServicesClient client() {
+        if (client == null) {
+            client = KieServicesFactory.newKieServicesClient(KieServicesFactory.newRestConfiguration(url, username, password));
+        }
+
         return client;
     }
 
-    public KieServerControllerClientService login() {
+    public KieServerExecutionClientService login() {
         return login(credentials.getUser(), credentials.getPassword());
     }
 
-    public KieServerControllerClientService login(String username, String password) {
-        client = KieServerControllerClientFactory.newRestClient(url, username, password);
+    public KieServerExecutionClientService login(String username, String password) {
+        this.username = username;
+        this.password = password;
         return this;
     }
 
