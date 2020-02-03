@@ -1,12 +1,12 @@
 package org.kie.cloud.tests;
 
-import org.junit.jupiter.api.Test;
-import org.kie.cloud.tests.utils.Templates;
+import org.kie.cloud.tests.steps.LoginSteps;
+import org.kie.cloud.tests.utils.Scenarios;
 
-public class AuthoringIntegrationTest extends BaseTest {
+public class AuthoringIntegrationTest extends BaseTest implements LoginSteps {
 
-    @Test
-    void testSingleSuccessTest() {
-        whenLoadTemplate(Templates.RHPAM_AUTHORING);
+    @Override
+    protected String scenario() {
+        return Scenarios.RHPAM_AUTHORING;
     }
 }

@@ -6,15 +6,19 @@ import java.util.Map;
 import java.util.function.BiConsumer;
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.kie.cloud.tests.clients.openshift.OpenshiftClient;
 import org.kie.cloud.tests.clients.openshift.Project;
 import org.kie.cloud.tests.config.TestConfig;
 import org.kie.cloud.tests.context.TestContext;
 import org.kie.cloud.tests.loader.Loader;
+import org.kie.cloud.tests.services.KieServerControllerClientService;
 import org.kie.cloud.tests.services.ProjectService;
+import org.kie.server.controller.client.KieServerControllerClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -31,7 +35,9 @@ import static org.junit.jupiter.api.Assertions.fail;
 @ExtendWith(SpringExtension.class)
 @TestPropertySource(locations = {"classpath:openshift.properties", "classpath:test.properties"})
 @ContextConfiguration
+@TestInstance(Lifecycle.PER_CLASS)
 public abstract class BaseTest {
+
 
 	@Autowired
 	private ProjectService projectService;
@@ -51,16 +57,21 @@ public abstract class BaseTest {
     @Autowired
     private ApplicationContext appContext;
 
-	protected TestContext testContext;
+    @Autowired
+    private KieServerControllerClientService kieServerControllerClientService;
 
-	@BeforeEach
+    private TestContext testContext;
+
+    @BeforeAll
 	public void setup() {
 		Project project = projectService.createProject();
 		testContext = new TestContext(project);
 		runConfigurers(TestConfig::before);
+        whenLoadTemplate(scenario(), scenarioExtraParams());
+        afterOnLoadScenario();
 	}
 
-	@AfterEach
+    @AfterAll
 	public void clearDown() {
 		runConfigurers(TestConfig::after);
 
@@ -69,12 +80,22 @@ public abstract class BaseTest {
 		}
 	}
 
-    protected void whenLoadTemplate(String template) {
-        whenLoadTemplate(template, Collections.emptyMap());
+    public KieServerControllerClient getKieServerControllerClient() {
+        return kieServerControllerClientService.getClient();
     }
 
-    protected void whenLoadTemplate(String template, Map<String, String> extraParams) {
-        appContext.getBean(loaderClass, Loader.class).load(testContext, template, extraParams);
+    protected abstract String scenario();
+
+    protected void afterOnLoadScenario() {
+
+    }
+
+    protected Map<String, String> scenarioExtraParams() {
+        return Collections.emptyMap();
+    }
+
+    protected void whenLoadTemplate(String scenario, Map<String, String> extraParams) {
+        appContext.getBean(loaderClass, Loader.class).load(testContext, scenario, extraParams);
     }
 
 	@EnableConfigurationProperties
@@ -82,6 +103,10 @@ public abstract class BaseTest {
 	@ComponentScan("org.kie.cloud")
 	public static class Config {
 	}
+
+    protected String projectName() {
+        return testContext.getProject().getName();
+    }
 
 	protected OpenshiftClient getOpenshift() {
 		return openshift;

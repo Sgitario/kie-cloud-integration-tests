@@ -19,7 +19,6 @@ public class OpenshiftConfiguration {
 
     private String selected;
 
-
     @PostConstruct
     public void init() {
 
