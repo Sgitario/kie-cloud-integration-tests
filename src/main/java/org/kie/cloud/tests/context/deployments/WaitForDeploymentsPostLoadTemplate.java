@@ -1,4 +1,4 @@
-package org.kie.cloud.tests.services;
+package org.kie.cloud.tests.context.deployments;
 
 import org.kie.cloud.tests.clients.openshift.OpenshiftClient;
 import org.kie.cloud.tests.context.Deployment;
@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class WaitForDeploymentsPostLoadTemplateService implements PostLoadDeploymentService {
+public class WaitForDeploymentsPostLoadTemplate implements PostLoadDeployment {
 
 	private final OpenshiftClient openshift;
 

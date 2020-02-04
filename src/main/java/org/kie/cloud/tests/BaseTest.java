@@ -12,15 +12,12 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.kie.cloud.tests.clients.openshift.OpenshiftClient;
 import org.kie.cloud.tests.clients.openshift.Project;
 import org.kie.cloud.tests.config.TestConfig;
 import org.kie.cloud.tests.context.TestContext;
 import org.kie.cloud.tests.loader.Loader;
-import org.kie.cloud.tests.services.KieServerControllerClientService;
-import org.kie.cloud.tests.services.KieServerExecutionClientService;
+import org.kie.cloud.tests.properties.CredentialsProperties;
 import org.kie.cloud.tests.services.ProjectService;
-import org.kie.cloud.tests.utils.AwaitilityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -36,7 +33,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 @Slf4j
 @ExtendWith(SpringExtension.class)
-@TestPropertySource(locations = {"classpath:openshift.properties", "classpath:test.properties"})
+@TestPropertySource(locations = {"classpath:openshift.properties", "classpath:test.properties", "classpath:ldap.properties"})
 @ContextConfiguration
 @TestInstance(Lifecycle.PER_CLASS)
 public abstract class BaseTest {
@@ -44,8 +41,9 @@ public abstract class BaseTest {
 	@Autowired
 	private ProjectService projectService;
 
-	@Autowired
-	private OpenshiftClient openshift;
+    @Getter
+    @Autowired
+    private CredentialsProperties defaultCredentials;
 
 	@Autowired
 	private List<TestConfig> testConfigurers;
@@ -60,14 +58,10 @@ public abstract class BaseTest {
     private ApplicationContext appContext;
 
     @Getter
-    @Autowired
-    private KieServerControllerClientService kieServerControllerClientService;
+    private TestContext testContext;
 
     @Getter
-    @Autowired
-    private KieServerExecutionClientService kieServerExecutionClientService;
-
-    private TestContext testContext;
+    private Loader currentLoader;
 
     @BeforeAll
 	public void setup() {
@@ -88,17 +82,13 @@ public abstract class BaseTest {
 	}
 
     public void tryAssert(Runnable action, String message) {
-        AwaitilityUtils.awaits().until(() -> {
-            try {
-                action.run();
-                assertTrue(true);
-            } catch (Exception ex) {
-                fail(message);
-                return false;
-            }
-
-            return true;
-        });
+        try {
+            action.run();
+            assertTrue(true);
+        } catch (Exception ex) {
+            log.error("Error in assert", ex);
+            fail(message + ". Cause: " + ex.getMessage());
+        }
     }
 
     protected abstract String scenario();
@@ -112,7 +102,8 @@ public abstract class BaseTest {
     }
 
     protected void whenLoadTemplate(String scenario, Map<String, String> extraParams) {
-        appContext.getBean(loaderClass, Loader.class).load(testContext, scenario, extraParams);
+        currentLoader = appContext.getBean(loaderClass, Loader.class);
+        currentLoader.load(testContext, scenario, extraParams);
     }
 
 	@EnableConfigurationProperties
@@ -124,10 +115,6 @@ public abstract class BaseTest {
     protected String projectName() {
         return testContext.getProject().getName();
     }
-
-	protected OpenshiftClient getOpenshift() {
-		return openshift;
-	}
 
 	protected String getDeploymentParam(String deploymentName, String paramName) {
 		return testContext.getDeployment(deploymentName).getEnvironmentVariable(paramName);

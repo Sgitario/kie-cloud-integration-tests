@@ -7,4 +7,6 @@ import org.kie.cloud.tests.context.TestContext;
 public interface Loader {
 
     void load(TestContext testContext, String template, Map<String, String> extraParams);
+
+    void whenSetExternalAuthTo(TestContext testContext, boolean value);
 }

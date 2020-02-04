@@ -1,10 +1,12 @@
 package org.kie.cloud.tests.clients.openshift;
 
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import cz.xtf.builder.builders.SecretBuilder;
@@ -15,6 +17,7 @@ import io.fabric8.openshift.api.model.Template;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.kie.cloud.tests.context.Deployment;
+import org.kie.cloud.tests.utils.OpenshiftExtensionModelUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -98,6 +101,28 @@ public class OpenshiftClient {
         }
     }
 
+    public List<String> getRouteByApplication(Project project, String name) {
+        try (OpenShift openShift = OpenShifts.master(project.getName())) {
+            return openShift.routes().withLabel("service", name).list().getItems().stream()
+                            .map(OpenshiftExtensionModelUtils::resolveRoute)
+                            .collect(Collectors.toList());
+        }
+    }
+
+    public void updateEnvironmentVariable(Project project, Deployment deployment, String key, String value) {
+        try (OpenShift openShift = OpenShifts.master(project.getName())) {
+            long currentVersion = getDeploymentLatestVersion(openShift, deployment);
+
+            openShift.updateDeploymentConfigEnvVars(deployment.getName(), Collections.singletonMap(key, value));
+            deployment.getEnvironmentVariables().clear();
+            deployment.getEnvironmentVariables().putAll(getDeploymentEnvironmentVariables(deployment.getName(), openShift));
+
+            waitForRollout(openShift, deployment, currentVersion + 1);
+            waitForDeployment(project, deployment.getName());
+        }
+
+    }
+
     private Map<String, String> getDeploymentEnvironmentVariables(String name, OpenShift openShift) {
         Map<String, String> variables = new HashMap<>();
         awaits().until(() -> {
@@ -128,6 +153,17 @@ public class OpenshiftClient {
             waitUntilAllPodsAreRunning(openShift, name, expectedPods);
             log.debug("Deployment started. ");
         }
+    }
+
+    private void waitForRollout(OpenShift openShift, Deployment deployment, long expectedVersion) {
+        log.debug("Waiting for rollout '{}' ... ", deployment.getName());
+        awaits().pollDelay(5, TimeUnit.SECONDS).until(() -> getDeploymentLatestVersion(openShift, deployment) == expectedVersion);
+
+        log.debug("Rollout started. ");
+    }
+
+    private long getDeploymentLatestVersion(OpenShift openShift, Deployment deployment) {
+        return openShift.getDeploymentConfig(deployment.getName()).getStatus().getLatestVersion();
     }
 
     private void loadOrCreateProject(String projectName) {

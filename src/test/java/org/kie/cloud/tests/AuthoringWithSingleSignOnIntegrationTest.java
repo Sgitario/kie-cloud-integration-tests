@@ -1,6 +1,7 @@
 package org.kie.cloud.tests;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.kie.cloud.tests.steps.LoginSteps;
 import org.kie.cloud.tests.utils.Scenarios;
@@ -13,11 +14,14 @@ public class AuthoringWithSingleSignOnIntegrationTest extends SingleSignOnBaseTe
         return Scenarios.RHPAM_AUTHORING;
     }
 
+    @Tag("login")
     @Test
-    @DisplayName("Can login using SSO users")
     void canLogin() {
-        thenCanLoginInKieServerControllerUsing(getSsoUsername(), getSsoPassword());
-    }
+        thenCanLoginInBusinessCentral(getDefaultCredentials().getUser(), getDefaultCredentials().getPassword());
+        thenCanLoginInBusinessCentral(getSsoUsername(), getSsoPassword());
 
+        thenCanLoginInKieServer(getDefaultCredentials().getUser(), getDefaultCredentials().getPassword());
+        thenCanLoginInKieServer(getSsoUsername(), getSsoPassword());
+    }
 
 }

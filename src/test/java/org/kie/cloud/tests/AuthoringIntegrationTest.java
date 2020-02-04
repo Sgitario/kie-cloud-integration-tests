@@ -1,6 +1,7 @@
 package org.kie.cloud.tests;
 
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
 import org.kie.cloud.tests.steps.LoginSteps;
 import org.kie.cloud.tests.utils.Scenarios;
@@ -14,9 +15,9 @@ public class AuthoringIntegrationTest extends BaseTest implements LoginSteps {
     }
 
     @Test
-    @DisplayName("Can login using credentials from the secret")
+    @Tag("login")
     void canLogin() {
-        thenCanLoginInKieServerControllerUsingDefaultUser();
-        thenCanLoginInKieServerExecutionUsingDefaultUser();
+        thenCanLoginInBusinessCentral(getDefaultCredentials().getUser(), getDefaultCredentials().getPassword());
+        thenCanLoginInKieServer(getDefaultCredentials().getUser(), getDefaultCredentials().getPassword());
     }
 }

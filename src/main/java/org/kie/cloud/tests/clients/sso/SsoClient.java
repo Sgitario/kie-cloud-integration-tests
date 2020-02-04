@@ -1,7 +1,5 @@
 package org.kie.cloud.tests.clients.sso;
 
-import static org.kie.cloud.tests.utils.AwaitilityUtils.awaits;
-
 import java.security.KeyManagementException;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
@@ -11,6 +9,7 @@ import java.util.stream.Collectors;
 
 import javax.net.ssl.SSLContext;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.http.conn.ssl.NoopHostnameVerifier;
 import org.apache.http.conn.ssl.TrustAllStrategy;
 import org.apache.http.ssl.SSLContexts;
@@ -22,7 +21,7 @@ import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.representations.idm.ClientRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 
-import lombok.extern.slf4j.Slf4j;
+import static org.kie.cloud.tests.utils.AwaitilityUtils.awaits;
 
 @Slf4j
 public class SsoClient {
@@ -47,6 +46,7 @@ public class SsoClient {
 		clientRepresentation.setClientId(client);
 		clientRepresentation.setName(client);
 		clientRepresentation.setRedirectUris(Arrays.asList("*"));
+        clientRepresentation.setDirectAccessGrantsEnabled(true);
 		clientRepresentation.setEnabled(true);
 		clientRepresentation.setPublicClient(true);
 

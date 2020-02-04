@@ -14,8 +14,32 @@
  */
 package org.kie.cloud.tests.steps;
 
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+
+import org.kie.cloud.tests.context.Deployment;
+import org.kie.cloud.tests.context.TestContext;
+import org.kie.cloud.tests.context.wrappers.BusinessCentral;
+import org.kie.cloud.tests.context.wrappers.KieServer;
+import org.kie.cloud.tests.loader.Loader;
+import org.kie.cloud.tests.utils.Deployments;
 
 public interface Steps {
 
+    Loader getCurrentLoader();
+    TestContext getTestContext();
+
     void tryAssert(Runnable action, String message);
+
+    default void forEachBusinessCentral(Consumer<BusinessCentral> action) {
+        forEachDeployment(name -> name.contains(Deployments.BUSINESS_CENTRAL), deployment -> action.accept(new BusinessCentral(deployment)));
+    }
+
+    default void forEachKieServer(Consumer<KieServer> action) {
+        forEachDeployment(name -> name.contains(Deployments.KIE_SERVER), deployment -> action.accept(new KieServer(deployment)));
+    }
+
+    default void forEachDeployment(Predicate<String> match, Consumer<Deployment> action) {
+        getTestContext().getDeployments().entrySet().stream().filter(entry -> match.test(entry.getKey())).forEach(entry -> action.accept(entry.getValue()));
+    }
 }

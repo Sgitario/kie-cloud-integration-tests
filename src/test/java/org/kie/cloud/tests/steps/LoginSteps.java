@@ -14,30 +14,39 @@
  */
 package org.kie.cloud.tests.steps;
 
-import org.kie.cloud.tests.services.KieServerControllerClientService;
-import org.kie.cloud.tests.services.KieServerExecutionClientService;
+import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public interface LoginSteps extends Steps {
 
-    KieServerControllerClientService getKieServerControllerClientService();
-
-    KieServerExecutionClientService getKieServerExecutionClientService();
-
-    public default void thenCanLoginInKieServerControllerUsingDefaultUser() {
-        tryAssert(() -> getKieServerControllerClientService().client().listServerTemplates(), "cannot login");
+    public default void thenCanLoginInBusinessCentral(String username, String password) {
+        forEachBusinessCentral(deployment -> tryAssert(() -> deployment.restClient(username, password).listServerTemplates(), "cannot login business central"));
     }
 
-    public default void thenCanLoginInKieServerControllerUsing(String username, String password) {
-        tryAssert(() -> getKieServerControllerClientService().login(username, password).client().listServerTemplates(), "cannot login");
+    public default void thenCannotLoginInBusinessCentral(String username, String password) {
+        try {
+            thenCanLoginInBusinessCentral(username, password);
+        } catch (AssertionError error) {
+            assertTrue(true);
+            return;
+        }
+
+        fail("It could login.");
     }
 
-    public default void thenCanLoginInKieServerExecutionUsingDefaultUser() {
-        tryAssert(() -> getKieServerExecutionClientService().client().listContainers(), "cannot login");
+    public default void thenCanLoginInKieServer(String username, String password) {
+        forEachKieServer(deployment -> tryAssert(() -> deployment.restClient(username, password).listContainers(), "cannot login kie server"));
     }
 
-    public default void thenCanLoginInKieServerExecutionUsing(String username, String password) {
-        tryAssert(() -> getKieServerExecutionClientService().login(username, password).client().listContainers(), "cannot login");
-    }
+    public default void thenCannotLoginInKieServer(String username, String password) {
+        try {
+            thenCanLoginInBusinessCentral(username, password);
+        } catch (AssertionError error) {
+            assertTrue(true);
+            return;
+        }
 
+        fail("It could login.");
+    }
 
 }

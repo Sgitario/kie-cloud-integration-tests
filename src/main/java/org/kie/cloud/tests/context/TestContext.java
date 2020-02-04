@@ -1,15 +1,14 @@
 package org.kie.cloud.tests.context;
 
-import static org.junit.jupiter.api.Assertions.fail;
-
 import java.beans.Transient;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import lombok.Data;
 import org.kie.cloud.tests.clients.openshift.Project;
 
-import lombok.Data;
+import static org.junit.jupiter.api.Assertions.fail;
 
 @Data
 public class TestContext {

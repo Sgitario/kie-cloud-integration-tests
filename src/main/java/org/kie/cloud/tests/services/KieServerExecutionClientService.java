@@ -17,6 +17,7 @@ package org.kie.cloud.tests.services;
 import lombok.RequiredArgsConstructor;
 import org.kie.cloud.tests.context.Deployment;
 import org.kie.cloud.tests.context.TestContext;
+import org.kie.cloud.tests.context.deployments.PostLoadDeployment;
 import org.kie.cloud.tests.properties.CredentialsProperties;
 import org.kie.server.client.KieServicesClient;
 import org.kie.server.client.KieServicesFactory;
@@ -24,7 +25,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class KieServerExecutionClientService implements PostLoadDeploymentService {
+public class KieServerExecutionClientService implements PostLoadDeployment {
 
     private static final String URL = "http://insecure-%s-%s.project.openshiftdomain/services/rest/server";
     private static final String ROUTE_PARAM = "KIE_SERVER_ROUTE_NAME";

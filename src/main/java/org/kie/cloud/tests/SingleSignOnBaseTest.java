@@ -19,17 +19,19 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Tag;
 import org.kie.cloud.tests.clients.sso.SsoClient;
 import org.kie.cloud.tests.utils.Deployments;
 import org.kie.cloud.tests.utils.Scenarios;
 
 @Slf4j
+@Tag("auth-sso")
 public abstract class SingleSignOnBaseTest extends BaseTest {
 
     private static final String AUTH_URL_PROPERTY = "SSO_URL";
     private static final String REALM_PROPERTY = "SSO_REALM";
-    private static final String USERNAME_PROPERTY = "SSO_USERNAME";
-    private static final String PASSWORD_PROPERTY = "SSO_PASSWORD";
+    private static final String USERNAME_PROPERTY = "SSO_SERVICE_USERNAME";
+    private static final String PASSWORD_PROPERTY = "SSO_SERVICE_PASSWORD";
     private static final String[] ROLES = new String[]{"admin", "kie-server", "rest-all"};
     private static final String BUSINESS_CENTRAL_CLIENT = "business-central-client";
     private static final String KIE_SERVER_CLIENT = "kie-server-client";
@@ -40,8 +42,8 @@ public abstract class SingleSignOnBaseTest extends BaseTest {
         Map<String, String> extraParams = new HashMap<>();
         extraParams.put(AUTH_URL_PROPERTY, ssoAuthUrl());
         extraParams.put(REALM_PROPERTY, getSsoDeploymentParam(REALM_PROPERTY));
-        extraParams.put(USERNAME_PROPERTY, getSsoDeploymentParam("SSO_SERVICE_USERNAME"));
-        extraParams.put(PASSWORD_PROPERTY, getSsoDeploymentParam("SSO_SERVICE_PASSWORD"));
+        extraParams.put("SSO_USERNAME", getSsoUsername());
+        extraParams.put("SSO_PASSWORD", getSsoPassword());
         extraParams.put("BUSINESS_CENTRAL_SSO_CLIENT", BUSINESS_CENTRAL_CLIENT);
         extraParams.put("BUSINESS_CENTRAL_SSO_SECRET", "business-central-secret");
         extraParams.put("KIE_SERVER_SSO_CLIENT", KIE_SERVER_CLIENT);

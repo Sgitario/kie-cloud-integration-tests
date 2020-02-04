@@ -1,4 +1,4 @@
-package org.kie.cloud.tests.services;
+package org.kie.cloud.tests.context.deployments;
 
 import org.kie.cloud.tests.context.Deployment;
 import org.kie.cloud.tests.context.TestContext;
@@ -10,7 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class AddDeploymentPostLoadDeploymentService implements PostLoadDeploymentService {
+public class AddDeploymentPostLoadDeployment implements PostLoadDeployment {
 
 	@Override
 	public void process(TestContext testContext, Deployment deployment) {

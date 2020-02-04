@@ -1,16 +1,16 @@
 package org.kie.cloud.tests.utils;
 
-import static org.junit.jupiter.api.Assertions.fail;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import org.apache.commons.lang3.StringUtils;
-
 import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.openshift.api.model.Parameter;
+import io.fabric8.openshift.api.model.Route;
 import io.fabric8.openshift.api.model.Template;
+import org.apache.commons.lang3.StringUtils;
+
+import static org.junit.jupiter.api.Assertions.fail;
 
 public final class OpenshiftExtensionModelUtils {
 
@@ -20,6 +20,16 @@ public final class OpenshiftExtensionModelUtils {
 	private OpenshiftExtensionModelUtils() {
 
 	}
+
+    public static final String resolveRoute(Route route) {
+        String protocol = "http";
+        String host = route.getSpec().getHost();
+        if (route.getSpec().getPort() != null && route.getSpec().getPort().getTargetPort() != null && route.getSpec().getPort().getTargetPort().getStrVal() != null) {
+            protocol = route.getSpec().getPort().getTargetPort().getStrVal();
+        }
+
+        return String.format("%s://%s", protocol, host);
+    }
 
 	@SuppressWarnings("unchecked")
 	public static final <T extends HasMetadata> List<T> objectsOf(Template template, Class<T> clazz) {

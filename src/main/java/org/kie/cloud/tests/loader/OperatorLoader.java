@@ -43,6 +43,12 @@ public class OperatorLoader implements Loader {
         runOperator(testContext, template, extraParams);
     }
 
+    @Override
+    public void whenSetExternalAuthTo(TestContext testContext, boolean value) {
+        // TODO Auto-generated method stub
+
+    }
+
     private void runOperator(TestContext testContext, String template, Map<String, String> extraParams) {
         KieApp app = new KieApp();
         app.getMetadata().setName(configuration.getKieAppName());

@@ -25,8 +25,8 @@ import org.kie.cloud.tests.config.templates.TemplateDefinition;
 import org.kie.cloud.tests.config.templates.TemplateListConfiguration;
 import org.kie.cloud.tests.context.Deployment;
 import org.kie.cloud.tests.context.TestContext;
+import org.kie.cloud.tests.context.deployments.PostLoadDeployment;
 import org.kie.cloud.tests.services.ExpressionEvaluator;
-import org.kie.cloud.tests.services.PostLoadDeploymentService;
 import org.springframework.stereotype.Component;
 
 import static org.junit.jupiter.api.Assertions.fail;
@@ -43,7 +43,7 @@ public class TemplateLoader implements Loader {
     private final TemplateListConfiguration templateListConfiguration;
     private final OpenshiftClient openshift;
     private final ExpressionEvaluator evaluator;
-    private final List<PostLoadDeploymentService> postProcessors;
+    private final List<PostLoadDeployment> postProcessors;
 
     @Override
     public void load(TestContext testContext, String template, Map<String, String> extraParams) {
@@ -56,6 +56,14 @@ public class TemplateLoader implements Loader {
         postLoad(testContext, deployments);
         log.info("Template loaded OK ");
         MDC.remove(MDC_KEY);
+    }
+
+    @Override
+    public void whenSetExternalAuthTo(TestContext testContext, boolean value) {
+        testContext.getDeployments().values().parallelStream().forEach(deployment -> {
+            openshift.updateEnvironmentVariable(testContext.getProject(), deployment, "EXTERNAL_AUTH_ONLY", "" + value);
+        });
+
     }
 
     private void preLoad(TestContext testContext, TemplateDefinition definition) {
