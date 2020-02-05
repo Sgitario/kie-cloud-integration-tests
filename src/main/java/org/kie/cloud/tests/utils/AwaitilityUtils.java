@@ -11,8 +11,20 @@ public final class AwaitilityUtils {
 
 	}
 
-	public static final ConditionFactory awaits() {
-        return Awaitility.with().catchUncaughtExceptions().pollDelay(1, TimeUnit.SECONDS).and().pollInterval(5, TimeUnit.SECONDS).await()
-				.atMost(30, TimeUnit.SECONDS);
+    public static final ConditionFactory awaitsFast() {
+        return awaitsCustom(200, secToMillis(1), secToMillis(5));
+    }
+
+    public static final ConditionFactory awaitsLong() {
+        return awaitsCustom(secToMillis(1), secToMillis(5), secToMillis(30));
 	}
+
+    public static final ConditionFactory awaitsCustom(int delayMillis, int pollMillis, int atMostMillis) {
+        return Awaitility.with().catchUncaughtExceptions().pollDelay(delayMillis, TimeUnit.MILLISECONDS).and().pollInterval(pollMillis, TimeUnit.MILLISECONDS).await()
+                         .atMost(atMostMillis, TimeUnit.MILLISECONDS);
+    }
+
+    private static int secToMillis(int seconds) {
+        return seconds * 1_000;
+    }
 }

@@ -22,6 +22,8 @@ import org.kie.cloud.tests.utils.CloseableUtils;
 import org.kie.server.controller.client.KieServerControllerClient;
 import org.kie.server.controller.client.KieServerControllerClientFactory;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 public class BusinessCentral {
 
     private static final String REST_API_PATH = "/rest/controller";
@@ -44,7 +46,8 @@ public class BusinessCentral {
             CloseableUtils.closeQuietly((Closeable) deployment.getChannel());
         }
 
-        deployment.setChannel(KieServerControllerClientFactory.newRestClient(deployment.getInsecureUrl() + REST_API_PATH, username, password));
+        assertNotNull(deployment.getHttpUrl(), "Http URL is null!");
+        deployment.setChannel(KieServerControllerClientFactory.newRestClient(deployment.getHttpUrl() + REST_API_PATH, username, password));
         return (KieServerControllerClient) deployment.getChannel();
     }
 }

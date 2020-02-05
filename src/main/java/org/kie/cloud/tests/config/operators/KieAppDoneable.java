@@ -23,8 +23,16 @@ import io.fabric8.kubernetes.client.CustomResourceDoneable;
  */
 public class KieAppDoneable extends CustomResourceDoneable<KieApp> {
 
+    private final KieApp resource;
+
     public KieAppDoneable(KieApp resource, Function<KieApp, KieApp> function) {
         super(resource, function);
+
+        this.resource = resource;
+    }
+
+    public KieApp getResource() {
+        return resource;
     }
 
 }

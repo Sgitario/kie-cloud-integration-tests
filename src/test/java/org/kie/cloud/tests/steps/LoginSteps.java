@@ -16,6 +16,7 @@ package org.kie.cloud.tests.steps;
 
 import static org.junit.Assert.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
+import static org.kie.cloud.tests.utils.AssertUtils.tryAssert;
 
 public interface LoginSteps extends Steps {
 

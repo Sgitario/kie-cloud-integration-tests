@@ -1,6 +1,7 @@
 package org.kie.cloud.tests.clients.openshift;
 
 import lombok.Data;
+import org.kie.cloud.tests.properties.ServiceProperties;
 
 @Data
 public class OpenshiftProperties {
@@ -12,4 +13,5 @@ public class OpenshiftProperties {
     private String version;
     private String namespace;
     private String token;
+    private ServiceProperties ldap;
 }

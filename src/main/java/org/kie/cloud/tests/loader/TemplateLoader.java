@@ -25,7 +25,6 @@ import org.kie.cloud.tests.config.templates.TemplateDefinition;
 import org.kie.cloud.tests.config.templates.TemplateListConfiguration;
 import org.kie.cloud.tests.context.Deployment;
 import org.kie.cloud.tests.context.TestContext;
-import org.kie.cloud.tests.context.deployments.PostLoadDeployment;
 import org.kie.cloud.tests.services.ExpressionEvaluator;
 import org.springframework.stereotype.Component;
 
@@ -33,9 +32,9 @@ import static org.junit.jupiter.api.Assertions.fail;
 import static org.kie.cloud.tests.utils.OpenshiftExtensionModelUtils.findParam;
 
 @Slf4j
-@Component("template")
+@Component("templates")
 @RequiredArgsConstructor
-public class TemplateLoader implements Loader {
+public class TemplateLoader extends Loader {
 
     private static final String MDC_KEY = "template";
     private static final String PARAM_VALUE_DEFAULT = "1";
@@ -43,7 +42,6 @@ public class TemplateLoader implements Loader {
     private final TemplateListConfiguration templateListConfiguration;
     private final OpenshiftClient openshift;
     private final ExpressionEvaluator evaluator;
-    private final List<PostLoadDeployment> postProcessors;
 
     @Override
     public void load(TestContext testContext, String template, Map<String, String> extraParams) {
@@ -74,14 +72,6 @@ public class TemplateLoader implements Loader {
         Map<String, String> parameters = prepareParameters(testContext, definition, extraParams);
         InputStream content = loadContent(definition, parameters);
         return openshift.loadTemplate(testContext.getProject(), content, parameters);
-    }
-
-    private void postLoad(TestContext testContext, List<Deployment> deployments) {
-        if (deployments == null) {
-            return;
-        }
-
-        deployments.forEach(deployment -> postProcessors.forEach(p -> p.process(testContext, deployment)));
     }
 
     private TemplateDefinition loadTemplateDefinition(String templateName) {

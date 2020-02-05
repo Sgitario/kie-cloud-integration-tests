@@ -15,7 +15,9 @@ public class Deployment {
 	private final String name;
 	private final Map<String, String> environmentVariables;
     @Setter
-    private String insecureUrl;
+    private long version;
+    @Setter
+    private String httpUrl;
     @Setter
     private Object channel;
 

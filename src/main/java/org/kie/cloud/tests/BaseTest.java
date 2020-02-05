@@ -28,12 +28,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.fail;
 
 @Slf4j
 @ExtendWith(SpringExtension.class)
-@TestPropertySource(locations = {"classpath:openshift.properties", "classpath:test.properties", "classpath:ldap.properties"})
+@TestPropertySource(locations = {"classpath:openshift.properties", "classpath:test.properties", "classpath:ldap.properties", "classpath:params.properties"})
 @ContextConfiguration
 @TestInstance(Lifecycle.PER_CLASS)
 public abstract class BaseTest {
@@ -80,16 +79,6 @@ public abstract class BaseTest {
 			projectService.deleteProject(testContext);
 		}
 	}
-
-    public void tryAssert(Runnable action, String message) {
-        try {
-            action.run();
-            assertTrue(true);
-        } catch (Exception ex) {
-            log.error("Error in assert", ex);
-            fail(message + ". Cause: " + ex.getMessage());
-        }
-    }
 
     protected abstract String scenario();
 

@@ -21,7 +21,7 @@ import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.representations.idm.ClientRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
 
-import static org.kie.cloud.tests.utils.AwaitilityUtils.awaits;
+import static org.kie.cloud.tests.utils.AwaitilityUtils.awaitsLong;
 
 @Slf4j
 public class SsoClient {
@@ -50,7 +50,7 @@ public class SsoClient {
 		clientRepresentation.setEnabled(true);
 		clientRepresentation.setPublicClient(true);
 
-		awaits().until(() -> {
+        awaitsLong().until(() -> {
 			try {
 				realm().clients().create(clientRepresentation);
 				return true;

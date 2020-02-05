@@ -24,11 +24,15 @@ import org.kie.server.client.KieServicesFactory;
 import org.kie.server.controller.client.KieServerControllerClient;
 import org.kie.server.controller.client.KieServerControllerClientFactory;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
+import static org.kie.cloud.tests.utils.AwaitilityUtils.awaitsFast;
+
 @Ignore
 public class SsoTest {
 
     private static final String BC_URL = "http://insecure-myapp-rhpamcentr-jch-tests-496e.project.openshiftdomain/rest/controller";
-    private static final String KIESERVER_URL = "http://insecure-myapp-kieserver-jch-tests-d39d.project.openshiftdomain/services/rest/server";
+    private static final String KIESERVER_URL = "http://insecure-myapp-rhpamcentr-josecarvajalhilario-tests-e08e.apps.playground.rhba.openshift-aws.rhocf-dev.com/services/rest/server";
 
     @Test
     public void bcUsingDefault() throws MalformedURLException, IOException {
@@ -41,11 +45,19 @@ public class SsoTest {
 
     @Test
     public void bcUsingSso() throws MalformedURLException, IOException {
-        String username = "serviceUser";
-        String password = "serviceUser1!";
+        String username = "appUser";
+        String password = "appUser1!";
         KieServerControllerClient responseCreateServerTemplate = KieServerControllerClientFactory.newRestClient(BC_URL, username, password);
 
         System.out.println(responseCreateServerTemplate.listServerTemplates());
+    }
+
+    @Test
+    public void bcUsingSsoWithAssert() throws MalformedURLException, IOException {
+        String username = "admin";
+        String password = "admin";
+
+        tryAssert(() -> KieServerControllerClientFactory.newRestClient(BC_URL, username, password).listServerTemplates(), "cannot login business central");
     }
 
     @Test
@@ -55,5 +67,22 @@ public class SsoTest {
         KieServicesClient responseCreateServerTemplate = KieServicesFactory.newKieServicesClient(KieServicesFactory.newRestConfiguration(KIESERVER_URL, username, password));
 
         System.out.println(responseCreateServerTemplate.listContainers());
+    }
+
+    private void tryAssert(Runnable action, String message) {
+        try {
+            awaitsFast().until(() -> {
+                try {
+                    action.run();
+                } catch (Exception error) {
+                    return false;
+                }
+
+                return true;
+            });
+            assertTrue(true);
+        } catch (Exception ex) {
+            fail(message + ". Cause: " + ex.getMessage());
+        }
     }
 }

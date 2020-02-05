@@ -25,6 +25,7 @@ public class Auth {
 
     private Sso sso;
     private Ldap ldap;
+    private Boolean externalOnly;
 
     public Sso getSso() {
         return sso;
@@ -40,6 +41,14 @@ public class Auth {
 
     public void setLdap(Ldap ldap) {
         this.ldap = ldap;
+    }
+
+    public Boolean getExternalOnly() {
+        return externalOnly;
+    }
+
+    public void setExternalOnly(Boolean externalOnly) {
+        this.externalOnly = externalOnly;
     }
 
 }

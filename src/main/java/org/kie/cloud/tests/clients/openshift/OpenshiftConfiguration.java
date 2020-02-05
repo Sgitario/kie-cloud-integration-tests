@@ -22,7 +22,7 @@ public class OpenshiftConfiguration {
     @PostConstruct
     public void init() {
 
-        OpenshiftProperties properties = config.get(selected);
+        OpenshiftProperties properties = getProperties();
 
         System.setProperty(OpenShiftConfig.OPENSHIFT_URL, properties.getUrl());
         System.setProperty(OpenShiftConfig.OPENSHIFT_MASTER_USERNAME, properties.getMasterUsername());
@@ -33,5 +33,9 @@ public class OpenshiftConfiguration {
         System.setProperty(OpenShiftConfig.OPENSHIFT_NAMESPACE, properties.getNamespace());
 
         Optional.ofNullable(properties.getToken()).ifPresent(val -> System.setProperty(OpenShiftConfig.OPENSHIFT_MASTER_TOKEN, val));
+    }
+
+    public OpenshiftProperties getProperties() {
+        return config.get(selected);
     }
 }

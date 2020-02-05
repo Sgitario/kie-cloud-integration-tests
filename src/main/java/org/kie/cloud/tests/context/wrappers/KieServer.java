@@ -18,6 +18,8 @@ import org.kie.cloud.tests.context.Deployment;
 import org.kie.server.client.KieServicesClient;
 import org.kie.server.client.KieServicesFactory;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 public class KieServer {
 
     private static final String API_PATH = "/services/rest/server";
@@ -30,7 +32,8 @@ public class KieServer {
 
     public KieServicesClient restClient(String username, String password) {
         if (deployment.getChannel() == null) {
-            deployment.setChannel(KieServicesFactory.newKieServicesClient(KieServicesFactory.newRestConfiguration(deployment.getInsecureUrl() + API_PATH, username, password)));
+            assertNotNull(deployment.getHttpUrl(), "Http URL is null!");
+            deployment.setChannel(KieServicesFactory.newKieServicesClient(KieServicesFactory.newRestConfiguration(deployment.getHttpUrl() + API_PATH, username, password)));
         }
 
         return (KieServicesClient) deployment.getChannel();

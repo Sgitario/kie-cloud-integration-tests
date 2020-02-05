@@ -15,23 +15,11 @@
 package org.kie.cloud.tests.properties;
 
 import lombok.Data;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
 
 @Data
-@Configuration
-@ConfigurationProperties("ldap")
-public class LdapProperties {
+public class ServiceProperties {
 
-    private String bindDn;
-    private String bindCredential;
-    private String baseCtxDn;
-    private String baseFilter;
-    private String searchScope;
-    private String searchTimeLimit;
-    private String roleAttributeId;
-    private String rolesCtxDn;
-    private String roleFilter;
-    private String roleRecursion;
-    private String defaultRole;
+    private String url;
+    private String user;
+    private String password;
 }

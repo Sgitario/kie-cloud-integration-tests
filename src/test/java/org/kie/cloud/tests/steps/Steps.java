@@ -29,8 +29,6 @@ public interface Steps {
     Loader getCurrentLoader();
     TestContext getTestContext();
 
-    void tryAssert(Runnable action, String message);
-
     default void forEachBusinessCentral(Consumer<BusinessCentral> action) {
         forEachDeployment(name -> name.contains(Deployments.BUSINESS_CENTRAL), deployment -> action.accept(new BusinessCentral(deployment)));
     }

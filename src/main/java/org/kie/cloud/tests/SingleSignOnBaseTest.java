@@ -28,8 +28,11 @@ import org.kie.cloud.tests.utils.Scenarios;
 @Tag("auth-sso")
 public abstract class SingleSignOnBaseTest extends BaseTest {
 
-    private static final String AUTH_URL_PROPERTY = "SSO_URL";
-    private static final String REALM_PROPERTY = "SSO_REALM";
+    public static final String SSO_URL = "SSO_URL";
+    public static final String SSO_REALM = "SSO_REALM";
+    public static final String SSO_USERNAME = "SSO_USERNAME";
+    public static final String SSO_PASSWORD = "SSO_PASSWORD";
+
     private static final String USERNAME_PROPERTY = "SSO_SERVICE_USERNAME";
     private static final String PASSWORD_PROPERTY = "SSO_SERVICE_PASSWORD";
     private static final String[] ROLES = new String[]{"admin", "kie-server", "rest-all"};
@@ -40,10 +43,10 @@ public abstract class SingleSignOnBaseTest extends BaseTest {
 
     protected Map<String, String> childExtraParams() {
         Map<String, String> extraParams = new HashMap<>();
-        extraParams.put(AUTH_URL_PROPERTY, ssoAuthUrl());
-        extraParams.put(REALM_PROPERTY, getSsoDeploymentParam(REALM_PROPERTY));
-        extraParams.put("SSO_USERNAME", getSsoUsername());
-        extraParams.put("SSO_PASSWORD", getSsoPassword());
+        extraParams.put(SSO_URL, ssoAuthUrl());
+        extraParams.put(SSO_REALM, getSsoDeploymentParam(SSO_REALM));
+        extraParams.put(SSO_USERNAME, getSsoUsername());
+        extraParams.put(SSO_PASSWORD, getSsoPassword());
         extraParams.put("BUSINESS_CENTRAL_SSO_CLIENT", BUSINESS_CENTRAL_CLIENT);
         extraParams.put("BUSINESS_CENTRAL_SSO_SECRET", "business-central-secret");
         extraParams.put("KIE_SERVER_SSO_CLIENT", KIE_SERVER_CLIENT);
@@ -76,7 +79,7 @@ public abstract class SingleSignOnBaseTest extends BaseTest {
 
     private void createUsersAndRolesInSingleSignOn() {
         String authUrl = ssoAuthUrl();
-        String realm = getSsoDeploymentParam(REALM_PROPERTY);
+        String realm = getSsoDeploymentParam(SSO_REALM);
         log.info("Creating roles and users in SSO at URL {} in Realm {}", authUrl, realm);
         SsoClient sso = SsoClient.get(authUrl, realm);
         sso.createClient(BUSINESS_CENTRAL_CLIENT);

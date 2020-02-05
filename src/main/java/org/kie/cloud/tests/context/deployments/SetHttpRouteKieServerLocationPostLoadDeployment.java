@@ -22,7 +22,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class SetInsecureRouteBusinessCentralLocationPostLoadDeployment implements PostLoadDeployment {
+public class SetHttpRouteKieServerLocationPostLoadDeployment implements PostLoadDeployment {
 
     private static final String INSECURE_PROTOCOL = "http:";
 
@@ -32,6 +32,6 @@ public class SetInsecureRouteBusinessCentralLocationPostLoadDeployment implement
     public void process(TestContext testContext, Deployment deployment) {
         openshift.getRouteByApplication(testContext.getProject(), deployment.getName()).stream()
                  .filter(url -> url.startsWith(INSECURE_PROTOCOL))
-                 .findFirst().ifPresent(deployment::setInsecureUrl);
+                 .findFirst().ifPresent(deployment::setHttpUrl);
     }
 }
