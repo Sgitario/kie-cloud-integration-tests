@@ -38,4 +38,12 @@ public class KieServer {
 
         return (KieServicesClient) deployment.getChannel();
     }
+
+    public String getInternalIpAddress() {
+        return deployment.getInternalIpAddress();
+    }
+
+    public String getAppName() {
+        return deployment.getName();
+    }
 }

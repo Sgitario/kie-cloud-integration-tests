@@ -17,22 +17,23 @@ package org.kie.cloud.tests.support;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
-import org.junit.Ignore;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.kie.cloud.tests.utils.AwaitilityUtils;
+import org.kie.server.api.exception.KieServicesHttpException;
 import org.kie.server.client.KieServicesClient;
 import org.kie.server.client.KieServicesFactory;
 import org.kie.server.controller.client.KieServerControllerClient;
 import org.kie.server.controller.client.KieServerControllerClientFactory;
+import org.kie.server.controller.client.exception.KieServerControllerHTTPClientException;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.kie.cloud.tests.utils.AwaitilityUtils.awaitsFast;
+import static org.junit.Assert.fail;
 
-@Ignore
+@Disabled
 public class SsoTest {
 
-    private static final String BC_URL = "http://insecure-myapp-rhpamcentr-jch-tests-496e.project.openshiftdomain/rest/controller";
-    private static final String KIESERVER_URL = "http://insecure-myapp-rhpamcentr-josecarvajalhilario-tests-e08e.apps.playground.rhba.openshift-aws.rhocf-dev.com/services/rest/server";
+    private static final String BC_URL = "http://insecure-myapp-rhpamcentr-josecarvajalhilario-tests-ac73.project.openshiftdomain/rest/controller";
+    private static final String KIESERVER_URL = "http://insecure-myapp-kieserver-josecarvajalhilario-tests-e145.project.openshiftdomain/services/rest/server";
 
     @Test
     public void bcUsingDefault() throws MalformedURLException, IOException {
@@ -45,44 +46,45 @@ public class SsoTest {
 
     @Test
     public void bcUsingSso() throws MalformedURLException, IOException {
-        String username = "appUser";
-        String password = "appUser1!";
-        KieServerControllerClient responseCreateServerTemplate = KieServerControllerClientFactory.newRestClient(BC_URL, username, password);
-
-        System.out.println(responseCreateServerTemplate.listServerTemplates());
-    }
-
-    @Test
-    public void bcUsingSsoWithAssert() throws MalformedURLException, IOException {
-        String username = "admin";
-        String password = "admin";
-
-        tryAssert(() -> KieServerControllerClientFactory.newRestClient(BC_URL, username, password).listServerTemplates(), "cannot login business central");
-    }
-
-    @Test
-    public void kieServerUsingApi() throws MalformedURLException, IOException {
-        String username = "adminUser";
-        String password = "adminUser1!";
-        KieServicesClient responseCreateServerTemplate = KieServicesFactory.newKieServicesClient(KieServicesFactory.newRestConfiguration(KIESERVER_URL, username, password));
-
-        System.out.println(responseCreateServerTemplate.listContainers());
-    }
-
-    private void tryAssert(Runnable action, String message) {
-        try {
-            awaitsFast().until(() -> {
+        String username = "appUseraa";
+        String password = "appUser1ss!";
+        try (KieServerControllerClient responseCreateServerTemplate = KieServerControllerClientFactory.newRestClient(BC_URL, username, password)) {
+            AwaitilityUtils.awaitsFast().until(() -> {
                 try {
-                    action.run();
-                } catch (Exception error) {
-                    return false;
+                    System.out.println(responseCreateServerTemplate.listServerTemplates());
+                } catch (KieServerControllerHTTPClientException ex) {
+                    if (ex.getResponseCode() > 500) { // perhaps the service is not ready yet
+                        return false;
+                    }
+
+                    fail("Error in service");
                 }
 
                 return true;
             });
-            assertTrue(true);
-        } catch (Exception ex) {
-            fail(message + ". Cause: " + ex.getMessage());
+
         }
+    }
+
+    @Test
+    public void kieServerUsingApi() throws MalformedURLException, IOException {
+        String username = "adminUsessr";
+        String password = "adminUser1!";
+        AwaitilityUtils.awaitsFast().until(() -> {
+            try {
+                KieServicesClient responseCreateServerTemplate = KieServicesFactory.newKieServicesClient(KieServicesFactory.newRestConfiguration(KIESERVER_URL, username, password));
+                System.out.println(responseCreateServerTemplate.listContainers());
+            } catch (RuntimeException ex) {
+                if (ex.getCause() instanceof KieServicesHttpException && ((KieServicesHttpException) ex.getCause()).getHttpCode() > 500) {
+                    // perhaps the service is not ready yet
+                    return false;
+                }
+
+                fail("Error in service");
+            }
+
+            return true;
+        });
+
     }
 }

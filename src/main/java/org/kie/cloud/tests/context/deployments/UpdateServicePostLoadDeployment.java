@@ -14,6 +14,8 @@
  */
 package org.kie.cloud.tests.context.deployments;
 
+import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
 import org.kie.cloud.tests.clients.openshift.OpenshiftClient;
 import org.kie.cloud.tests.context.Deployment;
@@ -22,16 +24,14 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class SetHttpRouteKieServerLocationPostLoadDeployment implements PostLoadDeployment {
-
-    private static final String INSECURE_PROTOCOL = "http:";
+public class UpdateServicePostLoadDeployment implements PostLoadDeployment {
 
     private final OpenshiftClient openshift;
 
     @Override
     public void process(TestContext testContext, Deployment deployment) {
-        openshift.getRouteByApplication(testContext.getProject(), deployment.getName()).stream()
-                 .filter(url -> url.startsWith(INSECURE_PROTOCOL))
-                 .findFirst().ifPresent(deployment::setHttpUrl);
+        Optional.ofNullable(openshift.getServiceByApplication(testContext.getProject(), deployment.getName())).ifPresent(service -> {
+            deployment.setInternalIpAddress(service.getSpec().getClusterIP());
+        });
     }
 }

@@ -120,6 +120,12 @@ public class OpenshiftClient {
 
     }
 
+    public io.fabric8.kubernetes.api.model.Service getServiceByApplication(Project project, String name) {
+        try (OpenShift openShift = OpenShifts.master(project.getName())) {
+            return openShift.services().withName(name).get();
+        }
+    }
+
     public List<String> getRouteByApplication(Project project, String name) {
         try (OpenShift openShift = OpenShifts.master(project.getName())) {
             return openShift.routes().withLabel("service", name).list().getItems().stream()

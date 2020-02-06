@@ -2,6 +2,7 @@ package org.kie.cloud.tests.context;
 
 import java.beans.Transient;
 import java.io.Closeable;
+import java.util.List;
 import java.util.Map;
 
 import lombok.Getter;
@@ -16,6 +17,10 @@ public class Deployment {
 	private final Map<String, String> environmentVariables;
     @Setter
     private long version;
+    @Setter
+    private String internalIpAddress;
+    @Setter
+    private List<String> routes;
     @Setter
     private String httpUrl;
     @Setter

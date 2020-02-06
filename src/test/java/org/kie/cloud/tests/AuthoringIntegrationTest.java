@@ -3,11 +3,12 @@ package org.kie.cloud.tests;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.kie.cloud.tests.steps.IntegrationSteps;
 import org.kie.cloud.tests.steps.LoginSteps;
 import org.kie.cloud.tests.utils.Scenarios;
 
 @DisplayName("RHPAM Authoring")
-public class AuthoringIntegrationTest extends BaseTest implements LoginSteps {
+public class AuthoringIntegrationTest extends BaseTest implements LoginSteps, IntegrationSteps {
 
     @Override
     protected String scenario() {
@@ -16,8 +17,14 @@ public class AuthoringIntegrationTest extends BaseTest implements LoginSteps {
 
     @Test
     @Tag("login")
-    void canLogin() {
+    public void canLogin() {
         thenCanLoginInBusinessCentral(getDefaultCredentials().getUser(), getDefaultCredentials().getPassword());
         thenCanLoginInKieServer(getDefaultCredentials().getUser(), getDefaultCredentials().getPassword());
+    }
+
+    @Tag("integration")
+    @Test
+    public void shouldKieServerConnectWithBusinessCentral() {
+        thenKieServersAreConnectedWithBusinessCentrals();
     }
 }

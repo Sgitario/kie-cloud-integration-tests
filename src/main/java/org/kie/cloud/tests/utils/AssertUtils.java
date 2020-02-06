@@ -33,7 +33,7 @@ public final class AssertUtils {
                 try {
                     action.run();
                 } catch (Exception error) {
-                    log.warn("Error in assertion '{}'. Will try again.", message, error);
+                    log.debug("Error in assertion '{}'. Will try again.", message, error);
                     return false;
                 }
 

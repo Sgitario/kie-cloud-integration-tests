@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -58,10 +59,12 @@ public class TemplateLoader extends Loader {
 
     @Override
     public void whenSetExternalAuthTo(TestContext testContext, boolean value) {
-        testContext.getDeployments().values().parallelStream().forEach(deployment -> {
-            openshift.updateEnvironmentVariable(testContext.getProject(), deployment, "EXTERNAL_AUTH_ONLY", "" + value);
-        });
+        forEachBusinessCentral(testContext, updateEnvironmentVariable(testContext, "EXTERNAL_AUTH_ONLY", value));
+        forEachKieServer(testContext, updateEnvironmentVariable(testContext, "EXTERNAL_AUTH_ONLY", value));
+    }
 
+    private Consumer<Deployment> updateEnvironmentVariable(TestContext testContext, String key, Object value) {
+        return deployment -> openshift.updateEnvironmentVariable(testContext.getProject(), deployment, key, "" + value);
     }
 
     private void preLoad(TestContext testContext, TemplateDefinition definition) {

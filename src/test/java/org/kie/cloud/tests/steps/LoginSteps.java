@@ -14,40 +14,52 @@
  */
 package org.kie.cloud.tests.steps;
 
-import static org.junit.Assert.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
-import static org.kie.cloud.tests.utils.AssertUtils.tryAssert;
+import org.kie.server.api.exception.KieServicesHttpException;
+import org.kie.server.controller.client.exception.KieServerControllerHTTPClientException;
+
+import static org.junit.Assert.fail;
+import static org.kie.cloud.tests.utils.AwaitilityUtils.awaitsFast;
 
 public interface LoginSteps extends Steps {
 
-    public default void thenCanLoginInBusinessCentral(String username, String password) {
-        forEachBusinessCentral(deployment -> tryAssert(() -> deployment.restClient(username, password).listServerTemplates(), "cannot login business central"));
+    default void thenCanLoginInBusinessCentral(String username, String password) {
+        assertBusinessCentralsFor(username, password, (c, d) -> c.listServerTemplates());
     }
 
-    public default void thenCannotLoginInBusinessCentral(String username, String password) {
-        try {
-            thenCanLoginInBusinessCentral(username, password);
-        } catch (AssertionError error) {
-            assertTrue(true);
-            return;
-        }
+    default void thenCannotLoginInBusinessCentral(String username, String password) {
+        forEachBusinessCentral(deployment -> {
+            awaitsFast().until(() -> {
+                try {
+                    deployment.restClient(username, password).listServerTemplates();
+                    fail(String.format("User '%s:%s' can login in Business Central", username, password));
+                } catch (KieServerControllerHTTPClientException ex) {
+                    if (ex.getResponseCode() == 401) {
+                        return true;
+                    }
+                }
 
-        fail("It could login.");
+                // perhaps the service is not ready yet. it needs retrying
+                return false;
+            });
+        });
     }
 
-    public default void thenCanLoginInKieServer(String username, String password) {
-        forEachKieServer(deployment -> tryAssert(() -> deployment.restClient(username, password).listContainers(), "cannot login kie server"));
-    }
+    default void thenCanLoginInKieServer(String username, String password) {
+        forEachKieServer(deployment ->  {
+            awaitsFast().until(() -> {
+                try {
+                    deployment.restClient(username, password).listContainers();
+                } catch (RuntimeException ex) {
+                    if (ex.getCause() instanceof KieServicesHttpException && ((KieServicesHttpException) ex.getCause()).getHttpCode() > 500) {
+                        return false;
+                    }
 
-    public default void thenCannotLoginInKieServer(String username, String password) {
-        try {
-            thenCanLoginInBusinessCentral(username, password);
-        } catch (AssertionError error) {
-            assertTrue(true);
-            return;
-        }
+                    fail(String.format("User '%s:%s' cannot login in Kie Server", username, password));
+                }
 
-        fail("It could login.");
+                return true;
+            });
+        });
     }
 
 }
