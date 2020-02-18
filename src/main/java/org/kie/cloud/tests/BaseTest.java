@@ -67,6 +67,7 @@ public abstract class BaseTest {
 		Project project = projectService.createProject();
 		testContext = new TestContext(project);
 		runConfigurers(TestConfig::before);
+        beforeOnLoadScenario();
         whenLoadTemplate(scenario(), scenarioExtraParams());
         afterOnLoadScenario();
 	}
@@ -81,6 +82,10 @@ public abstract class BaseTest {
 	}
 
     protected abstract String scenario();
+
+    protected void beforeOnLoadScenario() {
+
+    }
 
     protected void afterOnLoadScenario() {
 

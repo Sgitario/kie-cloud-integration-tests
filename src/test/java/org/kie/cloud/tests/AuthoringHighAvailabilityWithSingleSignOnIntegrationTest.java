@@ -11,7 +11,7 @@ import org.kie.cloud.tests.utils.Scenarios;
 public class AuthoringHighAvailabilityWithSingleSignOnIntegrationTest extends SingleSignOnBaseTest implements LoginSteps, IntegrationSteps {
 
     @Override
-    protected String childScenario() {
+    protected String scenario() {
         return Scenarios.RHPAM_AUTHORING_HA;
     }
 

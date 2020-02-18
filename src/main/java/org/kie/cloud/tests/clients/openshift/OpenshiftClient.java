@@ -102,7 +102,7 @@ public class OpenshiftClient {
             Template template = openShift.loadAndCreateTemplate(is);
             openShift.processAndDeployTemplate(template.getMetadata().getName(), parameters);
             List<Deployment> deployments = objectsOf(template, DeploymentConfig.class).stream()
-                    .map(deployment -> getName(template, deployment))
+                                                                                      .map(deployment -> getName(template, deployment, parameters))
                     .map(name -> loadDeployment(openShift, name))
                     .collect(Collectors.toList());
 

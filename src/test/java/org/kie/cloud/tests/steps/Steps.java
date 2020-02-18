@@ -29,7 +29,7 @@ import org.kie.server.controller.client.KieServerControllerClient;
 import org.kie.server.controller.client.exception.KieServerControllerHTTPClientException;
 
 import static org.junit.Assert.fail;
-import static org.kie.cloud.tests.utils.AwaitilityUtils.awaitsFast;
+import static org.kie.cloud.tests.utils.AwaitilityUtils.awaitsLong;
 
 public interface Steps {
 
@@ -45,7 +45,7 @@ public interface Steps {
 
     default void assertBusinessCentralsFor(String username, String password, BiConsumer<KieServerControllerClient, BusinessCentral> action) {
         forEachBusinessCentral(deployment -> {
-            awaitsFast().until(() -> {
+            awaitsLong().until(() -> {
                 try {
                     KieServerControllerClient client = deployment.restClient(username, password);
                     action.accept(client, deployment);
@@ -68,7 +68,7 @@ public interface Steps {
     }
 
     default void forEachKieServer(Consumer<KieServer> action) {
-        forEachDeployment(name -> name.contains(Deployments.KIE_SERVER), deployment -> action.accept(new KieServer(deployment)));
+        forEachDeployment(name -> name.endsWith(Deployments.KIE_SERVER), deployment -> action.accept(new KieServer(deployment)));
     }
 
     default void forEachDeployment(Predicate<String> match, Consumer<Deployment> action) {

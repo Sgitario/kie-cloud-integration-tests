@@ -12,11 +12,11 @@ public final class AwaitilityUtils {
 	}
 
     public static final ConditionFactory awaitsFast() {
-        return awaitsCustom(200, secToMillis(1), secToMillis(5));
+        return awaitsCustom(200, secToMillis(1), secToMillis(20));
     }
 
     public static final ConditionFactory awaitsLong() {
-        return awaitsCustom(secToMillis(1), secToMillis(5), secToMillis(30));
+        return awaitsCustom(secToMillis(1), secToMillis(10), secToMillis(60));
 	}
 
     public static final ConditionFactory awaitsCustom(int delayMillis, int pollMillis, int atMostMillis) {

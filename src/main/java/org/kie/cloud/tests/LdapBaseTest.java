@@ -18,12 +18,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.junit.jupiter.api.Tag;
-import org.kie.cloud.tests.clients.openshift.OpenshiftConfiguration;
 import org.kie.cloud.tests.properties.LdapProperties;
+import org.kie.cloud.tests.utils.Scenarios;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Tag("auth-ldap")
-public abstract class LdapBaseTest extends BaseTest {
+public abstract class LdapBaseTest extends ComposeDeploymentBaseTest {
 
     public static final String AUTH_LDAP_URL = "AUTH_LDAP_URL";
     public static final String AUTH_LDAP_BIND_DN = "AUTH_LDAP_BIND_DN";
@@ -41,14 +41,11 @@ public abstract class LdapBaseTest extends BaseTest {
     @Autowired
     private LdapProperties ldapProperties;
 
-    @Autowired
-    private OpenshiftConfiguration openshiftConfiguration;
-
     @Override
     protected Map<String, String> scenarioExtraParams() {
         Map<String, String> extraParams = new HashMap<>();
         extraParams.putAll(super.scenarioExtraParams());
-        extraParams.put(AUTH_LDAP_URL, openshiftConfiguration.getProperties().getLdap().getUrl());
+        extraParams.put(AUTH_LDAP_URL, ldapAuthUrl());
         extraParams.put(AUTH_LDAP_BIND_DN, ldapProperties.getBindDn());
         extraParams.put(AUTH_LDAP_BIND_CREDENTIAL, ldapProperties.getBindCredential());
         extraParams.put(AUTH_LDAP_BASE_CTX_DN, ldapProperties.getBaseCtxDn());
@@ -63,11 +60,20 @@ public abstract class LdapBaseTest extends BaseTest {
         return extraParams;
     }
 
+    @Override
+    protected String getDeploymentTemplate() {
+        return Scenarios.LDAP;
+    }
+
+    private String ldapAuthUrl() {
+        return String.format("ldap://%s-ldap.project.openshiftdomain:30389", projectName());
+    }
+
     protected String getLdapUsername() {
-        return openshiftConfiguration.getProperties().getLdap().getUser();
+        return ldapProperties.getUser();
     }
 
     protected String getLdapPassword() {
-        return openshiftConfiguration.getProperties().getLdap().getPassword();
+        return ldapProperties.getPassword();
     }
 }

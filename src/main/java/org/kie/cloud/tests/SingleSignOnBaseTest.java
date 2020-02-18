@@ -26,7 +26,7 @@ import org.kie.cloud.tests.utils.Scenarios;
 
 @Slf4j
 @Tag("auth-sso")
-public abstract class SingleSignOnBaseTest extends BaseTest {
+public abstract class SingleSignOnBaseTest extends ComposeDeploymentBaseTest {
 
     public static final String SSO_URL = "SSO_URL";
     public static final String SSO_REALM = "SSO_REALM";
@@ -39,9 +39,8 @@ public abstract class SingleSignOnBaseTest extends BaseTest {
     private static final String BUSINESS_CENTRAL_CLIENT = "business-central-client";
     private static final String KIE_SERVER_CLIENT = "kie-server-client";
 
-    protected abstract String childScenario();
-
-    protected Map<String, String> childExtraParams() {
+    @Override
+    protected Map<String, String> scenarioExtraParams() {
         Map<String, String> extraParams = new HashMap<>();
         extraParams.put(SSO_URL, ssoAuthUrl());
         extraParams.put(SSO_REALM, getSsoDeploymentParam(SSO_REALM));
@@ -55,14 +54,8 @@ public abstract class SingleSignOnBaseTest extends BaseTest {
     }
 
     @Override
-    protected String scenario() {
+    protected String getDeploymentTemplate() {
         return Scenarios.SSO;
-    }
-
-    @Override
-    protected void afterOnLoadScenario() {
-        createUsersAndRolesInSingleSignOn();
-        deployNextScenario();
     }
 
     protected String getSsoUsername() {
@@ -73,11 +66,8 @@ public abstract class SingleSignOnBaseTest extends BaseTest {
         return getSsoDeploymentParam(PASSWORD_PROPERTY);
     }
 
-    private void deployNextScenario() {
-        whenLoadTemplate(childScenario(), childExtraParams());
-    }
-
-    private void createUsersAndRolesInSingleSignOn() {
+    @Override
+    protected void onAfterDeploymentTemplate() {
         String authUrl = ssoAuthUrl();
         String realm = getSsoDeploymentParam(SSO_REALM);
         log.info("Creating roles and users in SSO at URL {} in Realm {}", authUrl, realm);

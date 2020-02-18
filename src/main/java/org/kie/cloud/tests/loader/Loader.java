@@ -18,8 +18,6 @@ public abstract class Loader {
 
     public abstract void load(TestContext testContext, String template, Map<String, String> extraParams);
 
-    public abstract void whenSetExternalAuthTo(TestContext testContext, boolean value);
-
     protected void postLoad(TestContext testContext, List<Deployment> deployments) {
         if (deployments == null) {
             return;

@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.jboss.logging.MDC;
 import org.kie.cloud.tests.clients.openshift.OpenshiftClient;
-import org.kie.cloud.tests.config.operators.Auth;
 import org.kie.cloud.tests.config.operators.CommonConfig;
 import org.kie.cloud.tests.config.operators.KieApp;
 import org.kie.cloud.tests.config.operators.OperatorConfiguration;
@@ -46,20 +45,6 @@ public class OperatorLoader extends Loader {
         waitForDeployments(testContext, template);
     }
 
-    @Override
-    public void whenSetExternalAuthTo(TestContext testContext, boolean value) {
-        openshiftClient.updateOperator(testContext.getProject(), configuration.getKieAppName(), app -> {
-            Auth auth = app.getSpec().getAuth();
-            if (auth == null) {
-                auth = new Auth();
-                app.getSpec().setAuth(auth);
-            }
-
-            auth.setExternalOnly(value);
-        });
-        openshiftClient.waitForRollout(testContext.getProject(), testContext.getDeployments().values());
-    }
-
     private void waitForDeployments(TestContext testContext, String template) {
         postLoad(testContext, loadDeployments(testContext, template));
     }
@@ -69,6 +54,7 @@ public class OperatorLoader extends Loader {
         app.getMetadata().setNamespace(testContext.getProject().getName());
         app.getMetadata().setName(configuration.getKieAppName());
         app.getSpec().setEnvironment(template);
+        app.getSpec().setUseImageTags(true);
 
         CommonConfig commonConfig = new CommonConfig();
         commonConfig.setAdminUser(credentials.getUser());
@@ -92,7 +78,7 @@ public class OperatorLoader extends Loader {
 
     private void ensureRouteHttp(TestContext testContext, String deploymentName) {
         List<String> routes = openshiftClient.getRouteByApplication(testContext.getProject(), deploymentName);
-        if (routes.stream().noneMatch(route -> route.startsWith("http:"))) {
+        if (!routes.isEmpty() && routes.stream().noneMatch(route -> route.startsWith("http:"))) {
             String targetHost = routes.get(0).replaceAll("https://", "insecure-");
             openshiftClient.createRouteForService(testContext.getProject(), "http", targetHost, deploymentName);
         }

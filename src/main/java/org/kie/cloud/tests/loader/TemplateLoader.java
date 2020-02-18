@@ -57,12 +57,6 @@ public class TemplateLoader extends Loader {
         MDC.remove(MDC_KEY);
     }
 
-    @Override
-    public void whenSetExternalAuthTo(TestContext testContext, boolean value) {
-        forEachBusinessCentral(testContext, updateEnvironmentVariable(testContext, "EXTERNAL_AUTH_ONLY", value));
-        forEachKieServer(testContext, updateEnvironmentVariable(testContext, "EXTERNAL_AUTH_ONLY", value));
-    }
-
     private Consumer<Deployment> updateEnvironmentVariable(TestContext testContext, String key, Object value) {
         return deployment -> openshift.updateEnvironmentVariable(testContext.getProject(), deployment, key, "" + value);
     }

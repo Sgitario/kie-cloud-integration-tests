@@ -1,6 +1,7 @@
 package org.kie.cloud.tests.utils;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -37,8 +38,8 @@ public final class OpenshiftExtensionModelUtils {
 				.collect(Collectors.toList());
 	}
 
-	public static String getName(Template template, HasMetadata object) {
-		return resolveProperty(template, object.getMetadata().getName());
+    public static String getName(Template template, HasMetadata object, Map<String, String> parameters) {
+        return resolveProperty(template, object.getMetadata().getName(), parameters);
 	}
 
 	public static final Optional<String> findParam(Template template, String paramName) {
@@ -46,15 +47,15 @@ public final class OpenshiftExtensionModelUtils {
 				.map(Parameter::getValue).findFirst();
 	}
 
-	private static String resolveProperty(Template template, String property) {
+    private static String resolveProperty(Template template, String property, Map<String, String> parameters) {
 		String result = property;
 		String[] properties = StringUtils.substringsBetween(property, START_TAG, END_TAG);
 		if (properties != null) {
 			for (String item : properties) {
-				String value = findParam(template, item).orElseGet(() -> {
-					fail("Cannot find property '" + item + "'");
-					return null;
-				});
+                String value = Optional.ofNullable(parameters.get(item)).orElseGet(() -> findParam(template, item).orElseGet(() -> {
+                    fail("Cannot find property '" + item + "'");
+                    return null;
+                }));
 
 				result = result.replace(START_TAG + item + END_TAG, value);
 			}
