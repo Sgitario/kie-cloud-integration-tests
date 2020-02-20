@@ -20,7 +20,9 @@ import io.fabric8.openshift.api.model.Template;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jboss.logging.MDC;
+import org.kie.cloud.tests.actions.Action;
 import org.kie.cloud.tests.clients.openshift.OpenshiftClient;
 import org.kie.cloud.tests.config.templates.TemplateDefinition;
 import org.kie.cloud.tests.config.templates.TemplateListConfiguration;
@@ -43,18 +45,19 @@ public class TemplateLoader extends Loader {
     private final TemplateListConfiguration templateListConfiguration;
     private final OpenshiftClient openshift;
     private final ExpressionEvaluator evaluator;
+    private final List<Action> actions;
 
     @Override
-    public void load(TestContext testContext, String template, Map<String, String> extraParams) {
+    protected List<Deployment> runLoad(TestContext testContext, String template, Map<String, String> extraParams) {
 
         MDC.put(MDC_KEY, template);
         log.info("Loading template ... ");
         TemplateDefinition definition = loadTemplateDefinition(template);
         preLoad(testContext, definition);
         List<Deployment> deployments = loadAndProcess(testContext, definition, extraParams);
-        postLoad(testContext, deployments);
         log.info("Template loaded OK ");
         MDC.remove(MDC_KEY);
+        return deployments;
     }
 
     private Consumer<Deployment> updateEnvironmentVariable(TestContext testContext, String key, Object value) {
@@ -62,7 +65,24 @@ public class TemplateLoader extends Loader {
     }
 
     private void preLoad(TestContext testContext, TemplateDefinition definition) {
+        runPreActions(testContext, definition);
         loadCustomResources(testContext, definition);
+    }
+
+    private void runPreActions(TestContext testContext, TemplateDefinition definition) {
+        if (definition.getPreActions() != null) {
+            definition.getPreActions().forEach(actionDefinition -> {
+                Action action = loadAction(actionDefinition.getAction());
+                action.run(actionDefinition, testContext);
+            });
+        }
+    }
+
+    private Action loadAction(String action) {
+        return actions.stream().filter(a -> StringUtils.equalsAnyIgnoreCase(a.name(), action)).findFirst().orElseGet(() -> {
+            fail("Action '" + action + "' not found");
+            return null;
+        });
     }
 
     private List<Deployment> loadAndProcess(TestContext testContext, TemplateDefinition definition, Map<String, String> extraParams) {
@@ -124,16 +144,19 @@ public class TemplateLoader extends Loader {
 
     private Map<String, String> prepareParameters(TestContext testContext, TemplateDefinition definition, Map<String, String> extraParams) {
         Map<String, String> parameters = new HashMap<>();
-        for (Entry<String, String> entry : definition.getParams().entrySet()) {
-            String value = evaluator.resolveValue(entry.getKey(), entry.getValue(), testContext);
-
-            parameters.put(entry.getKey(), value);
-        }
-
-        parameters.putAll(extraParams);
+        resolveParams(testContext, definition.getParams(), parameters);
+        resolveParams(testContext, extraParams, parameters);
         parameters.entrySet().forEach(entry -> log.info("Property '{}'= '{}'", entry.getKey(), entry.getValue()));
 
         return parameters;
+    }
+
+    private void resolveParams(TestContext testContext, Map<String, String> in, Map<String, String> out) {
+        for (Entry<String, String> entry : in.entrySet()) {
+            String value = evaluator.resolveValue(entry.getKey(), entry.getValue(), testContext);
+
+            out.put(entry.getKey(), value);
+        }
     }
 
     private void loadCustomResources(TestContext context, TemplateDefinition definition) {

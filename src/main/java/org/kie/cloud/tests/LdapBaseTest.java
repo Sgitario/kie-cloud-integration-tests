@@ -66,7 +66,7 @@ public abstract class LdapBaseTest extends ComposeDeploymentBaseTest {
     }
 
     private String ldapAuthUrl() {
-        return String.format("ldap://%s-ldap.project.openshiftdomain:30389", projectName());
+        return String.format("ldap://ldap-%s.project.openshiftdomain:30389", projectName());
     }
 
     protected String getLdapUsername() {

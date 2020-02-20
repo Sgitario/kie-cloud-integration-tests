@@ -1,5 +1,6 @@
 package org.kie.cloud.tests.loader;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -16,7 +17,15 @@ public abstract class Loader {
     @Autowired
     private List<PostLoadDeployment> postProcessors;
 
-    public abstract void load(TestContext testContext, String template, Map<String, String> extraParams);
+    protected abstract List<Deployment> runLoad(TestContext testContext, String template, Map<String, String> extraParams);
+
+    public void load(TestContext testContext, String template, Map<String, String> extraParams) {
+        Map<String, String> params = new HashMap<>();
+        params.putAll(extraParams);
+        testContext.getProperties().forEach(params::putIfAbsent);
+        List<Deployment> deployments = runLoad(testContext, template, params);
+        postLoad(testContext, deployments);
+    }
 
     protected void postLoad(TestContext testContext, List<Deployment> deployments) {
         if (deployments == null) {

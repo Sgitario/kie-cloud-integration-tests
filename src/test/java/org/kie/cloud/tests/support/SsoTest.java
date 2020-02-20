@@ -31,8 +31,8 @@ import static org.junit.Assert.fail;
 // @Disabled
 public class SsoTest {
 
-    private static final String BC_URL = "http://insecure-myapp-rhpamcentr-josecarvajalhilario-tests-bc9b.project.openshiftdomain/rest/controller";
-    private static final String KIESERVER_URL = "http://insecure-myapp-kieserver-josecarvajalhilario-tests-bc9b.project.openshiftdomain/services/rest/server";
+    private static final String BC_URL = "http://insecure-myapp-rhpamcentr-josecarvajalhilario-local-5918.project.openshiftdomain/rest/controller";
+    private static final String KIESERVER_URL = "http://insecure-myapp-kieserver-josecarvajalhilario-tests-4e67.project.openshiftdomain/services/rest/server";
 
     @Test
     public void bcUsingDefault() throws MalformedURLException, IOException {
@@ -67,11 +67,11 @@ public class SsoTest {
 
     @Test
     public void kieServerUsingApi() throws MalformedURLException, IOException {
-        String username = "admin";
-        String password = "admin";
+        String username = "adminUser";
+        String password = "adminUser1!";
         try {
             KieServicesClient responseCreateServerTemplate = new KieServerClientImpl(KIESERVER_URL, username, password);
-            System.out.println(responseCreateServerTemplate.listContainers());
+            System.out.println(responseCreateServerTemplate.getServerInfo());
         } catch (RuntimeException ex) {
             ex.printStackTrace();
             if (ex.getCause() instanceof KieServicesHttpException) {

@@ -35,18 +35,14 @@ public class OperatorLoader extends Loader {
     private final List<KieAppPopulator> populators;
 
     @Override
-    public void load(TestContext testContext, String template, Map<String, String> extraParams) {
+    protected List<Deployment> runLoad(TestContext testContext, String template, Map<String, String> extraParams) {
         importCrd(testContext);
         importServiceAccount(testContext);
         importRole(testContext);
         importRoleBinding(testContext);
         importOperator(testContext);
         runOperator(testContext, template, extraParams);
-        waitForDeployments(testContext, template);
-    }
-
-    private void waitForDeployments(TestContext testContext, String template) {
-        postLoad(testContext, loadDeployments(testContext, template));
+        return loadDeployments(testContext, template);
     }
 
     private void runOperator(TestContext testContext, String template, Map<String, String> extraParams) {

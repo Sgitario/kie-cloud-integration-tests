@@ -2,11 +2,11 @@
 kind: Template
 apiVersion: v1
 metadata:
-  name: ldap
+  name: docker
   annotations:
-    name: ldap
-    description: Application template for ldap server
-message: A new ldap server was created
+    name: docker
+    description: Application template for Docker Registry
+message: A new Docker Registry was created
 
 parameters:
 - name: APPLICATION_NAME
@@ -18,7 +18,7 @@ objects:
 - kind: ImageStream
   apiVersion: v1
   metadata:
-    name: "rhba-qe-ldap"
+    name: "rhba-qe-docker"
     annotations:
       openshift.io/image.insecureRepository: 'true'
   spec:
@@ -26,17 +26,15 @@ objects:
     - name: 'latest'
       from:
         kind: DockerImage
-        name: bxms-binaries.usersys.redhat.com:5000/openldap:latest
+        name: registry:2
       importPolicy:
         insecure: true
-      referencePolicy:
-        type: Local
 - kind: DeploymentConfig
   apiVersion: v1
   metadata:
-    name: "ldap"
+    name: "docker"
     labels:
-      application: "ldap"
+      application: "docker"
   spec:
     strategy:
       type: Recreate
@@ -45,58 +43,52 @@ objects:
       imageChangeParams:
         automatic: true
         containerNames:
-        - "ldap"
+        - "docker"
         from:
           kind: ImageStreamTag
-          name: "rhba-qe-ldap:latest"
+          name: "rhba-qe-docker:latest"
     - type: ConfigChange
     replicas: 1
     selector:
-      deploymentConfig: "ldap"
+      deploymentConfig: "docker"
     template:
       metadata:
-        name: "ldap"
+        name: "docker"
         labels:
-          application: "ldap"
-          deploymentConfig: "ldap"
+          application: "docker"
+          deploymentConfig: "docker"
       spec:
         containers:
-        - name: "ldap"
-          image: "rhba-qe-ldap:latest"
+        - name: "docker"
+          image: "rhba-qe-docker:latest"
           imagePullPolicy: Always
           ports:
-          - name: "ldap"
-            containerPort: 389
-            protocol: TCP
-          - name: "ldap-tls"
-            containerPort: 636
+          - name: "docker"
+            containerPort: 5000
             protocol: TCP
 - kind: Service
   apiVersion: v1
   metadata:
-    name: "ldap"
+    name: "docker"
     labels:
-      application: "ldap"
+      application: "docker"
   spec:
     ports:
-    - name: ldap
-      port: 389
-      targetPort: 30389
-    - name: ldap-tls
-      port: 636
-      targetPort: 30636
+    - name: docker
+      port: 5000
+      targetPort: 5000
     selector:
-      deploymentConfig: "ldap"
+      deploymentConfig: "docker"
 - kind: Route
   apiVersion: v1
   metadata:
-    name: "ldap-route"
+    name: "docker-route"
     labels:
-      application: "ldap"
-      service: "ldap"
+      application: "docker"
+      service: "docker"
   spec:
-      host: "ldap-${APPLICATION_NAME}.project.openshiftdomain"
+      host: "docker-${APPLICATION_NAME}.project.openshiftdomain"
       to:
-        name: "ldap"
+        name: "docker"
       port:
-        targetPort: ldap
+        targetPort: docker

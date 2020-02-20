@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public interface IntegrationSteps extends Steps {
+public interface IntegrationSteps extends KieServerSteps, BusinessCentralSteps {
 
     default void thenKieServersAreConnectedWithBusinessCentrals() {
         Set<String> expected = new HashSet<>();

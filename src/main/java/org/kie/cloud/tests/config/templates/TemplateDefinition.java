@@ -1,5 +1,6 @@
 package org.kie.cloud.tests.config.templates;
 
+import java.util.List;
 import java.util.Map;
 
 import lombok.Data;
@@ -11,4 +12,5 @@ public class TemplateDefinition {
     private Map<String, String> params;
 	private Resource customImageStreamsFile;
 	private Resource customSecretsFile;
+    private List<ActionDefinition> preActions;
 }

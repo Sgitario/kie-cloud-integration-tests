@@ -19,6 +19,7 @@ import org.kie.cloud.tests.utils.KieServerClientImpl;
 import org.kie.server.client.KieServicesClient;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class KieServer {
 
@@ -28,6 +29,14 @@ public class KieServer {
 
     public KieServer(Deployment deployment) {
         this.deployment = deployment;
+    }
+
+    public KieServicesClient restClient() {
+        if (deployment.getChannel() == null) {
+            fail("Channel not initialize. Must provide username and password first");
+        }
+
+        return (KieServicesClient) deployment.getChannel();
     }
 
     public KieServicesClient restClient(String username, String password) {

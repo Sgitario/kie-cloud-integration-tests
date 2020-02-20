@@ -15,6 +15,7 @@ public class TestContext {
 	private final Project project;
 	private String secret;
 	private Map<String, Deployment> deployments = new HashMap<>();
+    private Map<String, String> properties;
 
 	@Transient
 	public void putDeployment(Deployment deployment) {
@@ -28,4 +29,9 @@ public class TestContext {
 			return null;
 		});
 	}
+
+    @Transient
+    public String getProperty(String key) {
+        return properties.get(key);
+    }
 }

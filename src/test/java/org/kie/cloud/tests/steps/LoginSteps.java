@@ -14,13 +14,12 @@
  */
 package org.kie.cloud.tests.steps;
 
-import org.kie.server.api.exception.KieServicesHttpException;
 import org.kie.server.controller.client.exception.KieServerControllerHTTPClientException;
 
 import static org.junit.Assert.fail;
 import static org.kie.cloud.tests.utils.AwaitilityUtils.awaitsFast;
 
-public interface LoginSteps extends Steps {
+public interface LoginSteps extends KieServerSteps, BusinessCentralSteps {
 
     default void thenCanLoginInBusinessCentral(String username, String password) {
         assertBusinessCentralsFor(username, password, (c, d) -> c.listServerTemplates());
@@ -45,21 +44,8 @@ public interface LoginSteps extends Steps {
     }
 
     default void thenCanLoginInKieServer(String username, String password) {
-        forEachKieServer(deployment ->  {
-            awaitsFast().until(() -> {
-                try {
-                    deployment.restClient(username, password).listContainers();
-                } catch (RuntimeException ex) {
-                    if (ex.getCause() instanceof KieServicesHttpException && ((KieServicesHttpException) ex.getCause()).getHttpCode() > 500) {
-                        return false;
-                    }
-
-                    fail(String.format("User '%s:%s' cannot login in Kie Server", username, password));
-                }
-
-                return true;
-            });
-        });
+        assertKieServersFor(username, password, (c, d) -> c.listContainers());
+        thenKieServersStartUpOk(username, password);
     }
 
 }
