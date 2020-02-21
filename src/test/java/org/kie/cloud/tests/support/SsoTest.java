@@ -17,6 +17,7 @@ package org.kie.cloud.tests.support;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.kie.cloud.tests.utils.AwaitilityUtils;
 import org.kie.cloud.tests.utils.KieServerClientImpl;
@@ -28,7 +29,7 @@ import org.kie.server.controller.client.exception.KieServerControllerHTTPClientE
 
 import static org.junit.Assert.fail;
 
-// @Disabled
+@Disabled
 public class SsoTest {
 
     private static final String BC_URL = "http://insecure-myapp-rhpamcentr-josecarvajalhilario-local-5918.project.openshiftdomain/rest/controller";

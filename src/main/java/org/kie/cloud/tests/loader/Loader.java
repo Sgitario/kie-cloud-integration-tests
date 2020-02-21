@@ -9,6 +9,7 @@ import java.util.function.Predicate;
 import org.kie.cloud.tests.context.Deployment;
 import org.kie.cloud.tests.context.TestContext;
 import org.kie.cloud.tests.context.deployments.PostLoadDeployment;
+import org.kie.cloud.tests.services.ExpressionEvaluator;
 import org.kie.cloud.tests.utils.Deployments;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -17,12 +18,19 @@ public abstract class Loader {
     @Autowired
     private List<PostLoadDeployment> postProcessors;
 
+    @Autowired
+    protected ExpressionEvaluator evaluator;
+
     protected abstract List<Deployment> runLoad(TestContext testContext, String template, Map<String, String> extraParams);
 
     public void load(TestContext testContext, String template, Map<String, String> extraParams) {
         Map<String, String> params = new HashMap<>();
         params.putAll(extraParams);
-        testContext.getProperties().forEach(params::putIfAbsent);
+        testContext.getProperties().forEach((k, v) -> {
+            if (!params.containsKey(k)) {
+                params.put(k, evaluator.resolveValue(k, v, testContext));
+            }
+        });
         List<Deployment> deployments = runLoad(testContext, template, params);
         postLoad(testContext, deployments);
     }

@@ -28,7 +28,6 @@ import org.kie.cloud.tests.config.templates.TemplateDefinition;
 import org.kie.cloud.tests.config.templates.TemplateListConfiguration;
 import org.kie.cloud.tests.context.Deployment;
 import org.kie.cloud.tests.context.TestContext;
-import org.kie.cloud.tests.services.ExpressionEvaluator;
 import org.springframework.stereotype.Component;
 
 import static org.junit.jupiter.api.Assertions.fail;
@@ -44,7 +43,6 @@ public class TemplateLoader extends Loader {
 
     private final TemplateListConfiguration templateListConfiguration;
     private final OpenshiftClient openshift;
-    private final ExpressionEvaluator evaluator;
     private final List<Action> actions;
 
     @Override
@@ -145,13 +143,17 @@ public class TemplateLoader extends Loader {
     private Map<String, String> prepareParameters(TestContext testContext, TemplateDefinition definition, Map<String, String> extraParams) {
         Map<String, String> parameters = new HashMap<>();
         resolveParams(testContext, definition.getParams(), parameters);
-        resolveParams(testContext, extraParams, parameters);
+        extraParams.forEach(parameters::putIfAbsent);
         parameters.entrySet().forEach(entry -> log.info("Property '{}'= '{}'", entry.getKey(), entry.getValue()));
 
         return parameters;
     }
 
     private void resolveParams(TestContext testContext, Map<String, String> in, Map<String, String> out) {
+        if (in == null) {
+            return;
+        }
+
         for (Entry<String, String> entry : in.entrySet()) {
             String value = evaluator.resolveValue(entry.getKey(), entry.getValue(), testContext);
 
