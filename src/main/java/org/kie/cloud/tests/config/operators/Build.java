@@ -16,11 +16,13 @@
 package org.kie.cloud.tests.config.operators;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.ToString;
 
 /**
  * Kie server build configuration.
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
+@ToString
 public class Build {
 
     private String artifactDir;

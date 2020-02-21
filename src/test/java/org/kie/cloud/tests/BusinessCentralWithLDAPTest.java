@@ -22,7 +22,7 @@ import org.kie.cloud.tests.steps.LoginSteps;
 
 @DisabledOnOperators
 @DisplayName("Business Central with LDAP")
-public class BusinessCentralWithLDAPIntegrationTest extends LdapBaseTest implements LoginSteps {
+public class BusinessCentralWithLDAPTest extends LdapBaseTest implements LoginSteps {
 
     @Override
     protected String scenario() {

@@ -20,11 +20,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.ToString;
 
 /**
  * KieApp Smart router configuration.
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
+@ToString
 public class SmartRouter {
 
     private Integer replicas;

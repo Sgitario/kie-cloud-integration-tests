@@ -23,7 +23,7 @@ import org.kie.cloud.tests.config.operators.Ldap;
 import org.springframework.stereotype.Component;
 
 @Component
-public class LdapAuthKieAppPopulator implements KieAppPopulator {
+public class LdapAuthKieAppPopulator extends KieAppPopulator {
 
     @Override
     public void populate(KieApp app, Map<String, String> extraParams) {

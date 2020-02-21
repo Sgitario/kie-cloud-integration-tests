@@ -8,7 +8,7 @@ import org.kie.cloud.tests.steps.LoginSteps;
 import org.kie.cloud.tests.utils.Scenarios;
 
 @DisplayName("RHPAM Authoring")
-public class AuthoringIntegrationTest extends BaseTest implements LoginSteps, IntegrationSteps {
+public class AuthoringTest extends BaseTest implements LoginSteps, IntegrationSteps {
 
     @Override
     protected String scenario() {

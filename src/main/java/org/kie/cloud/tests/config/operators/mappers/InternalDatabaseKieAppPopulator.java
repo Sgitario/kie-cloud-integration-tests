@@ -16,33 +16,25 @@ package org.kie.cloud.tests.config.operators.mappers;
 
 import java.util.Map;
 
-import org.kie.cloud.tests.SingleSignOnBaseTest;
-import org.kie.cloud.tests.config.operators.Auth;
+import org.kie.cloud.tests.config.operators.Database;
 import org.kie.cloud.tests.config.operators.KieApp;
-import org.kie.cloud.tests.config.operators.Sso;
+import org.kie.cloud.tests.config.operators.Server;
+import org.kie.cloud.tests.utils.Params;
 import org.springframework.stereotype.Component;
 
 @Component
-public class SsoAuthKieAppPopulator extends KieAppPopulator {
+public class InternalDatabaseKieAppPopulator extends KieAppPopulator {
 
     @Override
     public void populate(KieApp app, Map<String, String> extraParams) {
-        String ssoUrl = extraParams.get(SingleSignOnBaseTest.SSO_URL);
-        if (ssoUrl == null) {
-            return;
+        String database = extraParams.get(Params.DATABASE_ENGINE);
+        if (database != null) {
+            Server internalDatabase = new Server();
+            internalDatabase.setDatabase(new Database());
+            internalDatabase.getDatabase().setType(database);
+
+            addServer(app, internalDatabase);
         }
-
-        Sso sso = new Sso();
-        sso.setUrl(ssoUrl);
-        sso.setAdminUser(extraParams.get(SingleSignOnBaseTest.SSO_USERNAME));
-        sso.setAdminPassword(extraParams.get(SingleSignOnBaseTest.SSO_PASSWORD));
-        sso.setRealm(extraParams.get(SingleSignOnBaseTest.SSO_REALM));
-        sso.setDisableSSLCertValidation(true);
-
-        if (app.getSpec().getAuth() == null) {
-            app.getSpec().setAuth(new Auth());
-        }
-
-        app.getSpec().getAuth().setSso(sso);
     }
+
 }

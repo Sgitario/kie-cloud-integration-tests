@@ -152,6 +152,7 @@ public class OpenshiftClient {
     }
 
     public KieApp loadOperator(Project project, KieApp app) {
+        log.debug("Loading Kie App: {}", app);
         return operatorClient(project).create(app);
     }
 

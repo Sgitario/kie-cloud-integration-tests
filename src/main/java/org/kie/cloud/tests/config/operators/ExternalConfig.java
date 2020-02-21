@@ -17,10 +17,12 @@ package org.kie.cloud.tests.config.operators;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
+@ToString
 public class ExternalConfig {
 
     private String driver;

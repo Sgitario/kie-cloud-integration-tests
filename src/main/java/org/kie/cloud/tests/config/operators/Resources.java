@@ -16,11 +16,13 @@
 package org.kie.cloud.tests.config.operators;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.ToString;
 
 /**
  * OpenShift resource requests and limits.
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
+@ToString
 public class Resources {
 
 }

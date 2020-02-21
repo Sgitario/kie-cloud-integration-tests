@@ -12,19 +12,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.kie.cloud.tests.config.operators;
+package org.kie.cloud.tests.utils;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
 
-@Getter
-@Setter
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
-@ToString
-public class Database {
+public final class Params {
 
-    private String type;
-    private ExternalConfig externalConfig;
+    private Params() {
+
+    }
+
+    public static final String DATABASE_ENGINE = "DATABASE_ENGINE";
 }

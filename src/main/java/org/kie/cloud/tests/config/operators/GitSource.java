@@ -16,11 +16,13 @@
 package org.kie.cloud.tests.config.operators;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.ToString;
 
 /**
  * Kie server GIT source configuration.
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
+@ToString
 public class GitSource {
 
     private String contextDir;

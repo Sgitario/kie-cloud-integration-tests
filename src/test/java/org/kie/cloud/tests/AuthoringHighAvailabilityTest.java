@@ -7,8 +7,8 @@ import org.kie.cloud.tests.steps.IntegrationSteps;
 import org.kie.cloud.tests.steps.LoginSteps;
 import org.kie.cloud.tests.utils.Scenarios;
 
-@DisplayName("RHPAM Authoring High Availability with Single Sign On")
-public class AuthoringHighAvailabilityWithSingleSignOnIntegrationTest extends SingleSignOnBaseTest implements LoginSteps, IntegrationSteps {
+@DisplayName("RHPAM Authoring High Availability")
+public class AuthoringHighAvailabilityTest extends BaseTest implements LoginSteps, IntegrationSteps {
 
     @Override
     protected String scenario() {
@@ -19,10 +19,7 @@ public class AuthoringHighAvailabilityWithSingleSignOnIntegrationTest extends Si
     @Test
     public void canLogin() {
         thenCanLoginInBusinessCentral(getDefaultCredentials().getUser(), getDefaultCredentials().getPassword());
-        thenCanLoginInBusinessCentral(getSsoUsername(), getSsoPassword());
-
         thenCanLoginInKieServer(getDefaultCredentials().getUser(), getDefaultCredentials().getPassword());
-        thenCanLoginInKieServer(getSsoUsername(), getSsoPassword());
     }
 
     @Tag("integration")

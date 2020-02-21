@@ -15,9 +15,12 @@
 
 package org.kie.cloud.tests.config.operators;
 
+import lombok.ToString;
+
 /**
  * KieApp environment variable.
  */
+@ToString
 public class Env {
 
     private String name;

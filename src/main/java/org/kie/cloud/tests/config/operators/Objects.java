@@ -20,11 +20,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.ToString;
 
 /**
  * KieApp objects which can be deployed or specifically configured.
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
+@ToString
 public class Objects {
 
     private Console console;

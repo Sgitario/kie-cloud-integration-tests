@@ -8,7 +8,7 @@ import org.kie.cloud.tests.steps.LoginSteps;
 import org.kie.cloud.tests.utils.Scenarios;
 
 @DisplayName("RHPAM Authoring with LDAP")
-public class AuthoringWithLDAPIntegrationTest extends LdapBaseTest implements LoginSteps, IntegrationSteps {
+public class AuthoringWithLDAPTest extends LdapBaseTest implements LoginSteps, IntegrationSteps {
 
     @Override
     protected String scenario() {

@@ -17,11 +17,13 @@ package org.kie.cloud.tests.config.operators;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.fabric8.kubernetes.client.CustomResource;
+import lombok.ToString;
 
 /**
  * Custom resource representation used by Fabric8 OpenShift client.
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
+@ToString
 public class KieApp extends CustomResource {
 
     private static final long serialVersionUID = -7608178420952152353L;

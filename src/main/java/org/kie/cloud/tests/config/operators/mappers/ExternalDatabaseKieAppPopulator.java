@@ -14,21 +14,17 @@
  */
 package org.kie.cloud.tests.config.operators.mappers;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 import org.kie.cloud.tests.config.operators.Build;
 import org.kie.cloud.tests.config.operators.Database;
 import org.kie.cloud.tests.config.operators.ExternalConfig;
 import org.kie.cloud.tests.config.operators.KieApp;
-import org.kie.cloud.tests.config.operators.Objects;
 import org.kie.cloud.tests.config.operators.Server;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ExternalDatabaseKieAppPopulator implements KieAppPopulator {
+public class ExternalDatabaseKieAppPopulator extends KieAppPopulator {
 
     private static final String EXTENSIONS_IMAGE = "EXTENSIONS_IMAGE";
     private static final String EXTENSIONS_IMAGE_NAMESPACE = "EXTENSIONS_IMAGE_NAMESPACE";
@@ -56,18 +52,7 @@ public class ExternalDatabaseKieAppPopulator implements KieAppPopulator {
 
             externalDatabase.setDatabase(createDatabase(extraParams));
 
-            Objects objects = app.getSpec().getObjects();
-            if (objects == null) {
-                objects = new Objects();
-                app.getSpec().setObjects(objects);
-            }
-
-            List<Server> servers = new ArrayList<>();
-            if (objects.getServers() != null) {
-                Stream.of(objects.getServers()).forEach(servers::add);
-            }
-
-            objects.setServers(servers.toArray(new Server[servers.size()]));
+            addServer(app, externalDatabase);
         }
     }
 

@@ -16,11 +16,13 @@
 package org.kie.cloud.tests.config.operators;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.ToString;
 
 /**
  * KieApp upgrades.
  */
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
+@ToString
 public class Upgrades {
 
     private Boolean enabled;

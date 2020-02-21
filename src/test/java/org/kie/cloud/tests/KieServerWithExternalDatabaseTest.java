@@ -10,7 +10,7 @@ import org.kie.cloud.tests.utils.Scenarios;
 
 @DisabledOnOperators
 @DisplayName("RHPAM KieServer With MYSQL Database")
-public class KieServerWithExternalDatabaseIntegrationTest extends ComposeDeploymentBaseTest implements LoginSteps, IntegrationSteps {
+public class KieServerWithExternalDatabaseTest extends ComposeDeploymentBaseTest implements LoginSteps, IntegrationSteps {
 
     @Override
     protected String scenario() {
