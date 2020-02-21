@@ -48,7 +48,7 @@ public class ExternalDatabaseKieAppPopulator extends KieAppPopulator {
             Server externalDatabase = new Server();
             externalDatabase.setBuild(new Build());
             externalDatabase.getBuild().setExtensionImageStreamTag(extensionsImage);
-            externalDatabase.getBuild().setExtensionImageStreamTagNamespace(extraParams.get(EXTENSIONS_IMAGE));
+            externalDatabase.getBuild().setExtensionImageStreamTagNamespace(extraParams.get(EXTENSIONS_IMAGE_NAMESPACE));
 
             externalDatabase.setDatabase(createDatabase(extraParams));
 
@@ -76,6 +76,7 @@ public class ExternalDatabaseKieAppPopulator extends KieAppPopulator {
         config.setExceptionSorter(extraParams.get(KIE_SERVER_EXTERNALDB_EXCEPTION_SORTER));
         config.setUsername(extraParams.get(KIE_SERVER_EXTERNALDB_USER));
         config.setPassword(extraParams.get(KIE_SERVER_EXTERNALDB_PWD));
+        config.setName(config.getDriver());
         return config;
     }
 

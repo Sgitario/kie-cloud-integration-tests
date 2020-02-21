@@ -15,9 +15,9 @@
 package org.kie.cloud.tests.utils;
 
 
-public final class Constants {
+public final class LocationConstants {
 
-    private Constants() {
+    private LocationConstants() {
 
     }
 

@@ -53,9 +53,20 @@ public class TemplateLoader extends Loader {
         TemplateDefinition definition = loadTemplateDefinition(template);
         preLoad(testContext, definition);
         List<Deployment> deployments = loadAndProcess(testContext, definition, extraParams);
+        postLoad(testContext, definition, deployments);
         log.info("Template loaded OK ");
         MDC.remove(MDC_KEY);
         return deployments;
+    }
+
+    private void postLoad(TestContext testContext, TemplateDefinition definition, List<Deployment> deployments) {
+        addOutputToDeployments(testContext, definition, deployments);
+    }
+
+    private void addOutputToDeployments(TestContext testContext, TemplateDefinition definition, List<Deployment> deployments) {
+        if (deployments != null) {
+            deployments.forEach(d -> resolveParams(testContext, definition.getOutput(), d.getEnvironmentVariables()));
+        }
     }
 
     private Consumer<Deployment> updateEnvironmentVariable(TestContext testContext, String key, Object value) {
@@ -119,8 +130,7 @@ public class TemplateLoader extends Loader {
         if (m.find()) {
             String doubleQuoteParam = m.group();
             String paramName = doubleQuoteParam.substring(3, doubleQuoteParam.length() - 2);
-            String value = findParamFromParameters(paramName, parameters)
-                                                                         .orElseGet(findParamValueFromContent(paramName, content));
+            String value = findParamFromParameters(paramName, parameters).orElseGet(findParamValueFromContent(paramName, content));
             String newContent = m.replaceAll(value);
             return replaceDoubleQuoteParams(newContent, parameters);
         }

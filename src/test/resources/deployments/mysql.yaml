@@ -7,13 +7,11 @@ metadata:
     name: mysql
     description: Application template for ldap server
 message: A new MySQL server was created
-
 parameters:
 - name: APPLICATION_NAME
   displayName: Application Name
   description: The name for the application.
   required: true
-
 objects:
 - kind: ImageStream
   apiVersion: v1
@@ -26,7 +24,7 @@ objects:
     - name: 'latest'
       from:
         kind: DockerImage
-        name: 'mysql:5.7'
+        name: 'registry.access.redhat.com/rhscl/mysql-57-rhel7:latest'
       importPolicy:
         insecure: true
 - kind: DeploymentConfig
@@ -64,7 +62,7 @@ objects:
         terminationGracePeriodSeconds: 60
         containers:
         - name: "mysql"
-          image: mysql
+          image: 'registry.access.redhat.com/rhscl/mysql-57-rhel7:latest'
           imagePullPolicy: Always
           livenessProbe:
             tcpSocket:
@@ -94,6 +92,7 @@ objects:
           - name: MYSQL_ROOT_PASSWORD
             value: "admin"
 - kind: Service
+  apiVersion: v1
   spec:
     ports:
     - port: 3306

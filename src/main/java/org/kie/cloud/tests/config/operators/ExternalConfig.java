@@ -25,6 +25,7 @@ import lombok.ToString;
 @ToString
 public class ExternalConfig {
 
+    private String name;
     private String driver;
     private String dialect;
     private String jdbcURL;

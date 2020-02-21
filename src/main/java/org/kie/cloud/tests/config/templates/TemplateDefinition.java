@@ -10,6 +10,7 @@ import org.springframework.core.io.Resource;
 public class TemplateDefinition {
 	private Resource file;
     private Map<String, String> params;
+    private Map<String, String> output;
 	private Resource customImageStreamsFile;
 	private Resource customSecretsFile;
     private List<ActionDefinition> preActions;

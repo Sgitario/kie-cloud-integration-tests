@@ -22,11 +22,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Tag;
 import org.kie.cloud.tests.clients.sso.SsoClient;
 import org.kie.cloud.tests.utils.Deployments;
-import org.kie.cloud.tests.utils.Scenarios;
+import org.kie.cloud.tests.utils.Parties;
 
 @Slf4j
 @Tag("auth-sso")
-public abstract class SingleSignOnBaseTest extends ComposeDeploymentBaseTest {
+public abstract class SingleSignOnBaseTest extends PartyBaseTest {
 
     public static final String SSO_URL = "SSO_URL";
     public static final String SSO_REALM = "SSO_REALM";
@@ -54,8 +54,8 @@ public abstract class SingleSignOnBaseTest extends ComposeDeploymentBaseTest {
     }
 
     @Override
-    protected String getDeploymentTemplate() {
-        return Scenarios.SSO;
+    protected String getParty() {
+        return Parties.SSO;
     }
 
     protected String getSsoUsername() {

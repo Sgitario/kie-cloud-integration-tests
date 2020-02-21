@@ -19,7 +19,7 @@ import java.nio.file.Paths;
 import lombok.extern.slf4j.Slf4j;
 import org.kie.cloud.tests.config.templates.ActionDefinition;
 import org.kie.cloud.tests.context.TestContext;
-import org.kie.cloud.tests.utils.Constants;
+import org.kie.cloud.tests.utils.LocationConstants;
 import org.kie.cloud.tests.utils.ProcessExecutor;
 import org.springframework.stereotype.Component;
 
@@ -44,7 +44,7 @@ public class BuildAndLoadDatabaseImageAction extends BaseAction {
 
         try (ProcessExecutor processExecutor = new ProcessExecutor()) {
             log.info("Building JDBC driver image.");
-            processExecutor.executeProcessCommand(buildCommand, Paths.get(Constants.JDBC_IMAGE_BUILD_FOLDER));
+            processExecutor.executeProcessCommand(buildCommand, Paths.get(LocationConstants.JDBC_IMAGE_BUILD_FOLDER));
 
             log.info("Pushing JDBC driver image to Docker registry.");
             processExecutor.executeProcessCommand("docker tag " + sourceDockerTag + " " + targetDockerTag);

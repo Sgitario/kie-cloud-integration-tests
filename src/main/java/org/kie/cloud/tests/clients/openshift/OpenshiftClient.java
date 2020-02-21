@@ -28,6 +28,7 @@ import org.kie.cloud.tests.config.operators.KieAppDoneable;
 import org.kie.cloud.tests.config.operators.KieAppList;
 import org.kie.cloud.tests.context.Deployment;
 import org.kie.cloud.tests.utils.OpenshiftExtensionModelUtils;
+import org.kie.cloud.tests.utils.YamlUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -152,7 +153,11 @@ public class OpenshiftClient {
     }
 
     public KieApp loadOperator(Project project, KieApp app) {
-        log.debug("Loading Kie App: {}", app);
+        if (log.isDebugEnabled()) {
+            log.debug("Loading Kie App: ");
+            log.debug(YamlUtils.getInstance().toYaml(app));
+        }
+
         return operatorClient(project).create(app);
     }
 
@@ -171,7 +176,7 @@ public class OpenshiftClient {
         try (OpenShift openShift = OpenShifts.master(project.getName())) {
 
             waitForDeployment(openShift, name);
-            log.debug("Deployment started. ");
+            log.debug("Deployment '{}' started. ", name);
         }
     }
 

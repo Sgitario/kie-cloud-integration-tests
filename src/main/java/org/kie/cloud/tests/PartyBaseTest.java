@@ -20,14 +20,14 @@ import java.util.Map;
 import org.kie.cloud.tests.loader.TemplateLoader;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public abstract class ComposeDeploymentBaseTest extends BaseTest {
+public abstract class PartyBaseTest extends BaseTest {
 
     @Autowired
     private TemplateLoader templateLoader;
 
-    protected abstract String getDeploymentTemplate();
+    protected abstract String getParty();
 
-    protected Map<String, String> getDeploymentTemplateExtraParams() {
+    protected Map<String, String> getPartyExtraParams() {
         return Collections.emptyMap();
     }
 
@@ -39,7 +39,7 @@ public abstract class ComposeDeploymentBaseTest extends BaseTest {
     protected void beforeOnLoadScenario() {
         super.beforeOnLoadScenario();
 
-        templateLoader.load(getTestContext(), getDeploymentTemplate(), getDeploymentTemplateExtraParams());
+        templateLoader.load(getTestContext(), getParty(), getPartyExtraParams());
         onAfterDeploymentTemplate();
     }
 }

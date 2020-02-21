@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 @Slf4j
 @ExtendWith(SpringExtension.class)
-@TestPropertySource(locations = {"classpath:openshift.properties", "classpath:test.properties", "classpath:ldap.properties", "classpath:params.properties"})
+@TestPropertySource(locations = {"classpath:openshift.properties", "classpath:test.properties", "classpath:ldap.properties", "classpath:params.properties", "classpath:parties.properties"})
 @ContextConfiguration
 @TestInstance(Lifecycle.PER_CLASS)
 public abstract class BaseTest {
@@ -113,6 +113,10 @@ public abstract class BaseTest {
 	protected String getDeploymentParam(String deploymentName, String paramName) {
 		return testContext.getDeployment(deploymentName).getEnvironmentVariable(paramName);
 	}
+
+    protected Map<String, String> getDeploymentParams(String deploymentName) {
+        return testContext.getDeployment(deploymentName).getEnvironmentVariables();
+    }
 
 	private void runConfigurers(BiConsumer<TestConfig, TestContext> stage) {
 		try {

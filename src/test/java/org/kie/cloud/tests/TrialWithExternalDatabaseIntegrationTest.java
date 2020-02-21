@@ -10,16 +10,11 @@ import org.kie.cloud.tests.utils.Scenarios;
 
 @DisabledOnTemplates
 @DisplayName("RHPAM Trial With MYSQL Database")
-public class TrialWithExternalDatabaseIntegrationTest extends ComposeDeploymentBaseTest implements LoginSteps, IntegrationSteps {
+public class TrialWithExternalDatabaseIntegrationTest extends MySqlBaseTest implements LoginSteps, IntegrationSteps {
 
     @Override
     protected String scenario() {
         return Scenarios.RHPAM_TRIAL;
-    }
-
-    @Override
-    protected String getDeploymentTemplate() {
-        return Scenarios.MYSQL;
     }
 
     @Test

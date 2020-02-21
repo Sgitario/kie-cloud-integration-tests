@@ -19,11 +19,11 @@ import java.util.Map;
 
 import org.junit.jupiter.api.Tag;
 import org.kie.cloud.tests.properties.LdapProperties;
-import org.kie.cloud.tests.utils.Scenarios;
+import org.kie.cloud.tests.utils.Parties;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Tag("auth-ldap")
-public abstract class LdapBaseTest extends ComposeDeploymentBaseTest {
+public abstract class LdapBaseTest extends PartyBaseTest {
 
     public static final String AUTH_LDAP_URL = "AUTH_LDAP_URL";
     public static final String AUTH_LDAP_BIND_DN = "AUTH_LDAP_BIND_DN";
@@ -61,8 +61,8 @@ public abstract class LdapBaseTest extends ComposeDeploymentBaseTest {
     }
 
     @Override
-    protected String getDeploymentTemplate() {
-        return Scenarios.LDAP;
+    protected String getParty() {
+        return Parties.LDAP;
     }
 
     private String ldapAuthUrl() {
