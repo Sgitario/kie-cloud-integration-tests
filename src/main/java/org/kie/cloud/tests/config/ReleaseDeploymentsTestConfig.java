@@ -28,7 +28,7 @@ public class ReleaseDeploymentsTestConfig implements TestConfig {
 
     @Override
     public void after(TestContext testContext) {
-        if (testContext.getDeployments() == null) {
+        if (testContext == null || testContext.getDeployments() == null) {
             return;
         }
 

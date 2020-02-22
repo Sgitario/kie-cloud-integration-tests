@@ -17,6 +17,7 @@ package org.kie.cloud.tests.utils;
 import java.util.Collection;
 import java.util.Map;
 
+import org.assertj.core.util.Arrays;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.introspector.Property;
@@ -61,6 +62,8 @@ public final class YamlUtils {
             } else if (propertyValue instanceof Collection && ((Collection) propertyValue).isEmpty()) {
                 return null;
             } else if (propertyValue instanceof Map && ((Map) propertyValue).isEmpty()) {
+                return null;
+            } else if (Arrays.isArray(propertyValue) && Arrays.isNullOrEmpty((Object[]) propertyValue)) {
                 return null;
             } else {
                 return super.representJavaBeanProperty(javaBean, property, propertyValue, customTag);
