@@ -23,6 +23,7 @@ public final class OpenshiftExtensionModelUtils {
 
 	private static final String START_TAG = "${";
 	private static final String END_TAG = "}";
+    private static final String SECURE = "secure";
 
 	private OpenshiftExtensionModelUtils() {
 
@@ -33,6 +34,8 @@ public final class OpenshiftExtensionModelUtils {
         String host = route.getSpec().getHost();
         if (route.getSpec().getPort() != null && route.getSpec().getPort().getTargetPort() != null && route.getSpec().getPort().getTargetPort().getStrVal() != null) {
             protocol = route.getSpec().getPort().getTargetPort().getStrVal();
+        } else if (route.getSpec().getTo().getName().contains(SECURE)) {
+            protocol = "https";
         }
 
         return String.format("%s://%s", protocol, host);

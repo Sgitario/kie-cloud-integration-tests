@@ -27,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 public class OperatorLoader extends Loader {
 
     private static final String MDC_CURRENT_RESOURCE = "resource";
+    private static final String CUSTOM_RESOURCE_DEFINITION = "kieapps.app.kiegroup.org";
 
     private final OperatorConfiguration configuration;
     private final OpenshiftClient openshiftClient;
@@ -81,7 +82,12 @@ public class OperatorLoader extends Loader {
     }
 
     private void importCrd(TestContext testContext) {
-        load(testContext, configuration.getCrd());
+        try {
+            openshiftClient.loadGlobalCustomResourceDefinition(CUSTOM_RESOURCE_DEFINITION, configuration.getCrd().getInputStream());
+        } catch (IOException e) {
+            log.error("Error loading crd", e);
+            fail("Could not load crd. Cause: " + e.getMessage());
+        }
     }
 
     private void importServiceAccount(TestContext testContext) {

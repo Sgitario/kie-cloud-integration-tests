@@ -21,6 +21,7 @@ import io.fabric8.kubernetes.client.dsl.Resource;
 import io.fabric8.openshift.api.model.DeploymentConfig;
 import io.fabric8.openshift.api.model.Template;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.assertj.core.api.Assertions;
 import org.hamcrest.Matchers;
 import org.kie.cloud.tests.config.operators.KieApp;
@@ -81,6 +82,21 @@ public class OpenshiftClient {
         }
     }
 
+    public void loadGlobalCustomResourceDefinition(String name, InputStream is) {
+        if (dryRunMode) {
+            return;
+        }
+
+        log.debug("Loading custom resource definition ... ");
+        try (OpenShift openShift = OpenShifts.master()) {
+            CustomResourceDefinition crd = openShift.customResourceDefinitions().withName(name).get();
+            if (crd == null) {
+                openShift.loadResource(is);
+            }
+            log.debug("Custom resource definition loaded OK ");
+        }
+    }
+
     public void loadResources(Project project, InputStream is) {
         if (dryRunMode) {
             return;
@@ -129,7 +145,8 @@ public class OpenshiftClient {
 
     public List<String> getRouteByApplication(Project project, String name) {
         try (OpenShift openShift = OpenShifts.master(project.getName())) {
-            return openShift.routes().withLabel("service", name).list().getItems().stream()
+            return openShift.getRoutes().stream()
+                            .filter(route -> StringUtils.endsWithIgnoreCase(route.getSpec().getTo().getName(), name))
                             .map(OpenshiftExtensionModelUtils::resolveRoute)
                             .collect(Collectors.toList());
         }

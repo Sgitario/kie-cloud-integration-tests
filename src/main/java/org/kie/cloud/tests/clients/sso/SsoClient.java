@@ -55,7 +55,7 @@ public class SsoClient {
 				realm().clients().create(clientRepresentation);
 				return true;
 			} catch (Exception ex) {
-				log.warn("Error loading the client into SSO. Trying again.");
+                log.warn("Error loading the client into SSO. Trying again.", ex);
 			}
 
 			return false;

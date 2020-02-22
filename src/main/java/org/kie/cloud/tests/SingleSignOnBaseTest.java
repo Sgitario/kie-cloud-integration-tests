@@ -80,7 +80,7 @@ public abstract class SingleSignOnBaseTest extends PartyBaseTest {
 
 
     private String ssoAuthUrl() {
-        return String.format("https://secure-sso-%s.project.openshiftdomain/auth", projectName());
+        return String.format("%s/auth", getTestContext().getDeployment(Deployments.SSO).getHttpUrl(), projectName());
     }
 
     private String getSsoDeploymentParam(String paramName) {

@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 public class UpdateRoutesPostLoadDeployment implements PostLoadDeployment {
 
     private static final String INSECURE_PROTOCOL = "http:";
+    private static final String SECURE_PROTOCOL = "https:";
 
     private final OpenshiftClient openshift;
 
@@ -34,5 +35,8 @@ public class UpdateRoutesPostLoadDeployment implements PostLoadDeployment {
         deployment.getRoutes().stream()
                  .filter(url -> url.startsWith(INSECURE_PROTOCOL))
                  .findFirst().ifPresent(deployment::setHttpUrl);
+        deployment.getRoutes().stream()
+                  .filter(url -> url.startsWith(SECURE_PROTOCOL))
+                  .findFirst().ifPresent(deployment::setHttpsUrl);
     }
 }

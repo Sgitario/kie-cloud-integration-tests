@@ -19,70 +19,15 @@ import java.net.MalformedURLException;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
-import org.kie.cloud.tests.utils.AwaitilityUtils;
-import org.kie.cloud.tests.utils.KieServerClientImpl;
-import org.kie.server.api.exception.KieServicesHttpException;
-import org.kie.server.client.KieServicesClient;
-import org.kie.server.controller.client.KieServerControllerClient;
-import org.kie.server.controller.client.KieServerControllerClientFactory;
-import org.kie.server.controller.client.exception.KieServerControllerHTTPClientException;
-
-import static org.junit.Assert.fail;
+import org.kie.cloud.tests.clients.sso.SsoClient;
 
 @Disabled
 public class SsoTest {
 
-    private static final String BC_URL = "http://insecure-myapp-rhpamcentr-josecarvajalhilario-local-5918.project.openshiftdomain/rest/controller";
-    private static final String KIESERVER_URL = "http://insecure-myapp-kieserver-josecarvajalhilario-tests-4e67.project.openshiftdomain/services/rest/server";
+    private static final String SSO_URL = "https://secure-sso-josecarvajalhilario-tests-286b.apps.playground.rhba.openshift-aws.rhocf-dev.com/auth";
 
     @Test
-    public void bcUsingDefault() throws MalformedURLException, IOException {
-        String username = "admin";
-        String password = "admin";
-        KieServerControllerClient responseCreateServerTemplate = KieServerControllerClientFactory.newRestClient(BC_URL, username, password);
-
-        System.out.println(responseCreateServerTemplate.listServerTemplates());
-    }
-
-    @Test
-    public void bcUsingSso() throws MalformedURLException, IOException {
-        String username = "appUseraa";
-        String password = "appUser1ss!";
-        try (KieServerControllerClient responseCreateServerTemplate = KieServerControllerClientFactory.newRestClient(BC_URL, username, password)) {
-            AwaitilityUtils.awaitsFast().until(() -> {
-                try {
-                    System.out.println(responseCreateServerTemplate.listServerTemplates());
-                } catch (KieServerControllerHTTPClientException ex) {
-                    if (ex.getResponseCode() > 500) { // perhaps the service is not ready yet
-                        return false;
-                    }
-
-                    fail("Error in service");
-                }
-
-                return true;
-            });
-
-        }
-    }
-
-    @Test
-    public void kieServerUsingApi() throws MalformedURLException, IOException {
-        String username = "adminUser";
-        String password = "adminUser1!";
-        try {
-            KieServicesClient responseCreateServerTemplate = new KieServerClientImpl(KIESERVER_URL, username, password);
-            System.out.println(responseCreateServerTemplate.getServerInfo());
-        } catch (RuntimeException ex) {
-            ex.printStackTrace();
-            if (ex.getCause() instanceof KieServicesHttpException) {
-                KieServicesHttpException cause = (KieServicesHttpException) ex.getCause();
-
-                fail("Cause: " + cause.getHttpCode());
-            }
-
-            fail("Error in service: " + ex.getCause());
-        }
-
+    public void creatingClient() throws MalformedURLException, IOException {
+        SsoClient.get(SSO_URL, "demo").createClient("ddd");
     }
 }

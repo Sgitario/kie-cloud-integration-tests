@@ -24,6 +24,8 @@ public class Deployment {
     @Setter
     private String httpUrl;
     @Setter
+    private String httpsUrl;
+    @Setter
     private Object channel;
 
 	@Transient
