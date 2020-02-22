@@ -18,20 +18,14 @@ public class AuthoringWithLDAPTest extends LdapBaseTest implements LoginSteps, I
     @Tag("login")
     @Test
     public void shouldCanLogin() {
-        thenCanLoginInBusinessCentralAndKieServer();
+        thenCanLoginInBusinessCentral(getLdapUsername(), getLdapPassword());
+        thenCanLoginInKieServer(getLdapUsername(), getLdapPassword());
     }
 
     @Tag("integration")
     @Test
     public void shouldKieServerConnectWithBusinessCentral() {
-        thenKieServersAreConnectedWithBusinessCentrals();
-    }
-
-    private void thenCanLoginInBusinessCentralAndKieServer() {
-        // thenCanLoginInBusinessCentral(getDefaultCredentials().getUser(), getDefaultCredentials().getPassword());
-        thenCanLoginInBusinessCentral(getLdapUsername(), getLdapPassword());
-        // thenCanLoginInKieServer(getDefaultCredentials().getUser(), getDefaultCredentials().getPassword());
-        thenCanLoginInKieServer(getLdapUsername(), getLdapPassword());
+        thenKieServersAreConnectedWithBusinessCentrals(defaultUserName(), defaultUserPassword());
     }
 
 }

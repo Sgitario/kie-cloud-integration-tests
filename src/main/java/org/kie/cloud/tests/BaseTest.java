@@ -40,7 +40,6 @@ public abstract class BaseTest {
 	@Autowired
 	private ProjectService projectService;
 
-    @Getter
     @Autowired
     private CredentialsProperties defaultCredentials;
 
@@ -105,6 +104,14 @@ public abstract class BaseTest {
 	@ComponentScan("org.kie.cloud")
 	public static class Config {
 	}
+
+    protected String defaultUserName() {
+        return defaultCredentials.getUser();
+    }
+
+    protected String defaultUserPassword() {
+        return defaultCredentials.getPassword();
+    }
 
     protected String projectName() {
         return testContext.getProject().getName();

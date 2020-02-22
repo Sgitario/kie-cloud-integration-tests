@@ -14,10 +14,7 @@
  */
 package org.kie.cloud.tests.config.operators.mappers;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 import org.kie.cloud.tests.config.operators.KieApp;
 import org.kie.cloud.tests.config.operators.Objects;
@@ -34,12 +31,6 @@ public abstract class KieAppPopulator {
             app.getSpec().setObjects(objects);
         }
 
-        List<Server> servers = new ArrayList<>();
-        if (objects.getServers() != null) {
-            Stream.of(objects.getServers()).forEach(servers::add);
-        }
-
-        servers.add(newServer);
-        objects.setServers(servers.toArray(new Server[servers.size()]));
+        objects.addServer(newServer);
     }
 }

@@ -20,15 +20,12 @@ import java.util.function.Predicate;
 import org.kie.cloud.tests.context.Deployment;
 import org.kie.cloud.tests.context.TestContext;
 import org.kie.cloud.tests.loader.Loader;
-import org.kie.cloud.tests.properties.CredentialsProperties;
 
 public interface Steps {
 
     Loader getCurrentLoader();
 
     TestContext getTestContext();
-
-    CredentialsProperties getDefaultCredentials();
 
     default void forEachDeployment(Predicate<String> match, Consumer<Deployment> action) {
         getTestContext().getDeployments().entrySet().stream().filter(entry -> match.test(entry.getKey())).forEach(entry -> action.accept(entry.getValue()));

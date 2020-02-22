@@ -76,7 +76,7 @@ public class ExternalDatabaseKieAppPopulator extends KieAppPopulator {
         config.setExceptionSorter(extraParams.get(KIE_SERVER_EXTERNALDB_EXCEPTION_SORTER));
         config.setUsername(extraParams.get(KIE_SERVER_EXTERNALDB_USER));
         config.setPassword(extraParams.get(KIE_SERVER_EXTERNALDB_PWD));
-        config.setName(config.getDriver());
+        config.setName(extraParams.get(KIE_SERVER_EXTERNALDB_DB));
         return config;
     }
 

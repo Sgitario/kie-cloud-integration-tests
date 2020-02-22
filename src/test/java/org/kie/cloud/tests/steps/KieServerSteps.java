@@ -36,17 +36,12 @@ import static org.kie.cloud.tests.utils.AwaitilityUtils.awaitsLong;
 public interface KieServerSteps extends Steps {
 
     default void thenKieServersStartUpOk(String username, String password) {
-
         assertKieServersFor(username, password, (c, d) -> {
             ServiceResponse<KieServerInfo> info = c.getServerInfo();
             assertEquals(ResponseType.SUCCESS, info.getType());
             List<String> errors = OpenshiftExtensionModelUtils.getErrorMessagesFromServerInfo(info);
             assertTrue(errors.isEmpty(), () -> errors.stream().collect(Collectors.joining()));
         });
-    }
-
-    default void assertKieServersFor(BiConsumer<KieServicesClient, KieServer> action) {
-        assertKieServersFor(getDefaultCredentials().getUser(), getDefaultCredentials().getPassword(), action);
     }
 
     default void assertKieServersFor(String username, String password, BiConsumer<KieServicesClient, KieServer> action) {

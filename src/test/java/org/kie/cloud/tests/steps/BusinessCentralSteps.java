@@ -27,10 +27,6 @@ import static org.kie.cloud.tests.utils.AwaitilityUtils.awaitsLong;
 
 public interface BusinessCentralSteps extends Steps {
 
-    default void assertBusinessCentralsFor(BiConsumer<KieServerControllerClient, BusinessCentral> action) {
-        assertBusinessCentralsFor(getDefaultCredentials().getUser(), getDefaultCredentials().getPassword(), action);
-    }
-
     default void assertBusinessCentralsFor(String username, String password, BiConsumer<KieServerControllerClient, BusinessCentral> action) {
         forEachBusinessCentral(deployment -> {
             awaitsLong().until(() -> {

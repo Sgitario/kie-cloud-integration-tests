@@ -18,14 +18,14 @@ public class AuthoringHighAvailabilityTest extends BaseTest implements LoginStep
     @Tag("login")
     @Test
     public void canLogin() {
-        thenCanLoginInBusinessCentral(getDefaultCredentials().getUser(), getDefaultCredentials().getPassword());
-        thenCanLoginInKieServer(getDefaultCredentials().getUser(), getDefaultCredentials().getPassword());
+        thenCanLoginInBusinessCentral(defaultUserName(), defaultUserPassword());
+        thenCanLoginInKieServer(defaultUserName(), defaultUserPassword());
     }
 
     @Tag("integration")
     @Test
     public void shouldKieServerConnectWithBusinessCentral() {
-        thenKieServersAreConnectedWithBusinessCentrals();
+        thenKieServersAreConnectedWithBusinessCentrals(defaultUserName(), defaultUserPassword());
     }
 
 }

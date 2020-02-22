@@ -18,17 +18,15 @@ public class AuthoringHighAvailabilityWithSingleSignOnTest extends SingleSignOnB
     @Tag("login")
     @Test
     public void canLogin() {
-        thenCanLoginInBusinessCentral(getDefaultCredentials().getUser(), getDefaultCredentials().getPassword());
+        thenCannotLoginInBusinessCentral(defaultUserName(), defaultUserPassword());
         thenCanLoginInBusinessCentral(getSsoUsername(), getSsoPassword());
-
-        thenCanLoginInKieServer(getDefaultCredentials().getUser(), getDefaultCredentials().getPassword());
         thenCanLoginInKieServer(getSsoUsername(), getSsoPassword());
     }
 
     @Tag("integration")
     @Test
     public void shouldKieServerConnectWithBusinessCentral() {
-        thenKieServersAreConnectedWithBusinessCentrals();
+        thenKieServersAreConnectedWithBusinessCentrals(getSsoUsername(), getSsoPassword());
     }
 
 }

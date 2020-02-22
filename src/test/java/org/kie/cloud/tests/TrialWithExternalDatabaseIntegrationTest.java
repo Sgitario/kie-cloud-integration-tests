@@ -21,6 +21,6 @@ public class TrialWithExternalDatabaseIntegrationTest extends MySqlBaseTest impl
     @Tag("login")
     @Tag("startup")
     public void canLogin() {
-        thenCanLoginInKieServer(getDefaultCredentials().getUser(), getDefaultCredentials().getPassword());
+        thenCanLoginInKieServer(defaultUserName(), defaultUserPassword());
     }
 }
