@@ -21,9 +21,9 @@ public abstract class Loader {
     @Autowired
     protected ExpressionEvaluator evaluator;
 
-    protected abstract List<Deployment> runLoad(TestContext testContext, String template, Map<String, String> extraParams);
+    protected abstract List<Deployment> runLoad(TestContext testContext, String scenario, Map<String, String> extraParams);
 
-    public void load(TestContext testContext, String template, Map<String, String> extraParams) {
+    public void load(TestContext testContext, String scenario, Map<String, String> extraParams) {
         Map<String, String> params = new HashMap<>();
         params.putAll(extraParams);
         testContext.getProperties().forEach((k, v) -> {
@@ -31,7 +31,7 @@ public abstract class Loader {
                 params.put(k, evaluator.resolveValue(k, v, testContext));
             }
         });
-        List<Deployment> deployments = runLoad(testContext, template, params);
+        List<Deployment> deployments = runLoad(testContext, scenario, params);
         postLoad(testContext, deployments);
     }
 

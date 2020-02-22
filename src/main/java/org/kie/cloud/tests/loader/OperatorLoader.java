@@ -1,8 +1,10 @@
 package org.kie.cloud.tests.loader;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import lombok.RequiredArgsConstructor;
@@ -12,6 +14,7 @@ import org.kie.cloud.tests.clients.openshift.OpenshiftClient;
 import org.kie.cloud.tests.config.operators.CommonConfig;
 import org.kie.cloud.tests.config.operators.KieApp;
 import org.kie.cloud.tests.config.operators.OperatorConfiguration;
+import org.kie.cloud.tests.config.operators.OperatorDefinition;
 import org.kie.cloud.tests.config.operators.mappers.KieAppPopulator;
 import org.kie.cloud.tests.context.Deployment;
 import org.kie.cloud.tests.context.TestContext;
@@ -36,21 +39,34 @@ public class OperatorLoader extends Loader {
     private final List<KieAppPopulator> populators;
 
     @Override
-    protected List<Deployment> runLoad(TestContext testContext, String template, Map<String, String> extraParams) {
+    protected List<Deployment> runLoad(TestContext testContext, String scenario, Map<String, String> extraParams) {
+        OperatorDefinition definition = loadOperatorDefinition(scenario);
         importCrd(testContext);
         importServiceAccount(testContext);
         importRole(testContext);
         importRoleBinding(testContext);
         importOperator(testContext);
-        runOperator(testContext, template, extraParams);
-        return loadDeployments(testContext, template);
+        runOperator(testContext, environment(scenario, definition), extraParams);
+        return loadDeployments(testContext, definition);
     }
 
-    private void runOperator(TestContext testContext, String template, Map<String, String> extraParams) {
+    private String environment(String scenario, OperatorDefinition definition) {
+        if (definition == null) {
+            return scenario;
+        }
+
+        return Optional.ofNullable(definition.getOverrideEnvironment()).orElse(scenario);
+    }
+
+    private OperatorDefinition loadOperatorDefinition(String scenario) {
+        return configuration.getDefinitions().get(scenario);
+    }
+
+    private void runOperator(TestContext testContext, String environment, Map<String, String> extraParams) {
         KieApp app = new KieApp();
         app.getMetadata().setNamespace(testContext.getProject().getName());
         app.getMetadata().setName(configuration.getKieAppName());
-        app.getSpec().setEnvironment(template);
+        app.getSpec().setEnvironment(environment);
         app.getSpec().setUseImageTags(true);
 
         CommonConfig commonConfig = new CommonConfig();
@@ -62,8 +78,12 @@ public class OperatorLoader extends Loader {
         openshiftClient.loadOperator(testContext.getProject(), app);
     }
 
-    private List<Deployment> loadDeployments(TestContext testContext, String template) {
-        return configuration.getDeployments().get(template).parallelStream().map(partialName -> prepareDeployment(testContext, partialName)).collect(Collectors.toList());
+    private List<Deployment> loadDeployments(TestContext testContext, OperatorDefinition definition) {
+        if (definition == null) {
+            return Collections.emptyList();
+        }
+
+        return definition.getDeployments().parallelStream().map(partialName -> prepareDeployment(testContext, partialName)).collect(Collectors.toList());
     }
 
     private Deployment prepareDeployment(TestContext testContext, String partialNameDeployment) {
@@ -81,15 +101,6 @@ public class OperatorLoader extends Loader {
         }
     }
 
-    private void importCrd(TestContext testContext) {
-        try {
-            openshiftClient.loadGlobalCustomResourceDefinition(CUSTOM_RESOURCE_DEFINITION, configuration.getCrd().getInputStream());
-        } catch (IOException e) {
-            log.error("Error loading crd", e);
-            fail("Could not load crd. Cause: " + e.getMessage());
-        }
-    }
-
     private void importServiceAccount(TestContext testContext) {
         load(testContext, configuration.getServiceAccount());
     }
@@ -104,6 +115,15 @@ public class OperatorLoader extends Loader {
 
     private void importOperator(TestContext testContext) {
         load(testContext, configuration.getDefinition());
+    }
+
+    private void importCrd(TestContext testContext) {
+        try {
+            openshiftClient.loadGlobalCustomResourceDefinition(CUSTOM_RESOURCE_DEFINITION, configuration.getCrd().getInputStream());
+        } catch (IOException e) {
+            log.error("Error loading crd", e);
+            fail("Could not load crd. Cause: " + e.getMessage());
+        }
     }
 
     private void load(TestContext testContext, Resource resource) {

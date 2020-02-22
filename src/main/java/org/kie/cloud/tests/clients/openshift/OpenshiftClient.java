@@ -87,13 +87,13 @@ public class OpenshiftClient {
             return;
         }
 
-        log.debug("Loading custom resource definition ... ");
         try (OpenShift openShift = OpenShifts.master()) {
             CustomResourceDefinition crd = openShift.customResourceDefinitions().withName(name).get();
             if (crd == null) {
+                log.debug("Loading custom resource definition ... ");
                 openShift.loadResource(is);
+                log.debug("Custom resource definition loaded OK ");
             }
-            log.debug("Custom resource definition loaded OK ");
         }
     }
 

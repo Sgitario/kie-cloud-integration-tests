@@ -46,11 +46,11 @@ public class TemplateLoader extends Loader {
     private final List<Action> actions;
 
     @Override
-    protected List<Deployment> runLoad(TestContext testContext, String template, Map<String, String> extraParams) {
+    protected List<Deployment> runLoad(TestContext testContext, String scenario, Map<String, String> extraParams) {
 
-        MDC.put(MDC_KEY, template);
+        MDC.put(MDC_KEY, scenario);
         log.info("Loading template ... ");
-        TemplateDefinition definition = loadTemplateDefinition(template);
+        TemplateDefinition definition = loadTemplateDefinition(scenario);
         preLoad(testContext, definition);
         List<Deployment> deployments = loadAndProcess(testContext, definition, extraParams);
         postLoad(testContext, definition, deployments);

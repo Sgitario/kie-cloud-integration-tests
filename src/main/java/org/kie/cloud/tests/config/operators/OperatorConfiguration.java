@@ -1,6 +1,5 @@
 package org.kie.cloud.tests.config.operators;
 
-import java.util.List;
 import java.util.Map;
 
 import lombok.Data;
@@ -19,5 +18,5 @@ public class OperatorConfiguration {
     private Resource role;
     private Resource roleBinding;
     private Resource definition;
-    private Map<String, List<String>> deployments;
+    private Map<String, OperatorDefinition> definitions;
 }
