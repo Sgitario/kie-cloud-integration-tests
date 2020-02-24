@@ -17,6 +17,7 @@ package org.kie.cloud.tests.support;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.kie.cloud.tests.utils.AwaitilityUtils;
 import org.kie.cloud.tests.utils.KieServerClientImpl;
@@ -28,10 +29,10 @@ import org.kie.server.controller.client.exception.KieServerControllerHTTPClientE
 
 import static org.junit.Assert.fail;
 
-// @Disabled
+@Disabled
 public class IntegrationTest {
 
-    private static final String BC_URL = "http://insecure-myapp-rhpamcentr-josecarvajalhilario-tests-ba6b.apps.playground.rhba.openshift-aws.rhocf-dev.com/rest/controller";
+    private static final String BC_URL = "http://insecure-myapp-rhpamcentr-josecarvajalhilario-tests-687f.project.openshiftdomain/rest/controller";
     private static final String KIESERVER_URL = "http://insecure-myapp-kieserver-josecarvajalhilario-tests-4e67.project.openshiftdomain/services/rest/server";
 
     @Test
@@ -45,8 +46,8 @@ public class IntegrationTest {
 
     @Test
     public void bcUsingSso() throws MalformedURLException, IOException {
-        String username = "serviceUser";
-        String password = "serviceUser1!";
+        String username = "adminUser";
+        String password = "adminUser1!";
         try (KieServerControllerClient responseCreateServerTemplate = KieServerControllerClientFactory.newRestClient(BC_URL, username, password)) {
             AwaitilityUtils.awaitsFast().until(() -> {
                 try {
@@ -55,8 +56,7 @@ public class IntegrationTest {
                     if (ex.getResponseCode() > 500) { // perhaps the service is not ready yet
                         return false;
                     }
-
-                    fail("Error in service");
+                    fail("Error in service with response: " + ex.getResponseCode());
                 }
 
                 return true;

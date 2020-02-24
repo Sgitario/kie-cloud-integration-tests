@@ -25,7 +25,7 @@ public class AuthoringWithLDAPIT extends LdapBaseTest implements LoginSteps, Int
     @Tag("integration")
     @Test
     public void shouldKieServerConnectWithBusinessCentral() {
-        thenKieServersAreConnectedWithBusinessCentrals(defaultUserName(), defaultUserPassword());
+        thenKieServersAreConnectedWithBusinessCentrals(getLdapUsername(), getLdapPassword());
     }
 
 }

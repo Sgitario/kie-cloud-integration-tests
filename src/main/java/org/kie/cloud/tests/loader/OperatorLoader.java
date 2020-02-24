@@ -35,8 +35,8 @@ public class OperatorLoader extends Loader {
 
     private static final String MDC_CURRENT_RESOURCE = "resource";
     private static final String CUSTOM_RESOURCE_DEFINITION = "kieapps.app.kiegroup.org";
-    public static final String KIE_ADMIN_USER = "KIE_ADMIN_USER";
-    public static final String KIE_ADMIN_PWD = "KIE_ADMIN_PWD";
+    private static final String KIE_ADMIN_USER = "KIE_ADMIN_USER";
+    private static final String KIE_ADMIN_PWD = "KIE_ADMIN_PWD";
 
     private final OperatorConfiguration configuration;
     private final OpenshiftClient openshiftClient;
