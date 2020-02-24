@@ -1,2 +1,3 @@
 .project
 target
+src/test/resources/params.properties
