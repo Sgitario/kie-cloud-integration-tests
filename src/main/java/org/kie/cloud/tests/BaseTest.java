@@ -32,7 +32,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 @Slf4j
 @ExtendWith(SpringExtension.class)
-@TestPropertySource(locations = {"classpath:openshift.properties", "classpath:test.properties", "classpath:ldap.properties", "classpath:params.properties", "classpath:parties.properties"})
+@TestPropertySource(locations = {"classpath:params.properties", "classpath:test.properties", "classpath:ldap.properties", "classpath:parties.properties"})
 @ContextConfiguration
 @TestInstance(Lifecycle.PER_CLASS)
 public abstract class BaseTest {

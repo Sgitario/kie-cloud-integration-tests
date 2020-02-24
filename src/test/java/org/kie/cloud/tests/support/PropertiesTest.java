@@ -30,13 +30,13 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 @Slf4j
 @ExtendWith(SpringExtension.class)
-@TestPropertySource(locations = {"classpath:openshift.properties", "classpath:test.properties", "classpath:ldap.properties", "classpath:params.properties"})
+@TestPropertySource(locations = {"classpath:params.properties", "classpath:test.properties", "classpath:ldap.properties"})
 @ContextConfiguration
 @TestInstance(Lifecycle.PER_CLASS)
 @Disabled
 public class PropertiesTest {
 
-    @Value("${client.openshift.selected}")
+    @Value("${client.openshift.config.v3.url}")
     private String property;
 
     @Test

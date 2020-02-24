@@ -7,19 +7,19 @@ import org.kie.cloud.tests.steps.IntegrationSteps;
 import org.kie.cloud.tests.steps.LoginSteps;
 import org.kie.cloud.tests.utils.Scenarios;
 
-@DisplayName("RHPAM Production")
-public class ProductionTest extends BaseTest implements LoginSteps, IntegrationSteps {
+@DisplayName("RHPAM Authoring with LDAP")
+public class AuthoringWithLDAPIT extends LdapBaseTest implements LoginSteps, IntegrationSteps {
 
     @Override
     protected String scenario() {
-        return Scenarios.RHPAM_PROD;
+        return Scenarios.RHPAM_AUTHORING;
     }
 
     @Tag("login")
     @Test
-    public void canLogin() {
-        thenCanLoginInBusinessCentral(defaultUserName(), defaultUserPassword());
-        thenCanLoginInKieServer(defaultUserName(), defaultUserPassword());
+    public void shouldCanLogin() {
+        thenCanLoginInBusinessCentral(getLdapUsername(), getLdapPassword());
+        thenCanLoginInKieServer(getLdapUsername(), getLdapPassword());
     }
 
     @Tag("integration")
@@ -27,4 +27,5 @@ public class ProductionTest extends BaseTest implements LoginSteps, IntegrationS
     public void shouldKieServerConnectWithBusinessCentral() {
         thenKieServersAreConnectedWithBusinessCentrals(defaultUserName(), defaultUserPassword());
     }
+
 }

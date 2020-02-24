@@ -12,7 +12,7 @@ public final class AwaitilityUtils {
 	}
 
     public static final ConditionFactory awaitsFast() {
-        return awaitsCustom(200, secToMillis(1), secToMillis(20));
+        return awaitsCustom(200, 500, secToMillis(20));
     }
 
     public static final ConditionFactory awaitsLong() {

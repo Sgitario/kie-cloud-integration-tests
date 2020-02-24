@@ -1,6 +1,7 @@
 package org.kie.cloud.tests.loader;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -12,9 +13,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.jboss.logging.MDC;
 import org.kie.cloud.tests.clients.openshift.OpenshiftClient;
 import org.kie.cloud.tests.config.operators.CommonConfig;
+import org.kie.cloud.tests.config.operators.Console;
+import org.kie.cloud.tests.config.operators.Env;
 import org.kie.cloud.tests.config.operators.KieApp;
 import org.kie.cloud.tests.config.operators.OperatorConfiguration;
 import org.kie.cloud.tests.config.operators.OperatorDefinition;
+import org.kie.cloud.tests.config.operators.Server;
 import org.kie.cloud.tests.config.operators.mappers.KieAppPopulator;
 import org.kie.cloud.tests.context.Deployment;
 import org.kie.cloud.tests.context.TestContext;
@@ -31,6 +35,8 @@ public class OperatorLoader extends Loader {
 
     private static final String MDC_CURRENT_RESOURCE = "resource";
     private static final String CUSTOM_RESOURCE_DEFINITION = "kieapps.app.kiegroup.org";
+    public static final String KIE_ADMIN_USER = "KIE_ADMIN_USER";
+    public static final String KIE_ADMIN_PWD = "KIE_ADMIN_PWD";
 
     private final OperatorConfiguration configuration;
     private final OpenshiftClient openshiftClient;
@@ -73,6 +79,18 @@ public class OperatorLoader extends Loader {
         commonConfig.setAdminUser(credentials.getUser());
         commonConfig.setAdminPassword(credentials.getPassword());
         app.getSpec().setCommonConfig(commonConfig);
+
+        List<Env> authenticationEnvVars = new ArrayList<>();
+        authenticationEnvVars.add(new Env(KIE_ADMIN_USER, commonConfig.getAdminUser()));
+        authenticationEnvVars.add(new Env(KIE_ADMIN_PWD, commonConfig.getAdminPassword()));
+
+        Server server = new Server();
+        server.addEnvs(authenticationEnvVars);
+        app.getSpec().getObjects().addServer(server);
+
+        Console console = new Console();
+        console.addEnvs(authenticationEnvVars);
+        app.getSpec().getObjects().setConsole(console);
 
         populators.forEach(p -> p.populate(app, extraParams));
         openshiftClient.loadOperator(testContext.getProject(), app);

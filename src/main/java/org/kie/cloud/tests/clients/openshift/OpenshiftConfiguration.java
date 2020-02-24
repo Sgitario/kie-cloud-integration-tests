@@ -25,10 +25,10 @@ public class OpenshiftConfiguration {
         OpenshiftProperties properties = getProperties();
 
         System.setProperty(OpenShiftConfig.OPENSHIFT_URL, properties.getUrl());
-        System.setProperty(OpenShiftConfig.OPENSHIFT_MASTER_USERNAME, properties.getMasterUsername());
-        System.setProperty(OpenShiftConfig.OPENSHIFT_MASTER_PASSWORD, properties.getMasterPassword());
-        System.setProperty(OpenShiftConfig.OPENSHIFT_ADMIN_USERNAME, properties.getAdminUsername());
-        System.setProperty(OpenShiftConfig.OPENSHIFT_ADMIN_PASSWORD, properties.getAdminPassword());
+        System.setProperty(OpenShiftConfig.OPENSHIFT_MASTER_USERNAME, properties.getUsername());
+        System.setProperty(OpenShiftConfig.OPENSHIFT_MASTER_PASSWORD, properties.getPassword());
+        System.setProperty(OpenShiftConfig.OPENSHIFT_ADMIN_USERNAME, properties.getUsername());
+        System.setProperty(OpenShiftConfig.OPENSHIFT_ADMIN_PASSWORD, properties.getPassword());
         System.setProperty(OpenShiftConfig.OPENSHIFT_VERSION, properties.getVersion());
         System.setProperty(OpenShiftConfig.OPENSHIFT_NAMESPACE, properties.getNamespace());
 

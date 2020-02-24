@@ -18,7 +18,6 @@ import java.util.Map;
 
 import org.kie.cloud.tests.config.operators.Database;
 import org.kie.cloud.tests.config.operators.KieApp;
-import org.kie.cloud.tests.config.operators.Server;
 import org.kie.cloud.tests.utils.Params;
 import org.springframework.stereotype.Component;
 
@@ -29,11 +28,10 @@ public class InternalDatabaseKieAppPopulator extends KieAppPopulator {
     public void populate(KieApp app, Map<String, String> extraParams) {
         String database = extraParams.get(Params.DATABASE_ENGINE);
         if (database != null) {
-            Server internalDatabase = new Server();
-            internalDatabase.setDatabase(new Database());
-            internalDatabase.getDatabase().setType(database);
-
-            addServer(app, internalDatabase);
+            forEachServer(app, server -> {
+                server.setDatabase(new Database());
+                server.getDatabase().setType(database);
+            });
         }
     }
 

@@ -20,7 +20,6 @@ import org.kie.cloud.tests.config.operators.Build;
 import org.kie.cloud.tests.config.operators.Database;
 import org.kie.cloud.tests.config.operators.ExternalConfig;
 import org.kie.cloud.tests.config.operators.KieApp;
-import org.kie.cloud.tests.config.operators.Server;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -45,14 +44,16 @@ public class ExternalDatabaseKieAppPopulator extends KieAppPopulator {
     public void populate(KieApp app, Map<String, String> extraParams) {
         String extensionsImage = extraParams.get(EXTENSIONS_IMAGE);
         if (extensionsImage != null) {
-            Server externalDatabase = new Server();
-            externalDatabase.setBuild(new Build());
-            externalDatabase.getBuild().setExtensionImageStreamTag(extensionsImage);
-            externalDatabase.getBuild().setExtensionImageStreamTagNamespace(extraParams.get(EXTENSIONS_IMAGE_NAMESPACE));
+            forEachServer(app, server -> {
+                if (server.getBuild() == null) {
+                    server.setBuild(new Build());
+                }
 
-            externalDatabase.setDatabase(createDatabase(extraParams));
+                server.getBuild().setExtensionImageStreamTag(extensionsImage);
+                server.getBuild().setExtensionImageStreamTagNamespace(extraParams.get(EXTENSIONS_IMAGE_NAMESPACE));
 
-            addServer(app, externalDatabase);
+                server.setDatabase(createDatabase(extraParams));
+            });
         }
     }
 

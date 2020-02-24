@@ -20,6 +20,7 @@ import org.kie.cloud.tests.SingleSignOnBaseTest;
 import org.kie.cloud.tests.config.operators.Auth;
 import org.kie.cloud.tests.config.operators.KieApp;
 import org.kie.cloud.tests.config.operators.Sso;
+import org.kie.cloud.tests.config.operators.SsoClient;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -44,5 +45,21 @@ public class SsoAuthKieAppPopulator extends KieAppPopulator {
         }
 
         app.getSpec().getAuth().setSso(sso);
+
+        setClients(app, extraParams);
+    }
+
+    private void setClients(KieApp app, Map<String, String> extraParams) {
+        SsoClient ssoClient = new SsoClient();
+        ssoClient.setName(extraParams.get(SingleSignOnBaseTest.SSO_BUSINESS_CENTRAL_SSO_CLIENT));
+        ssoClient.setSecret(extraParams.get(SingleSignOnBaseTest.SSO_BUSINESS_CENTRAL_SSO_SECRET));
+        app.getSpec().getObjects().getConsole().setSsoClient(ssoClient);
+
+        forEachServer(app, server -> {
+            SsoClient ssoKieServerClient = new SsoClient();
+            ssoKieServerClient.setName(extraParams.get(SingleSignOnBaseTest.SSO_KIE_SERVER_SSO_CLIENT));
+            ssoKieServerClient.setSecret(extraParams.get(SingleSignOnBaseTest.SSO_KIE_SERVER_SSO_SECRET));
+            server.setSsoClient(ssoKieServerClient);
+        });
     }
 }

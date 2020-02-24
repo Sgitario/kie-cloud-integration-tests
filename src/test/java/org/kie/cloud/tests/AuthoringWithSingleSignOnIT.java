@@ -7,12 +7,12 @@ import org.kie.cloud.tests.steps.IntegrationSteps;
 import org.kie.cloud.tests.steps.LoginSteps;
 import org.kie.cloud.tests.utils.Scenarios;
 
-@DisplayName("RHPAM Authoring High Availability with Single Sign On")
-public class AuthoringHighAvailabilityWithSingleSignOnTest extends SingleSignOnBaseTest implements LoginSteps, IntegrationSteps {
+@DisplayName("RHPAM Authoring with Single Sign On")
+public class AuthoringWithSingleSignOnIT extends SingleSignOnBaseTest implements LoginSteps, IntegrationSteps {
 
     @Override
     protected String scenario() {
-        return Scenarios.RHPAM_AUTHORING_HA;
+        return Scenarios.RHPAM_AUTHORING;
     }
 
     @Tag("login")

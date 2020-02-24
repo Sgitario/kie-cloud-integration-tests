@@ -15,6 +15,8 @@
 package org.kie.cloud.tests.config.operators.mappers;
 
 import java.util.Map;
+import java.util.function.Consumer;
+import java.util.stream.Stream;
 
 import org.kie.cloud.tests.config.operators.KieApp;
 import org.kie.cloud.tests.config.operators.Objects;
@@ -24,13 +26,18 @@ public abstract class KieAppPopulator {
 
     public abstract void populate(KieApp app, Map<String, String> extraParams);
 
-    protected void addServer(KieApp app, Server newServer) {
+    protected void forEachServer(KieApp app, Consumer<Server> kieServerAction) {
         Objects objects = app.getSpec().getObjects();
         if (objects == null) {
             objects = new Objects();
             app.getSpec().setObjects(objects);
         }
 
-        objects.addServer(newServer);
+        if (objects.getServers() == null || objects.getServers().length == 0) {
+            objects.addServer(new Server());
+        }
+
+        Stream.of(objects.getServers()).forEach(kieServerAction);
     }
+
 }

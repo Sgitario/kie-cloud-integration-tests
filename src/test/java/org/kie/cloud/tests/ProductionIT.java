@@ -7,12 +7,12 @@ import org.kie.cloud.tests.steps.IntegrationSteps;
 import org.kie.cloud.tests.steps.LoginSteps;
 import org.kie.cloud.tests.utils.Scenarios;
 
-@DisplayName("RHPAM Authoring High Availability")
-public class AuthoringHighAvailabilityTest extends BaseTest implements LoginSteps, IntegrationSteps {
+@DisplayName("RHPAM Production")
+public class ProductionIT extends BaseTest implements LoginSteps, IntegrationSteps {
 
     @Override
     protected String scenario() {
-        return Scenarios.RHPAM_AUTHORING_HA;
+        return Scenarios.RHPAM_PROD;
     }
 
     @Tag("login")
@@ -27,5 +27,4 @@ public class AuthoringHighAvailabilityTest extends BaseTest implements LoginStep
     public void shouldKieServerConnectWithBusinessCentral() {
         thenKieServersAreConnectedWithBusinessCentrals(defaultUserName(), defaultUserPassword());
     }
-
 }
