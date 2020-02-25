@@ -136,6 +136,14 @@ public class OperatorLoader extends Loader {
     }
 
     private void importCrd(TestContext testContext) {
+        if (configuration.isForceCrdUpdate()) {
+            load(testContext, configuration.getCrd());
+        } else {
+            loadGlobalCrdIfNotExists();
+        }
+    }
+
+    private void loadGlobalCrdIfNotExists() {
         try {
             openshiftClient.loadGlobalCustomResourceDefinition(CUSTOM_RESOURCE_DEFINITION, configuration.getCrd().getInputStream());
         } catch (IOException e) {

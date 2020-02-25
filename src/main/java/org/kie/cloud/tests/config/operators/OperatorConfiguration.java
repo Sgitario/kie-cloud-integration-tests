@@ -13,6 +13,7 @@ import org.springframework.core.io.Resource;
 public class OperatorConfiguration {
 
     private String kieAppName;
+    private boolean forceCrdUpdate;
     private Resource crd;
     private Resource serviceAccount;
     private Resource role;
