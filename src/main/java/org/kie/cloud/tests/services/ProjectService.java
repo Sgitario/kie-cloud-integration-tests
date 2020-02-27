@@ -2,6 +2,7 @@ package org.kie.cloud.tests.services;
 
 import java.util.UUID;
 
+import lombok.extern.slf4j.Slf4j;
 import org.kie.cloud.tests.clients.openshift.OpenshiftClient;
 import org.kie.cloud.tests.clients.openshift.Project;
 import org.kie.cloud.tests.context.TestContext;
@@ -9,8 +10,6 @@ import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
@@ -34,7 +33,7 @@ public class ProjectService {
 	}
 
 	public void deleteProject(TestContext context) {
-		if (context.getProject() != null) {
+        if (context != null && context.getProject() != null) {
 			log.debug("Deleting project ... ");
 			openshift.deleteProject(context.getProject());
 			log.debug("Project deleted. ");

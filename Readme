@@ -1,0 +1,53 @@
+
+# Launch environment from Test Script
+
+```sh
+java jar launcher.jar --spring.config.location=file:///home/jcarvaja/Documents/test-script-s.properties
+```
+
+# How to run tests
+
+- Launch with params:
+
+|| Param || Options ||
+| OPENSHIFT | v3 or v4_playground |
+| MODE | templates or operator |
+| BXMS_QE_LOCATION | File path of https://github.com/jboss-integration/bxms-qe-tests GIT repository. Example: file///my/path/tests |
+
+```sh
+mvn clean verify --batch-mode -Doverrides.client.openshift.selected=$OPENSHIFT -Doverrides.test.loaders.selected=$MODE -Doverrides.test.repo.path.bxms-qe-tests=$BXMS_QE_LOCATION 
+                  -Doverrides.client.openshift.config.$OPENSHIFT.url=XXX 
+                  -Doverrides.client.openshift.config.$OPENSHIFT.username=YYY
+                  -Doverrides.client.openshift.config.$OPENSHIFT.password=ZZZ  
+                  -Dit.test=$IT_TESTS -Dmaven.test.failure.ignore=true
+```
+
+- From your IDE:
+
+We only need to click on "Run JUnit test" and that's it. The configuration must be set on the params.propertiles file, as an example:
+
+*src/test/resources/params.properties:*
+```properties
+############################
+# Default Params #
+############################
+
+# v3 or v4_playground
+overrides.client.openshift.selected=v4_playground
+
+# loader can be: operator (only for v4_X openshift) or templates
+overrides.test.loaders.selected=templates
+
+# Load private repository
+overrides.test.repo.path.bxms-qe-tests=file///my/path/tests
+
+# Credentials for V4_playground
+overrides.client.openshift.config.v4_playground.url=XXX
+overrides.client.openshift.config.v4_playground.username=YYY
+overrides.client.openshift.config.v4_playground.password=ZZZ
+```
+
+- From test script:
+
+TBD
+

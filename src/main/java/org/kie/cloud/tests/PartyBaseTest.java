@@ -32,13 +32,11 @@ public abstract class PartyBaseTest extends BaseTest {
     }
 
     protected void onAfterDeploymentTemplate() {
-
+        super.beforeOnLoadScenario();
     }
 
     @Override
     protected void beforeOnLoadScenario() {
-        super.beforeOnLoadScenario();
-
         templateLoader.load(getTestContext(), getParty(), getPartyExtraParams());
         onAfterDeploymentTemplate();
     }
