@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+ <modelVersion>4.0.0</modelVersion>
+ <artifactId>utils-openshift</artifactId>
+
+ <parent>
+  <groupId>org.kie.cloud.automation</groupId>
+  <artifactId>parent</artifactId>
+  <version>master</version>
+ </parent>
+
+ <properties>
+  <kie.controller.version>7.33.0-SNAPSHOT</kie.controller.version>
+ </properties>
+
+ <dependencies>
+
+  <dependency>
+   <groupId>org.kie.cloud.automation</groupId>
+   <artifactId>core</artifactId>
+  </dependency>
+
+  <dependency>
+   <groupId>cz.xtf</groupId>
+   <artifactId>builder</artifactId>
+  </dependency>
+
+  <!-- Kie Server api -->
+  <dependency>
+   <groupId>org.kie.server</groupId>
+   <artifactId>kie-server-client</artifactId>
+   <version>${kie.controller.version}</version>
+  </dependency>
+  <dependency>
+   <groupId>org.kie.server</groupId>
+   <artifactId>kie-server-api</artifactId>
+   <version>${kie.controller.version}</version>
+   <exclusions>
+    <exclusion>
+     <groupId>com.fasterxml.jackson.core</groupId>
+     <artifactId>jackson-core</artifactId>
+    </exclusion>
+    <exclusion>
+     <groupId>com.fasterxml.jackson.core</groupId>
+     <artifactId>jackson-databind</artifactId>
+    </exclusion>
+   </exclusions>
+  </dependency>
+  <dependency>
+   <groupId>org.kie.server</groupId>
+   <artifactId>kie-server-controller-api</artifactId>
+   <version>${kie.controller.version}</version>
+   <exclusions>
+    <exclusion>
+     <groupId>com.fasterxml.jackson.core</groupId>
+     <artifactId>jackson-core</artifactId>
+    </exclusion>
+    <exclusion>
+     <groupId>com.fasterxml.jackson.core</groupId>
+     <artifactId>jackson-databind</artifactId>
+    </exclusion>
+   </exclusions>
+  </dependency>
+  <dependency>
+   <groupId>org.kie.server</groupId>
+   <artifactId>kie-server-controller-client</artifactId>
+   <version>${kie.controller.version}</version>
+  </dependency>
+
+  <dependency>
+   <groupId>org.projectlombok</groupId>
+   <artifactId>lombok</artifactId>
+   <scope>provided</scope>
+  </dependency>
+ </dependencies>
+
+</project>

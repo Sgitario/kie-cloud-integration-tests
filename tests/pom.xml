@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+ <modelVersion>4.0.0</modelVersion>
+ <artifactId>tests</artifactId>
+
+ <parent>
+  <groupId>org.kie.cloud.automation</groupId>
+  <artifactId>parent</artifactId>
+  <version>master</version>
+ </parent>
+
+ <properties>
+  <keycloak.version>8.0.1</keycloak.version>
+ </properties>
+
+ <profiles>
+  <profile>
+   <id>cloud</id>
+   <activation>
+    <activeByDefault>true</activeByDefault>
+   </activation>
+   <dependencies>
+
+    <dependency>
+     <groupId>org.kie.cloud.automation</groupId>
+     <artifactId>environment-openshift</artifactId>
+    </dependency>
+
+    <dependency>
+     <groupId>org.kie.cloud.automation</groupId>
+     <artifactId>loader-operator</artifactId>
+    </dependency>
+
+    <dependency>
+     <groupId>org.kie.cloud.automation</groupId>
+     <artifactId>loader-templates</artifactId>
+    </dependency>
+   </dependencies>
+  </profile>
+ </profiles>
+
+ <dependencies>
+  <!-- RH SSO dependencies -->
+  <dependency>
+   <groupId>org.keycloak</groupId>
+   <artifactId>keycloak-admin-client</artifactId>
+   <version>${keycloak.version}</version>
+   <exclusions>
+    <exclusion>
+     <groupId>com.fasterxml.jackson.core</groupId>
+     <artifactId>jackson-core</artifactId>
+    </exclusion>
+    <exclusion>
+     <groupId>com.fasterxml.jackson.core</groupId>
+     <artifactId>jackson-databind</artifactId>
+    </exclusion>
+   </exclusions>
+  </dependency>
+
+  <dependency>
+   <groupId>org.projectlombok</groupId>
+   <artifactId>lombok</artifactId>
+   <scope>provided</scope>
+  </dependency>
+ </dependencies>
+
+ <build>
+  <plugins>
+   <plugin>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-failsafe-plugin</artifactId>
+    <version>3.0.0-M4</version>
+    <executions>
+     <execution>
+      <goals>
+       <goal>integration-test</goal>
+       <goal>verify</goal>
+      </goals>
+     </execution>
+    </executions>
+    <configuration>
+     <statelessTestsetReporter
+      implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5Xml30StatelessReporter">
+      <disable>false</disable>
+      <version>3.0</version>
+      <usePhrasedFileName>false</usePhrasedFileName>
+      <usePhrasedTestSuiteClassName>true</usePhrasedTestSuiteClassName>
+      <usePhrasedTestCaseClassName>true</usePhrasedTestCaseClassName>
+      <usePhrasedTestCaseMethodName>true</usePhrasedTestCaseMethodName>
+     </statelessTestsetReporter>
+     <consoleOutputReporter
+      implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5ConsoleOutputReporter">
+      <disable>false</disable>
+      <encoding>UTF-8</encoding>
+      <usePhrasedFileName>false</usePhrasedFileName>
+     </consoleOutputReporter>
+     <statelessTestsetInfoReporter
+      implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5StatelessTestsetInfoReporter">
+      <disable>false</disable>
+      <usePhrasedFileName>false</usePhrasedFileName>
+      <usePhrasedClassNameInRunning>true</usePhrasedClassNameInRunning>
+      <usePhrasedClassNameInTestCaseSummary>true</usePhrasedClassNameInTestCaseSummary>
+     </statelessTestsetInfoReporter>
+     <systemProperties>
+      <!-- v3 or v4_playground -->
+      <client.openshift.selected>${overrides.client.openshift.selected}</client.openshift.selected>
+      <!-- operator (only for v4_X openshift) or templates -->
+      <test.loaders.selected>${overrides.test.loaders.selected}</test.loaders.selected>
+      <!-- Load private repository -->
+      <test.repo.path.bxms-qe-tests>${overrides.test.repo.path.bxms-qe-tests}</test.repo.path.bxms-qe-tests>
+      <!-- Openshift V3 -->
+      <client.openshift.config.v3.url>${overrides.client.openshift.config.v3.url}</client.openshift.config.v3.url>
+      <client.openshift.config.v3.version>${overrides.client.openshift.config.v3.version}</client.openshift.config.v3.version>
+      <client.openshift.config.v3.namespace>${overrides.client.openshift.config.v3.namespace}</client.openshift.config.v3.namespace>
+      <client.openshift.config.v3.username>${overrides.client.openshift.config.v3.username}</client.openshift.config.v3.username>
+      <client.openshift.config.v3.password>${overrides.client.openshift.config.v3.password}</client.openshift.config.v3.password>
+      <!-- Openshift V4_playground -->
+      <client.openshift.config.v4_playground.url>${overrides.client.openshift.config.v4_playground.url}</client.openshift.config.v4_playground.url>
+      <client.openshift.config.v4_playground.version>${overrides.client.openshift.config.v4_playground.version}</client.openshift.config.v4_playground.version>
+      <client.openshift.config.v4_playground.namespace>${overrides.client.openshift.config.v4_playground.namespace}</client.openshift.config.v4_playground.namespace>
+      <client.openshift.config.v4_playground.username>${overrides.client.openshift.config.v4_playground.username}</client.openshift.config.v4_playground.username>
+      <client.openshift.config.v4_playground.password>${overrides.client.openshift.config.v4_playground.password}</client.openshift.config.v4_playground.password>
+     </systemProperties>
+    </configuration>
+   </plugin>
+
+  </plugins>
+
+  <testResources>
+   <testResource>
+    <directory>src/test/resources</directory>
+    <filtering>true</filtering>
+   </testResource>
+  </testResources>
+ </build>
+
+ <repositories>
+  <!-- Bootstrap repository to locate the parent pom when the parent pom 
+   has not been build locally. -->
+  <repository>
+   <id>jboss-public-repository-group</id>
+   <name>JBoss Public Repository Group</name>
+   <url>https://repository.jboss.org/nexus/content/groups/public/</url>
+   <layout>default</layout>
+   <releases>
+    <enabled>true</enabled>
+    <updatePolicy>never</updatePolicy>
+   </releases>
+   <snapshots>
+    <enabled>true</enabled>
+    <updatePolicy>daily</updatePolicy>
+   </snapshots>
+  </repository>
+  <repository>
+   <id>bintray-xtf-cz-xtf</id>
+   <name>Bintray XTF</name>
+   <url>https://dl.bintray.com/xtf-cz/xtf</url>
+   <snapshots>
+    <enabled>false</enabled>
+   </snapshots>
+   <releases>
+    <enabled>true</enabled>
+   </releases>
+  </repository>
+  <repository>
+   <id>oss-jfrog-snapshots</id>
+   <name>oss-jfrog-artifactory-snapshots</name>
+   <url>https://oss.jfrog.org/artifactory/oss-snapshot-local</url>
+   <snapshots>
+    <enabled>true</enabled>
+   </snapshots>
+   <releases>
+    <enabled>false</enabled>
+   </releases>
+  </repository>
+ </repositories>
+
+</project>
