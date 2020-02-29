@@ -68,12 +68,4 @@ public abstract class LdapBaseTest extends PartyBaseTest {
     private String ldapAuthUrl() {
         return String.format("ldap://ldap-%s:30389", projectName());
     }
-
-    protected String getLdapUsername() {
-        return ldapProperties.getUser();
-    }
-
-    protected String getLdapPassword() {
-        return ldapProperties.getPassword();
-    }
 }

@@ -23,8 +23,6 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties("ldap")
 public class LdapProperties {
 
-    private String user;
-    private String password;
     private String bindDn;
     private String bindCredential;
     private String baseCtxDn;

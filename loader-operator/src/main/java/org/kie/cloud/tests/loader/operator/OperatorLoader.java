@@ -79,6 +79,7 @@ public class OperatorLoader extends Loader {
         CommonConfig commonConfig = new CommonConfig();
         commonConfig.setAdminUser(credentials.getUser());
         commonConfig.setAdminPassword(credentials.getPassword());
+        commonConfig.setApplicationName(configuration.getKieAppName());
         app.getSpec().setCommonConfig(commonConfig);
 
         List<Env> authenticationEnvVars = new ArrayList<>();

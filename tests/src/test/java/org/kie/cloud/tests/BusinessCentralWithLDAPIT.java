@@ -32,7 +32,7 @@ public class BusinessCentralWithLDAPIT extends LdapBaseTest implements LoginStep
     @Tag("login")
     @Test
     public void shouldCanLogin() {
-        thenCanLoginInBusinessCentral(getLdapUsername(), getLdapPassword());
+        thenCanLoginInBusinessCentral(defaultUserName(), defaultUserPassword());
     }
 
 }
