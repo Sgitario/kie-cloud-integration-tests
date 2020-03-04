@@ -46,8 +46,8 @@ public abstract class SingleSignOnBaseTest extends PartyBaseTest {
         Map<String, String> extraParams = new HashMap<>();
         extraParams.put(SSO_URL, ssoAuthUrl());
         extraParams.put(SSO_REALM, getSsoDeploymentParam(SSO_REALM));
-        extraParams.put(SSO_USERNAME, defaultUserName());
-        extraParams.put(SSO_PASSWORD, defaultUserPassword());
+        extraParams.put(SSO_USERNAME, getUserName());
+        extraParams.put(SSO_PASSWORD, getUserPassword());
         extraParams.put(SSO_BUSINESS_CENTRAL_SSO_CLIENT, BUSINESS_CENTRAL_CLIENT);
         extraParams.put(SSO_BUSINESS_CENTRAL_SSO_SECRET, "business-central-secret");
         extraParams.put(SSO_KIE_SERVER_SSO_CLIENT, KIE_SERVER_CLIENT);
@@ -68,9 +68,9 @@ public abstract class SingleSignOnBaseTest extends PartyBaseTest {
         SsoClient sso = SsoClient.get(authUrl, realm);
         sso.createClient(BUSINESS_CENTRAL_CLIENT);
         sso.createClient(KIE_SERVER_CLIENT);
-        sso.createUser(defaultUserName(), defaultUserPassword());
+        sso.createUser(getUserName(), getUserPassword());
         Stream.of(ROLES).forEach(sso::createRole);
-        sso.addRolesToUser(defaultUserName(), ROLES);
+        sso.addRolesToUser(getUserName(), ROLES);
     }
 
     private String ssoAuthUrl() {

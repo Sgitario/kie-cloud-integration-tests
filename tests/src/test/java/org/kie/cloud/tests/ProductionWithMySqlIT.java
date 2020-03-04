@@ -32,13 +32,13 @@ public class ProductionWithMySqlIT extends BaseTest implements LoginSteps, Integ
     @Tag("login")
     @Test
     public void canLogin() {
-        thenCanLoginInBusinessCentral(defaultUserName(), defaultUserPassword());
-        thenCanLoginInKieServer(defaultUserName(), defaultUserPassword());
+        thenCanLoginInBusinessCentral();
+        thenCanLoginInKieServer();
     }
 
     @Tag("integration")
     @Test
     public void shouldKieServerConnectWithBusinessCentral() {
-        thenKieServersAreConnectedWithBusinessCentrals(defaultUserName(), defaultUserPassword());
+        thenKieServersAreConnectedWithBusinessCentrals();
     }
 }

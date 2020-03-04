@@ -18,13 +18,13 @@ public class AuthoringIT extends BaseTest implements LoginSteps, IntegrationStep
     @Test
     @Tag("login")
     public void canLogin() {
-        thenCanLoginInBusinessCentral(defaultUserName(), defaultUserPassword());
-        thenCanLoginInKieServer(defaultUserName(), defaultUserPassword());
+        thenCanLoginInBusinessCentral();
+        thenCanLoginInKieServer();
     }
 
     @Tag("integration")
     @Test
     public void shouldKieServerConnectWithBusinessCentral() {
-        thenKieServersAreConnectedWithBusinessCentrals(defaultUserName(), defaultUserPassword());
+        thenKieServersAreConnectedWithBusinessCentrals();
     }
 }

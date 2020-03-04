@@ -27,6 +27,10 @@ public interface Steps {
 
     TestContext getTestContext();
 
+    String getUserName();
+
+    String getUserPassword();
+
     default void forEachDeployment(Predicate<String> match, Consumer<Deployment> action) {
         getTestContext().getDeployments().entrySet().stream().filter(entry -> match.test(entry.getKey())).forEach(entry -> action.accept(entry.getValue()));
     }

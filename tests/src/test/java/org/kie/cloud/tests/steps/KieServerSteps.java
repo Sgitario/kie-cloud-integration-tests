@@ -35,8 +35,8 @@ import static org.kie.cloud.tests.utils.AwaitilityUtils.awaitsLong;
 
 public interface KieServerSteps extends Steps {
 
-    default void thenKieServersStartUpOk(String username, String password) {
-        assertKieServersFor(username, password, (c, d) -> {
+    default void thenKieServersStartUpOk() {
+        assertKieServersFor((c, d) -> {
             ServiceResponse<KieServerInfo> info = c.getServerInfo();
             assertEquals(ResponseType.SUCCESS, info.getType());
             List<String> errors = OpenshiftExtensionModelUtils.getErrorMessagesFromServerInfo(info);
@@ -44,18 +44,18 @@ public interface KieServerSteps extends Steps {
         });
     }
 
-    default void assertKieServersFor(String username, String password, BiConsumer<KieServicesClient, KieServer> action) {
+    default void assertKieServersFor(BiConsumer<KieServicesClient, KieServer> action) {
         forEachKieServer(deployment -> {
             awaitsLong().until(() -> {
                 try {
-                    KieServicesClient client = deployment.restClient(username, password);
+                    KieServicesClient client = deployment.restClient(getUserName(), getUserPassword());
                     action.accept(client, deployment);
                 } catch (RuntimeException ex) {
                     if (ex.getCause() instanceof KieServicesHttpException && ((KieServicesHttpException) ex.getCause()).getHttpCode() > 500) {
                         return false;
                     }
 
-                    fail(String.format("User '%s:%s' cannot login in Kie Server. Cause: %s", username, password, ex.getMessage()));
+                    fail(String.format("User '%s:%s' cannot login in Kie Server. Cause: %s", getUserName(), getUserPassword(), ex.getMessage()));
                 }
 
                 return true;

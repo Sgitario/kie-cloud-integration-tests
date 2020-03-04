@@ -55,6 +55,6 @@ public class WithExternalDatabaseTest extends BaseTest implements LoginSteps, In
     @Tag("login")
     @Tag("startup")
     public void canLogin() {
-        thenCanLoginInKieServer(defaultUserName(), defaultUserPassword());
+        thenCanLoginInKieServer();
     }
 }

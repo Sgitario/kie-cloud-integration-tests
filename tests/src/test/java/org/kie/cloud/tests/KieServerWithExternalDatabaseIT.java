@@ -19,6 +19,6 @@ public class KieServerWithExternalDatabaseIT extends MySqlBaseTest implements Lo
     @Tag("login")
     @Tag("startup")
     public void canLogin() {
-        thenCanLoginInKieServer(defaultUserName(), defaultUserPassword());
+        thenCanLoginInKieServer();
     }
 }

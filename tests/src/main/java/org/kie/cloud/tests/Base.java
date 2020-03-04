@@ -59,6 +59,14 @@ public abstract class Base {
     @Getter
     private Loader currentLoader;
 
+    public String getUserName() {
+        return defaultCredentials.getUser();
+    }
+
+    public String getUserPassword() {
+        return defaultCredentials.getPassword();
+    }
+
     protected void startUp() {
         Project project = projectService.createProject();
         testContext = new TestContext(project);
@@ -76,14 +84,6 @@ public abstract class Base {
     protected void whenLoadScenario(String scenario, Map<String, String> extraParams) {
         currentLoader = appContext.getBean(loaderClass, Loader.class);
         currentLoader.load(testContext, scenario, extraParams);
-    }
-
-    protected String defaultUserName() {
-        return defaultCredentials.getUser();
-    }
-
-    protected String defaultUserPassword() {
-        return defaultCredentials.getPassword();
     }
 
     protected String projectName() {

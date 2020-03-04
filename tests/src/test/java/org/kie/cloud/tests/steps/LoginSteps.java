@@ -21,16 +21,16 @@ import static org.kie.cloud.tests.utils.AwaitilityUtils.awaitsFast;
 
 public interface LoginSteps extends KieServerSteps, BusinessCentralSteps {
 
-    default void thenCanLoginInBusinessCentral(String username, String password) {
-        assertBusinessCentralsFor(username, password, (c, d) -> c.listServerTemplates());
+    default void thenCanLoginInBusinessCentral() {
+        assertBusinessCentralsFor((c, d) -> c.listServerTemplates());
     }
 
-    default void thenCannotLoginInBusinessCentral(String username, String password) {
+    default void thenCannotLoginInBusinessCentral() {
         forEachBusinessCentral(deployment -> {
             awaitsFast().until(() -> {
                 try {
-                    deployment.restClient(username, password).listServerTemplates();
-                    fail(String.format("User '%s:%s' can login in Business Central", username, password));
+                    deployment.restClient(getUserName(), getUserPassword()).listServerTemplates();
+                    fail(String.format("User '%s:%s' can login in Business Central", getUserName(), getUserPassword()));
                 } catch (KieServerControllerHTTPClientException ex) {
                     if (ex.getResponseCode() == 401) {
                         return true;
@@ -43,9 +43,9 @@ public interface LoginSteps extends KieServerSteps, BusinessCentralSteps {
         });
     }
 
-    default void thenCanLoginInKieServer(String username, String password) {
-        assertKieServersFor(username, password, (c, d) -> c.listContainers());
-        thenKieServersStartUpOk(username, password);
+    default void thenCanLoginInKieServer() {
+        assertKieServersFor((c, d) -> c.listContainers());
+        thenKieServersStartUpOk();
     }
 
 }

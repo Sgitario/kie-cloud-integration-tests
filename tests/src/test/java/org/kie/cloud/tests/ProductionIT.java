@@ -18,13 +18,13 @@ public class ProductionIT extends BaseTest implements LoginSteps, IntegrationSte
     @Tag("login")
     @Test
     public void canLogin() {
-        thenCanLoginInBusinessCentral(defaultUserName(), defaultUserPassword());
-        thenCanLoginInKieServer(defaultUserName(), defaultUserPassword());
+        thenCanLoginInBusinessCentral();
+        thenCanLoginInKieServer();
     }
 
     @Tag("integration")
     @Test
     public void shouldKieServerConnectWithBusinessCentral() {
-        thenKieServersAreConnectedWithBusinessCentrals(defaultUserName(), defaultUserPassword());
+        thenKieServersAreConnectedWithBusinessCentrals();
     }
 }

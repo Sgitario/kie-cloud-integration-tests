@@ -27,11 +27,11 @@ import static org.kie.cloud.tests.utils.AwaitilityUtils.awaitsLong;
 
 public interface BusinessCentralSteps extends Steps {
 
-    default void assertBusinessCentralsFor(String username, String password, BiConsumer<KieServerControllerClient, BusinessCentral> action) {
+    default void assertBusinessCentralsFor(BiConsumer<KieServerControllerClient, BusinessCentral> action) {
         forEachBusinessCentral(deployment -> {
             awaitsLong().until(() -> {
                 try {
-                    KieServerControllerClient client = deployment.restClient(username, password);
+                    KieServerControllerClient client = deployment.restClient(getUserName(), getUserPassword());
                     action.accept(client, deployment);
                 } catch (KieServerControllerHTTPClientException ex) {
                     if (ex.getResponseCode() > 500) {
@@ -39,7 +39,7 @@ public interface BusinessCentralSteps extends Steps {
                         return false;
                     }
 
-                    fail(String.format("User '%s:%s' cannot login in Business Central", username, password));
+                    fail(String.format("User '%s:%s' cannot login in Business Central", getUserName(), getUserPassword()));
                 }
 
                 return true;

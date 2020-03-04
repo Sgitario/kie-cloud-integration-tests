@@ -32,7 +32,7 @@ public class BusinessCentralWithSingleSignOnIT extends SingleSignOnBaseTest impl
     @Tag("login")
     @Test
     public void shouldCanLogin() {
-        thenCanLoginInBusinessCentral(defaultUserName(), defaultUserPassword());
+        thenCanLoginInBusinessCentral();
     }
 
 }

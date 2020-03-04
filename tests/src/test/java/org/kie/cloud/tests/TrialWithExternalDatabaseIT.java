@@ -19,6 +19,6 @@ public class TrialWithExternalDatabaseIT extends MySqlBaseTest implements LoginS
     @Tag("login")
     @Tag("startup")
     public void canLogin() {
-        thenCanLoginInKieServer(defaultUserName(), defaultUserPassword());
+        thenCanLoginInKieServer();
     }
 }

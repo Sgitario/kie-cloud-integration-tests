@@ -26,10 +26,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public interface IntegrationSteps extends KieServerSteps, BusinessCentralSteps {
 
-    default void thenKieServersAreConnectedWithBusinessCentrals(String username, String password) {
+    default void thenKieServersAreConnectedWithBusinessCentrals() {
         Set<String> expected = new HashSet<>();
         forEachKieServer(kieServer -> expected.add(kieServer.getAppName()));
-        assertBusinessCentralsFor(username, password, (c, d) -> {
+        assertBusinessCentralsFor((c, d) -> {
             ServerTemplateList actual = c.listServerTemplates();
             assertNotNull(actual, "Error getting servers");
             assertNotNull(actual.getServerTemplates(), "No server instances returned");
