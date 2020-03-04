@@ -19,7 +19,9 @@ import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.KeycloakBuilder;
 import org.keycloak.admin.client.resource.RealmResource;
 import org.keycloak.representations.idm.ClientRepresentation;
+import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.RoleRepresentation;
+import org.keycloak.representations.idm.UserRepresentation;
 
 import static org.kie.cloud.tests.utils.AwaitilityUtils.awaitsLong;
 
@@ -62,6 +64,25 @@ public class SsoClient {
 		});
 
 	}
+
+    public void createUser(String user, String password) {
+        UserRepresentation ur = new UserRepresentation();
+        ur.setUsername(user);
+        ur.setFirstName(user);
+        ur.setLastName(user);
+        ur.setEmail(user + "@abc.com");
+        ur.setEnabled(true);
+
+        realm().users().create(ur).close();
+
+        // set password
+        String userId = findUserByUsername(user);
+        CredentialRepresentation cr = new CredentialRepresentation();
+        cr.setType(CredentialRepresentation.PASSWORD);
+        cr.setValue(password);
+        cr.setTemporary(false);
+        realm().users().get(userId).resetPassword(cr);
+    }
 
 	public void createRole(String rolename) {
 		RoleRepresentation role = new RoleRepresentation();

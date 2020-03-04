@@ -37,8 +37,6 @@ import static org.kie.cloud.tests.core.constants.SsoContants.SSO_USERNAME;
 @Tag("auth-sso")
 public abstract class SingleSignOnBaseTest extends PartyBaseTest {
 
-    private static final String USERNAME_PROPERTY = "SSO_SERVICE_USERNAME";
-    private static final String PASSWORD_PROPERTY = "SSO_SERVICE_PASSWORD";
     private static final String[] ROLES = new String[]{"admin", "kie-server", "rest-all"};
     private static final String BUSINESS_CENTRAL_CLIENT = "business-central-client";
     private static final String KIE_SERVER_CLIENT = "kie-server-client";
@@ -48,8 +46,8 @@ public abstract class SingleSignOnBaseTest extends PartyBaseTest {
         Map<String, String> extraParams = new HashMap<>();
         extraParams.put(SSO_URL, ssoAuthUrl());
         extraParams.put(SSO_REALM, getSsoDeploymentParam(SSO_REALM));
-        extraParams.put(SSO_USERNAME, getSsoUsername());
-        extraParams.put(SSO_PASSWORD, getSsoPassword());
+        extraParams.put(SSO_USERNAME, defaultUserName());
+        extraParams.put(SSO_PASSWORD, defaultUserPassword());
         extraParams.put(SSO_BUSINESS_CENTRAL_SSO_CLIENT, BUSINESS_CENTRAL_CLIENT);
         extraParams.put(SSO_BUSINESS_CENTRAL_SSO_SECRET, "business-central-secret");
         extraParams.put(SSO_KIE_SERVER_SSO_CLIENT, KIE_SERVER_CLIENT);
@@ -62,14 +60,6 @@ public abstract class SingleSignOnBaseTest extends PartyBaseTest {
         return Parties.SSO;
     }
 
-    protected String getSsoUsername() {
-        return getSsoDeploymentParam(USERNAME_PROPERTY);
-    }
-
-    protected String getSsoPassword() {
-        return getSsoDeploymentParam(PASSWORD_PROPERTY);
-    }
-
     @Override
     protected void onAfterDeploymentTemplate() {
         String authUrl = ssoAuthUrl();
@@ -78,10 +68,10 @@ public abstract class SingleSignOnBaseTest extends PartyBaseTest {
         SsoClient sso = SsoClient.get(authUrl, realm);
         sso.createClient(BUSINESS_CENTRAL_CLIENT);
         sso.createClient(KIE_SERVER_CLIENT);
+        sso.createUser(defaultUserName(), defaultUserPassword());
         Stream.of(ROLES).forEach(sso::createRole);
-        sso.addRolesToUser(getSsoUsername(), ROLES);
+        sso.addRolesToUser(defaultUserName(), ROLES);
     }
-
 
     private String ssoAuthUrl() {
         return String.format("%s/auth", getTestContext().getDeployment(Deployments.SSO).getHttpUrl(), projectName());

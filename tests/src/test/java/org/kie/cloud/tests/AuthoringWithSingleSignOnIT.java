@@ -18,15 +18,14 @@ public class AuthoringWithSingleSignOnIT extends SingleSignOnBaseTest implements
     @Tag("login")
     @Test
     public void canLogin() {
-        thenCannotLoginInBusinessCentral(defaultUserName(), defaultUserPassword());
-        thenCanLoginInBusinessCentral(getSsoUsername(), getSsoPassword());
-        thenCanLoginInKieServer(getSsoUsername(), getSsoPassword());
+        thenCanLoginInBusinessCentral(defaultUserName(), defaultUserPassword());
+        thenCanLoginInKieServer(defaultUserName(), defaultUserPassword());
     }
 
     @Tag("integration")
     @Test
     public void shouldKieServerConnectWithBusinessCentral() {
-        thenKieServersAreConnectedWithBusinessCentrals(getSsoUsername(), getSsoPassword());
+        thenKieServersAreConnectedWithBusinessCentrals(defaultUserName(), defaultUserPassword());
     }
 
 }
