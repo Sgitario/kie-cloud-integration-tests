@@ -7,6 +7,12 @@ java jar launcher.jar --spring.config.location=file:///home/jcarvaja/Documents/t
 
 # How to run tests
 
+- Generate the SSL certs:
+
+```sh
+environment-openshift/ mvn clean install -Pv3 (depends on the environment you want to run the tests)
+```
+
 - Launch with params:
 
 || Param || Options ||

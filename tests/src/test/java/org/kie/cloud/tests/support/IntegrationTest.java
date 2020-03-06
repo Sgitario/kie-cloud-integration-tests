@@ -17,7 +17,6 @@ package org.kie.cloud.tests.support;
 import java.io.IOException;
 import java.net.MalformedURLException;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.kie.cloud.tests.utils.AwaitilityUtils;
 import org.kie.cloud.tests.utils.KieServerClientImpl;
@@ -29,16 +28,19 @@ import org.kie.server.controller.client.exception.KieServerControllerHTTPClientE
 
 import static org.junit.Assert.fail;
 
-@Disabled
+// @Disabled
 public class IntegrationTest {
 
-    private static final String BC_URL = "http://insecure-myapp-rhpamcentr-josecarvajalhilario-tests-687f.project.openshiftdomain/rest/controller";
+    private static final String BC_URL = "https://myapp-rhpamcentr-josecarvajalhilario-tests-cca4.apps.playground.rhba.openshift-aws.rhocf-dev.com/rest/controller";
     private static final String KIESERVER_URL = "http://insecure-myapp-kieserver-josecarvajalhilario-tests-4e67.project.openshiftdomain/services/rest/server";
 
     @Test
     public void bcUsingDefault() throws MalformedURLException, IOException {
-        String username = "admin";
-        String password = "admin";
+        System.setProperty("javax.net.ssl.trustStore", "/home/jcarvaja/sources/kie-cloud-integration-tests/openshiftCerts/v4_playground_client.ts");
+        System.setProperty("javax.net.ssl.trustStorePassword", "mykeystorepass");
+
+        String username = "yoda";
+        String password = "usetheforce123@";
         KieServerControllerClient responseCreateServerTemplate = KieServerControllerClientFactory.newRestClient(BC_URL, username, password);
 
         System.out.println(responseCreateServerTemplate.listServerTemplates());

@@ -88,6 +88,7 @@ public class OperatorLoader extends Loader {
 
         Server server = new Server();
         server.addEnvs(authenticationEnvVars);
+        server.addEnv(new Env("KIE_SERVER_CONTROLLER_OPENSHIFT_PREFER_KIESERVER_SERVICE", "false"));
         app.getSpec().getObjects().addServer(server);
 
         Console console = new Console();

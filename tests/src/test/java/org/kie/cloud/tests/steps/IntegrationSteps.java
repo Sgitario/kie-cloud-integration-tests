@@ -27,6 +27,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public interface IntegrationSteps extends KieServerSteps, BusinessCentralSteps {
 
     default void thenKieServersAreConnectedWithBusinessCentrals() {
+        assertKieServersFor((c, d) -> {
+
+        });
+
         Set<String> expected = new HashSet<>();
         forEachKieServer(kieServer -> expected.add(kieServer.getAppName()));
         assertBusinessCentralsFor((c, d) -> {
@@ -35,7 +39,7 @@ public interface IntegrationSteps extends KieServerSteps, BusinessCentralSteps {
             assertNotNull(actual.getServerTemplates(), "No server instances returned");
             assertEquals(expected.size(), actual.getServerTemplates().length, "mismatch of kie server instances");
             expected.stream().forEach(kieServerExpected -> {
-                assertTrue(Stream.of(actual.getServerTemplates()).anyMatch(kieServerActual -> kieServerActual.getId().equals(kieServerExpected)));
+                assertTrue(Stream.of(actual.getServerTemplates()).anyMatch(serverTemplate -> serverTemplate.getId().equals(kieServerExpected)));
             });
         });
     }

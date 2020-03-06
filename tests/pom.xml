@@ -113,6 +113,9 @@
       <usePhrasedClassNameInTestCaseSummary>true</usePhrasedClassNameInTestCaseSummary>
      </statelessTestsetInfoReporter>
      <systemProperties>
+      <javax.net.ssl.trustStore>${certificate.dir}/${overrides.client.openshift.selected}_client.ts</javax.net.ssl.trustStore>
+      <javax.net.ssl.trustStorePassword>${certificate.keypass}</javax.net.ssl.trustStorePassword>
+      <overrides.test.project.certificate.secret>${certificate.keypass}</overrides.test.project.certificate.secret>
       <!-- v3 or v4_playground -->
       <client.openshift.selected>${overrides.client.openshift.selected}</client.openshift.selected>
       <!-- operator (only for v4_X openshift) or templates -->
@@ -131,6 +134,12 @@
       <client.openshift.config.v4_playground.namespace>${overrides.client.openshift.config.v4_playground.namespace}</client.openshift.config.v4_playground.namespace>
       <client.openshift.config.v4_playground.username>${overrides.client.openshift.config.v4_playground.username}</client.openshift.config.v4_playground.username>
       <client.openshift.config.v4_playground.password>${overrides.client.openshift.config.v4_playground.password}</client.openshift.config.v4_playground.password>
+      <!-- Openshift v4_production -->
+      <client.openshift.config.v4_production.url>${overrides.client.openshift.config.v4_production.url}</client.openshift.config.v4_production.url>
+      <client.openshift.config.v4_production.version>${overrides.client.openshift.config.v4_production.version}</client.openshift.config.v4_production.version>
+      <client.openshift.config.v4_production.namespace>${overrides.client.openshift.config.v4_production.namespace}</client.openshift.config.v4_production.namespace>
+      <client.openshift.config.v4_production.username>${overrides.client.openshift.config.v4_production.username}</client.openshift.config.v4_production.username>
+      <client.openshift.config.v4_production.password>${overrides.client.openshift.config.v4_production.password}</client.openshift.config.v4_production.password>
      </systemProperties>
     </configuration>
    </plugin>

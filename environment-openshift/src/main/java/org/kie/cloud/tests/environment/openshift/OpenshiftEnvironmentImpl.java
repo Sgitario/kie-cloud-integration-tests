@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 import cz.xtf.builder.builders.RouteBuilder;
@@ -77,21 +78,26 @@ public class OpenshiftEnvironmentImpl implements OpenshiftEnvironment, Environme
         }
     }
 
-    public void createSecret(Project project, String secretName, Map<String, String> secrets) {
-        if (dryRunMode) {
-            return;
-        }
-
-        log.debug("Loading secret ... '{}'", secretName);
-        try (OpenShift openShift = OpenShifts.master(project.getName())) {
+    public void createRawSecret(Project project, String secretName, Map<String, String> secrets) {
+        createSecret(project, secretName, () -> {
             SecretBuilder sb = new SecretBuilder(secretName);
             for (Entry<String, String> entry : secrets.entrySet()) {
                 sb.addRawData(entry.getKey(), entry.getValue());
             }
 
-            openShift.createSecret(sb.build());
-            log.debug("Secret loaded OK ");
-        }
+            return sb;
+        });
+    }
+
+    public void createEncodedSecret(Project project, String secretName, Map<String, String> secrets) {
+        createSecret(project, secretName, () -> {
+            SecretBuilder sb = new SecretBuilder(secretName);
+            for (Entry<String, String> entry : secrets.entrySet()) {
+                sb.addEncodedData(entry.getKey(), entry.getValue());
+            }
+
+            return sb;
+        });
     }
 
     @Override
@@ -203,6 +209,18 @@ public class OpenshiftEnvironmentImpl implements OpenshiftEnvironment, Environme
     public void waitForRollout(Project project, Collection<Deployment> deployments) {
         try (OpenShift openShift = OpenShifts.master(project.getName())) {
             deployments.parallelStream().forEach(deployment -> waitForRollout(openShift, deployment));
+        }
+    }
+
+    private void createSecret(Project project, String secretName, Supplier<SecretBuilder> builder) {
+        if (dryRunMode) {
+            return;
+        }
+
+        log.debug("Loading secret ... '{}'", secretName);
+        try (OpenShift openShift = OpenShifts.master(project.getName())) {
+            openShift.createSecret(builder.get().build());
+            log.debug("Secret loaded OK ");
         }
     }
 

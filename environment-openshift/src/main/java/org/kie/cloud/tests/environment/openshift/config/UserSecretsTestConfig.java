@@ -29,7 +29,7 @@ public class UserSecretsTestConfig implements TestConfig {
         Map<String, String> data = new HashMap<>();
         data.put(KIE_ADMIN_USER, credentials.getUser());
         data.put(KIE_ADMIN_PWD, credentials.getPassword());
-        openshift.createSecret(testContext.getProject(), credentials.getSecret(), data);
+        openshift.createRawSecret(testContext.getProject(), credentials.getSecret(), data);
     }
 
 }

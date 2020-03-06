@@ -30,6 +30,11 @@
   <slf4j.version>1.7.26</slf4j.version>
   <xtf.version>0.15-SNAPSHOT</xtf.version>
   <lombok.version>1.18.10</lombok.version>
+  
+  <!-- SSL Auto Certificates -->
+  <certificate.dir>../openshiftCerts</certificate.dir>
+  <certificate.keypass>mykeystorepass</certificate.keypass>
+  <certificate.server.alias>jboss</certificate.server.alias>
  </properties>
 
  <build>
