@@ -32,7 +32,7 @@ import static org.junit.Assert.fail;
 public class IntegrationTest {
 
     private static final String BC_URL = "https://myapp-rhpamcentr-josecarvajalhilario-tests-cca4.apps.playground.rhba.openshift-aws.rhocf-dev.com/rest/controller";
-    private static final String KIESERVER_URL = "http://insecure-myapp-kieserver-josecarvajalhilario-tests-4e67.project.openshiftdomain/services/rest/server";
+    private static final String KIESERVER_URL = "http://insecure-myapp-kieserver-jenkins-dm-7b64.project.openshiftdomain/services/rest/server";
 
     @Test
     public void bcUsingDefault() throws MalformedURLException, IOException {
@@ -69,11 +69,11 @@ public class IntegrationTest {
 
     @Test
     public void kieServerUsingApi() throws MalformedURLException, IOException {
-        String username = "adminUser";
-        String password = "adminUser1!";
+        String username = "yoda";
+        String password = "usetheforce123@";
         try {
             KieServicesClient responseCreateServerTemplate = new KieServerClientImpl(KIESERVER_URL, username, password);
-            System.out.println(responseCreateServerTemplate.getServerInfo());
+            System.out.println(responseCreateServerTemplate.listContainers());
         } catch (RuntimeException ex) {
             ex.printStackTrace();
             if (ex.getCause() instanceof KieServicesHttpException) {

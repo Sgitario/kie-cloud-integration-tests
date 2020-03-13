@@ -3,3 +3,6 @@ target
 src/test/resources/params.properties
 
 tests/src/test/resources/params.properties
+openshiftCerts/*
+
+*.prefs
