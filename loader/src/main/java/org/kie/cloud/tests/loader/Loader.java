@@ -44,11 +44,11 @@ public abstract class Loader {
     }
 
     protected void forEachBusinessCentral(TestContext testContext, Consumer<Deployment> action) {
-        forEachDeployment(testContext, name -> name.contains(Deployments.BUSINESS_CENTRAL), deployment -> action.accept(deployment));
+        forEachDeployment(testContext, Deployments::isBusinessCentral, deployment -> action.accept(deployment));
     }
 
     protected void forEachKieServer(TestContext testContext, Consumer<Deployment> action) {
-        forEachDeployment(testContext, name -> name.contains(Deployments.KIE_SERVER), deployment -> action.accept(deployment));
+        forEachDeployment(testContext, Deployments::isKieServer, deployment -> action.accept(deployment));
     }
 
     protected void forEachDeployment(TestContext testContext, Predicate<String> match, Consumer<Deployment> action) {

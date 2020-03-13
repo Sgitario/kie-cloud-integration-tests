@@ -20,7 +20,7 @@ import java.util.Map;
 import org.kie.cloud.tests.loader.templates.TemplateLoader;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public abstract class PartyBaseTest extends BaseTest {
+public abstract class PartyJbpmBaseTest extends JbpmBaseTest {
 
     @Autowired
     private TemplateLoader templateLoader;

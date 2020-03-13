@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.kie.cloud.tests.core.context.Mode;
 import org.kie.cloud.tests.services.RecordScenarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -28,7 +29,7 @@ public abstract class BaseTest extends Base {
 
     @BeforeAll
 	public void setup() {
-        super.startUp();
+        super.startUp(mode());
         beforeOnLoadScenario();
         whenLoadScenario(scenario(), scenarioExtraParams());
         afterOnLoadScenario();
@@ -38,6 +39,8 @@ public abstract class BaseTest extends Base {
 	public void clearDown() {
         super.cleanUp();
 	}
+
+    protected abstract Mode mode();
 
     protected abstract String scenario();
 

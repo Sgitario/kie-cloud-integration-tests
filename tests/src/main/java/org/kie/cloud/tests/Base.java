@@ -21,6 +21,7 @@ import java.util.function.BiConsumer;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.kie.cloud.tests.core.config.TestConfig;
+import org.kie.cloud.tests.core.context.Mode;
 import org.kie.cloud.tests.core.context.Project;
 import org.kie.cloud.tests.core.context.TestContext;
 import org.kie.cloud.tests.core.properties.CredentialsProperties;
@@ -72,9 +73,9 @@ public abstract class Base {
         return defaultCredentials.getPassword();
     }
 
-    protected void startUp() {
+    protected void startUp(Mode mode) {
         Project project = projectService.createProject();
-        testContext = new TestContext(project);
+        testContext = new TestContext(project, mode);
         runConfigurers(TestConfig::before);
     }
 

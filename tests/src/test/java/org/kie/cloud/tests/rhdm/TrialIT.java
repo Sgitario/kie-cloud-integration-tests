@@ -1,26 +1,27 @@
-package org.kie.cloud.tests;
+package org.kie.cloud.tests.rhdm;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.kie.cloud.tests.DroolsBaseTest;
 import org.kie.cloud.tests.steps.IntegrationSteps;
 import org.kie.cloud.tests.steps.LoginSteps;
 import org.kie.cloud.tests.utils.Scenarios;
 
-@DisplayName("RHPAM Authoring")
-public class AuthoringIT extends BaseTest implements LoginSteps, IntegrationSteps {
+@DisplayName("RHDM Trial")
+public class TrialIT extends DroolsBaseTest implements LoginSteps, IntegrationSteps {
 
     @Override
     protected String scenario() {
-        return Scenarios.RHPAM_AUTHORING;
+        return Scenarios.RHDM_TRIAL;
     }
 
-    @Test
     @Tag("login")
+	@Test
     public void canLogin() {
         thenCanLoginInBusinessCentral();
         thenCanLoginInKieServer();
-    }
+	}
 
     @Tag("integration")
     @Test

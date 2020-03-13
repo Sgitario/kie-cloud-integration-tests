@@ -15,6 +15,7 @@
 package org.kie.cloud.tests.app;
 
 import org.kie.cloud.tests.Base;
+import org.kie.cloud.tests.core.context.Mode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -35,7 +36,7 @@ public class TestScriptRunner extends Base implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         try {
-            startUp();
+            startUp(Mode.JBPM);
             whenLoadScenario(scenario.getName(), scenario.getParams());
         } finally {
             cleanUp();

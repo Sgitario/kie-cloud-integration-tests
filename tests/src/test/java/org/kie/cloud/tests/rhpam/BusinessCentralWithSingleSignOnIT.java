@@ -12,17 +12,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.kie.cloud.tests;
+package org.kie.cloud.tests.rhpam;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.kie.cloud.tests.SingleSignOnJbpmBaseTest;
 import org.kie.cloud.tests.loader.operator.DisabledOnOperators;
 import org.kie.cloud.tests.steps.LoginSteps;
 
 @DisabledOnOperators
 @DisplayName("Business Central with SSO")
-public class BusinessCentralWithSingleSignOnIT extends SingleSignOnBaseTest implements LoginSteps {
+public class BusinessCentralWithSingleSignOnIT extends SingleSignOnJbpmBaseTest implements LoginSteps {
 
     @Override
     protected String scenario() {

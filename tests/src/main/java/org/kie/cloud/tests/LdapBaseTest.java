@@ -36,7 +36,7 @@ import static org.kie.cloud.tests.core.constants.LdapConstants.AUTH_LDAP_SEARCH_
 import static org.kie.cloud.tests.core.constants.LdapConstants.AUTH_LDAP_URL;
 
 @Tag("auth-ldap")
-public abstract class LdapBaseTest extends PartyBaseTest {
+public abstract class LdapBaseTest extends PartyJbpmBaseTest {
 
     @Autowired
     private LdapProperties ldapProperties;

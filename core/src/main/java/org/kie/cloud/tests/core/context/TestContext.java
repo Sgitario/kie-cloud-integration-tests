@@ -12,6 +12,8 @@ import static org.junit.jupiter.api.Assertions.fail;
 @Data
 public class TestContext {
 	private final Project project;
+    private final Mode mode;
+
 	private String secret;
 	private Map<String, Deployment> deployments = new HashMap<>();
     private Map<String, String> properties;

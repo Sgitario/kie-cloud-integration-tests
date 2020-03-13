@@ -35,7 +35,7 @@ import static org.kie.cloud.tests.core.constants.SsoContants.SSO_USERNAME;
 
 @Slf4j
 @Tag("auth-sso")
-public abstract class SingleSignOnBaseTest extends PartyBaseTest {
+public abstract class SingleSignOnJbpmBaseTest extends PartyJbpmBaseTest {
 
     private static final String[] ROLES = new String[]{"admin", "kie-server", "rest-all"};
     private static final String BUSINESS_CENTRAL_CLIENT = "business-central-client";

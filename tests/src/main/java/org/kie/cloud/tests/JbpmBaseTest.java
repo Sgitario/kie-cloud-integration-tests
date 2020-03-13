@@ -14,25 +14,12 @@
  */
 package org.kie.cloud.tests;
 
-import java.util.HashMap;
-import java.util.Map;
+import org.kie.cloud.tests.core.context.Mode;
 
-import org.junit.jupiter.api.Tag;
-import org.kie.cloud.tests.utils.Parties;
-
-@Tag("mysql")
-public abstract class MySqlBaseTest extends PartyJbpmBaseTest {
+public abstract class JbpmBaseTest extends BaseTest {
 
     @Override
-    protected String getParty() {
-        return Parties.MYSQL;
-    }
-
-    @Override
-    protected Map<String, String> scenarioExtraParams() {
-        Map<String, String> params = new HashMap<>();
-        params.putAll(super.scenarioExtraParams());
-        params.putAll(getDeploymentParams(Parties.MYSQL));
-        return params;
+    protected Mode mode() {
+        return Mode.JBPM;
     }
 }

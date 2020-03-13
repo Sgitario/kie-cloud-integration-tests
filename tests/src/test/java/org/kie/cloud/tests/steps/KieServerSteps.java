@@ -64,6 +64,6 @@ public interface KieServerSteps extends Steps {
     }
 
     default void forEachKieServer(Consumer<KieServer> action) {
-        forEachDeployment(name -> name.endsWith(Deployments.KIE_SERVER), deployment -> action.accept(new KieServer(getTestContext(), deployment, getEnvironment())));
+        forEachDeployment(Deployments::isKieServer, deployment -> action.accept(new KieServer(getTestContext(), deployment, getEnvironment())));
     }
 }

@@ -12,17 +12,18 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.kie.cloud.tests;
+package org.kie.cloud.tests.rhpam;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
+import org.kie.cloud.tests.LdapBaseTest;
 import org.kie.cloud.tests.loader.operator.DisabledOnOperators;
 import org.kie.cloud.tests.steps.LoginSteps;
 
 @DisabledOnOperators
-@DisplayName("Business Central")
-public class BusinessCentralIT extends BaseTest implements LoginSteps {
+@DisplayName("Business Central with LDAP")
+public class BusinessCentralWithLDAPIT extends LdapBaseTest implements LoginSteps {
 
     @Override
     protected String scenario() {

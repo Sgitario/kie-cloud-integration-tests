@@ -6,7 +6,7 @@ import java.util.Map;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
-import org.kie.cloud.tests.BaseTest;
+import org.kie.cloud.tests.JbpmBaseTest;
 import org.kie.cloud.tests.environment.openshift.OpenshiftEnvironmentImpl;
 import org.kie.cloud.tests.steps.IntegrationSteps;
 import org.kie.cloud.tests.steps.LoginSteps;
@@ -14,7 +14,7 @@ import org.kie.cloud.tests.utils.Scenarios;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @Disabled
-public class WithExternalDatabaseTest extends BaseTest implements LoginSteps, IntegrationSteps {
+public class WithExternalDatabaseTest extends JbpmBaseTest implements LoginSteps, IntegrationSteps {
 
     @Autowired
     private OpenshiftEnvironmentImpl openshift;
