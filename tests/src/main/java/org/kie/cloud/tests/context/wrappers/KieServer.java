@@ -15,6 +15,8 @@
 package org.kie.cloud.tests.context.wrappers;
 
 import org.kie.cloud.tests.core.context.Deployment;
+import org.kie.cloud.tests.core.context.TestContext;
+import org.kie.cloud.tests.environment.Environment;
 import org.kie.cloud.tests.utils.KieServerClientImpl;
 import org.kie.server.client.KieServicesClient;
 
@@ -24,10 +26,14 @@ public class KieServer {
 
     private static final String API_PATH = "/services/rest/server";
 
+    private final TestContext testContext;
     private final Deployment deployment;
+    private final Environment environment;
 
-    public KieServer(Deployment deployment) {
+    public KieServer(TestContext testContext, Deployment deployment, Environment environment) {
+        this.testContext = testContext;
         this.deployment = deployment;
+        this.environment = environment;
     }
 
     public KieServicesClient restClient(String username, String password) {
@@ -45,5 +51,9 @@ public class KieServer {
 
     public String getAppName() {
         return deployment.getName();
+    }
+
+    public void restart() {
+        environment.restartDeployment(testContext.getProject(), deployment);
     }
 }

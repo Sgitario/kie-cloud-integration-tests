@@ -18,6 +18,8 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Stream;
 
+import org.kie.cloud.tests.context.wrappers.BusinessCentral;
+import org.kie.cloud.tests.context.wrappers.KieServer;
 import org.kie.server.controller.api.model.spec.ServerTemplateList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -26,11 +28,15 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public interface IntegrationSteps extends KieServerSteps, BusinessCentralSteps {
 
+    default void whenBusinessCentralIsRestarted() {
+        forEachBusinessCentral(BusinessCentral::restart);
+    }
+
+    default void whenKieServerIsRestarted() {
+        forEachKieServer(KieServer::restart);
+    }
+
     default void thenKieServersAreConnectedWithBusinessCentrals() {
-        assertKieServersFor((c, d) -> {
-
-        });
-
         Set<String> expected = new HashSet<>();
         forEachKieServer(kieServer -> expected.add(kieServer.getAppName()));
         assertBusinessCentralsFor((c, d) -> {
@@ -43,5 +49,4 @@ public interface IntegrationSteps extends KieServerSteps, BusinessCentralSteps {
             });
         });
     }
-
 }

@@ -28,4 +28,17 @@ public class AuthoringHighAvailabilityIT extends BaseTest implements LoginSteps,
         thenKieServersAreConnectedWithBusinessCentrals();
     }
 
+    @Tag("integration")
+    @Test
+    public void shouldKieServerReconnectWhenBusinessCentralIsRestarted() {
+        whenBusinessCentralIsRestarted();
+        thenKieServersAreConnectedWithBusinessCentrals();
+    }
+
+    @Tag("integration")
+    @Test
+    public void shouldBusinessCentralReconnectWhenKieServerIsRestarted() {
+        whenKieServerIsRestarted();
+        thenKieServersAreConnectedWithBusinessCentrals();
+    }
 }

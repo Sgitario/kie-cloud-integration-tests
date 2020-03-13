@@ -37,6 +37,5 @@ public class Deployment {
         if (channel != null && channel instanceof Closeable) {
             CloseableUtils.closeQuietly((Closeable) channel);
         }
-
     }
 }

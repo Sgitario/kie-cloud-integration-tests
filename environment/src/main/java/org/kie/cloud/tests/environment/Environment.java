@@ -14,6 +14,7 @@
  */
 package org.kie.cloud.tests.environment;
 
+import org.kie.cloud.tests.core.context.Deployment;
 import org.kie.cloud.tests.core.context.Project;
 
 public interface Environment {
@@ -21,5 +22,7 @@ public interface Environment {
     Project createProject(String name);
 
     void deleteProject(Project project);
+
+    void restartDeployment(Project project, Deployment deployment);
 
 }

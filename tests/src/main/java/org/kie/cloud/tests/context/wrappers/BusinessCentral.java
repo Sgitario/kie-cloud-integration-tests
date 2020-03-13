@@ -16,8 +16,9 @@ package org.kie.cloud.tests.context.wrappers;
 
 import java.io.Closeable;
 
-import org.apache.commons.codec.binary.StringUtils;
 import org.kie.cloud.tests.core.context.Deployment;
+import org.kie.cloud.tests.core.context.TestContext;
+import org.kie.cloud.tests.environment.Environment;
 import org.kie.cloud.tests.utils.CloseableUtils;
 import org.kie.server.controller.client.KieServerControllerClient;
 import org.kie.server.controller.client.KieServerControllerClientFactory;
@@ -28,17 +29,18 @@ public class BusinessCentral {
 
     private static final String REST_API_PATH = "/rest/controller";
 
+    private final TestContext testContext;
     private final Deployment deployment;
+    private final Environment environment;
 
-    private String currentUsername;
-    private String currentPassword;
-
-    public BusinessCentral(Deployment deployment) {
+    public BusinessCentral(TestContext testContext, Deployment deployment, Environment environment) {
+        this.testContext = testContext;
         this.deployment = deployment;
+        this.environment = environment;
     }
 
     public KieServerControllerClient restClient(String username, String password) {
-        if (deployment.getChannel() != null && StringUtils.equals(username, currentUsername) && StringUtils.equals(password, currentPassword)) {
+        if (deployment.getChannel() != null) {
             return (KieServerControllerClient) deployment.getChannel();
         }
 
@@ -49,5 +51,9 @@ public class BusinessCentral {
         assertNotNull(deployment.getHttpUrl(), "Http URL is null!");
         deployment.setChannel(KieServerControllerClientFactory.newRestClient(deployment.getHttpUrl() + REST_API_PATH, username, password));
         return (KieServerControllerClient) deployment.getChannel();
+    }
+
+    public void restart() {
+        environment.restartDeployment(testContext.getProject(), deployment);
     }
 }

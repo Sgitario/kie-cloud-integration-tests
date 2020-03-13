@@ -27,4 +27,18 @@ public class TrialIT extends BaseTest implements LoginSteps, IntegrationSteps {
     public void shouldKieServerConnectWithBusinessCentral() {
         thenKieServersAreConnectedWithBusinessCentrals();
     }
+
+    @Tag("integration")
+    @Test
+    public void shouldKieServerReconnectWhenBusinessCentralIsRestarted() {
+        whenBusinessCentralIsRestarted();
+        thenKieServersAreConnectedWithBusinessCentrals();
+    }
+
+    @Tag("integration")
+    @Test
+    public void shouldBusinessCentralReconnectWhenKieServerIsRestarted() {
+        whenKieServerIsRestarted();
+        thenKieServersAreConnectedWithBusinessCentrals();
+    }
 }

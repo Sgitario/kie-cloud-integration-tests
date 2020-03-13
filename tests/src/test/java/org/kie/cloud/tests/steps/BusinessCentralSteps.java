@@ -48,6 +48,6 @@ public interface BusinessCentralSteps extends Steps {
     }
 
     default void forEachBusinessCentral(Consumer<BusinessCentral> action) {
-        forEachDeployment(name -> name.contains(Deployments.BUSINESS_CENTRAL), deployment -> action.accept(new BusinessCentral(deployment)));
+        forEachDeployment(name -> name.contains(Deployments.BUSINESS_CENTRAL), deployment -> action.accept(new BusinessCentral(getTestContext(), deployment, getEnvironment())));
     }
 }

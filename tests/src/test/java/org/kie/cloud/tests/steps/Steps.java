@@ -19,6 +19,7 @@ import java.util.function.Predicate;
 
 import org.kie.cloud.tests.core.context.Deployment;
 import org.kie.cloud.tests.core.context.TestContext;
+import org.kie.cloud.tests.environment.Environment;
 import org.kie.cloud.tests.loader.Loader;
 
 public interface Steps {
@@ -26,6 +27,8 @@ public interface Steps {
     Loader getCurrentLoader();
 
     TestContext getTestContext();
+
+    Environment getEnvironment();
 
     String getUserName();
 

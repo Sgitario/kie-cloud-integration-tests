@@ -15,7 +15,6 @@
 package org.kie.cloud.tests.environment.openshift;
 
 import java.io.InputStream;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -75,6 +74,23 @@ public class OpenshiftEnvironmentImpl implements OpenshiftEnvironment, Environme
 
         try (OpenShift openShift = OpenShifts.master()) {
             openShift.deleteProject(project.getName());
+        }
+    }
+
+    @Override
+    public void restartDeployment(Project project, Deployment deployment) {
+        if (dryRunMode) {
+            return;
+        }
+
+        log.debug("Restarting deployment ...  {}", deployment.getName());
+        try (OpenShift openShift = OpenShifts.master(project.getName())) {
+            int replicas = getReplicasCountByDeployment(openShift, deployment.getName());
+            openShift.deploymentConfigs().withName(deployment.getName()).scale(0);
+            waitForDeployment(openShift, deployment.getName());
+            openShift.deploymentConfigs().withName(deployment.getName()).scale(replicas, true);
+            waitForDeployment(openShift, deployment.getName());
+            log.debug("Deployment restarted OK ");
         }
     }
 
@@ -193,22 +209,16 @@ public class OpenshiftEnvironmentImpl implements OpenshiftEnvironment, Environme
         }
     }
 
-    public void waitForDeployment(Project project, String name) {
+    public void waitForDeployment(Project project, String deploymentName) {
         if (dryRunMode) {
             return;
         }
 
-        log.debug("Waiting for deployment '{}' ... ", name);
+        log.debug("Waiting for deployment '{}' ... ", deploymentName);
         try (OpenShift openShift = OpenShifts.master(project.getName())) {
 
-            waitForDeployment(openShift, name);
-            log.debug("Deployment '{}' started. ", name);
-        }
-    }
-
-    public void waitForRollout(Project project, Collection<Deployment> deployments) {
-        try (OpenShift openShift = OpenShifts.master(project.getName())) {
-            deployments.parallelStream().forEach(deployment -> waitForRollout(openShift, deployment));
+            waitForDeployment(openShift, deploymentName);
+            log.debug("Deployment '{}' started. ", deploymentName);
         }
     }
 
@@ -232,9 +242,12 @@ public class OpenshiftEnvironmentImpl implements OpenshiftEnvironment, Environme
     }
 
     private void waitForDeployment(OpenShift openShift, String name) {
-        awaitsLong().pollDelay(5, TimeUnit.SECONDS).until(() -> openShift.getDeploymentConfig(name) != null);
-        int expectedPods = openShift.getDeploymentConfig(name).getSpec().getReplicas().intValue();
+        int expectedPods = getReplicasCountByDeployment(openShift, name);
         waitUntilAllPodsAreRunning(openShift, name, expectedPods);
+    }
+
+    private int getReplicasCountByDeployment(OpenShift openShift, String name) {
+        return openShift.getDeploymentConfig(name).getSpec().getReplicas().intValue();
     }
 
     private Deployment loadDeployment(OpenShift openShift, String name) {
@@ -277,17 +290,17 @@ public class OpenshiftEnvironmentImpl implements OpenshiftEnvironment, Environme
         }
     }
 
-    private void waitUntilAllPodsAreRunning(OpenShift openShift, String serviceName, int expectedPods) {
+    private void waitUntilAllPodsAreRunning(OpenShift openShift, String name, int expectedPods) {
         try {
-            openShift.waiters().areExactlyNPodsReady(expectedPods, DEPLOYMENT_CONFIG_LABEL, serviceName)
-                     .timeout(PODS_START_TO_READY_TIMEOUT).reason("Waiting for " + expectedPods + " pods of deployment config '" + serviceName + "' to become ready.")
+            openShift.waiters().areExactlyNPodsReady(expectedPods, DEPLOYMENT_CONFIG_LABEL, name)
+                     .timeout(PODS_START_TO_READY_TIMEOUT).reason("Waiting for " + expectedPods + " pods of deployment config '" + name + "' to become ready.")
                      .waitFor();
 
-            openShift.waiters().areExactlyNPodsRunning(expectedPods, DEPLOYMENT_CONFIG_LABEL, serviceName)
-                     .timeout(PODS_START_TO_READY_TIMEOUT).reason("Waiting for " + expectedPods + " pods of deployment config '" + serviceName + "' to become runnning.")
+            openShift.waiters().areExactlyNPodsRunning(expectedPods, DEPLOYMENT_CONFIG_LABEL, name)
+                     .timeout(PODS_START_TO_READY_TIMEOUT).reason("Waiting for " + expectedPods + " pods of deployment config '" + name + "' to become runnning.")
                      .waitFor();
         } catch (AssertionError e) {
-            Assertions.fail("Timeout while waiting for pods to start for service '" + serviceName + "'");
+            Assertions.fail("Timeout while waiting for pods to start for service '" + name + "'");
         }
     }
 }

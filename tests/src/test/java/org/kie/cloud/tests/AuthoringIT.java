@@ -27,4 +27,18 @@ public class AuthoringIT extends BaseTest implements LoginSteps, IntegrationStep
     public void shouldKieServerConnectWithBusinessCentral() {
         thenKieServersAreConnectedWithBusinessCentrals();
     }
+
+    @Tag("integration")
+    @Test
+    public void shouldKieServerReconnectWhenBusinessCentralIsRestarted() {
+        whenBusinessCentralIsRestarted();
+        thenKieServersAreConnectedWithBusinessCentrals();
+    }
+
+    @Tag("integration")
+    @Test
+    public void shouldBusinessCentralReconnectWhenKieServerIsRestarted() {
+        whenKieServerIsRestarted();
+        thenKieServersAreConnectedWithBusinessCentrals();
+    }
 }

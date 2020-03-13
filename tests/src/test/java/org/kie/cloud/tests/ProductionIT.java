@@ -27,4 +27,18 @@ public class ProductionIT extends BaseTest implements LoginSteps, IntegrationSte
     public void shouldKieServerConnectWithBusinessCentral() {
         thenKieServersAreConnectedWithBusinessCentrals();
     }
+
+    @Tag("integration")
+    @Test
+    public void shouldKieServerReconnectWhenBusinessCentralIsRestarted() {
+        whenBusinessCentralIsRestarted();
+        thenKieServersAreConnectedWithBusinessCentrals();
+    }
+
+    @Tag("integration")
+    @Test
+    public void shouldBusinessCentralReconnectWhenKieServerIsRestarted() {
+        whenKieServerIsRestarted();
+        thenKieServersAreConnectedWithBusinessCentrals();
+    }
 }

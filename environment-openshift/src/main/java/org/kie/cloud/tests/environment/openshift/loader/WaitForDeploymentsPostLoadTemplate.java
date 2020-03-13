@@ -15,7 +15,7 @@ public class WaitForDeploymentsPostLoadTemplate implements PostLoadDeployment {
 
 	@Override
 	public void process(TestContext testContext, Deployment deployment) {
-		openshift.waitForDeployment(testContext.getProject(), deployment.getName());
+        openshift.waitForDeployment(testContext.getProject(), deployment.getName());
 	}
 
 }

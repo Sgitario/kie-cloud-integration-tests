@@ -24,6 +24,7 @@ import org.kie.cloud.tests.core.config.TestConfig;
 import org.kie.cloud.tests.core.context.Project;
 import org.kie.cloud.tests.core.context.TestContext;
 import org.kie.cloud.tests.core.properties.CredentialsProperties;
+import org.kie.cloud.tests.environment.Environment;
 import org.kie.cloud.tests.loader.Loader;
 import org.kie.cloud.tests.services.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +53,10 @@ public abstract class Base {
 
     @Autowired
     private ApplicationContext appContext;
+
+    @Getter
+    @Autowired
+    private Environment environment;
 
     @Getter
     private TestContext testContext;
