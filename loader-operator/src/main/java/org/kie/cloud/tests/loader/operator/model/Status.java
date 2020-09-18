@@ -29,6 +29,8 @@ public class Status {
     private String consoleHost;
     private Deployments deployments;
     private String phase;
+    private String version;
+    private Spec applied;
 
     public Conditions[] getConditions() {
         return conditions;
@@ -60,5 +62,21 @@ public class Status {
 
     public void setPhase(String phase) {
         this.phase = phase;
+    }
+
+    public Spec getApplied() {
+        return applied;
+    }
+
+    public void setApplied(Spec applied) {
+        this.applied = applied;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
     }
 }

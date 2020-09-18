@@ -16,6 +16,7 @@ package org.kie.cloud.tests.context.wrappers;
 
 import java.io.Closeable;
 
+import lombok.Getter;
 import org.kie.cloud.tests.core.context.Deployment;
 import org.kie.cloud.tests.core.context.TestContext;
 import org.kie.cloud.tests.environment.Environment;
@@ -30,6 +31,7 @@ public class BusinessCentral {
     private static final String REST_API_PATH = "/rest/controller";
 
     private final TestContext testContext;
+    @Getter
     private final Deployment deployment;
     private final Environment environment;
 

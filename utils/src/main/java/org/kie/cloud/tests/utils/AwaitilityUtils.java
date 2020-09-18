@@ -20,7 +20,10 @@ public final class AwaitilityUtils {
 	}
 
     public static final ConditionFactory awaitsCustom(int delayMillis, int pollMillis, int atMostMillis) {
-        return Awaitility.with().catchUncaughtExceptions().pollDelay(delayMillis, TimeUnit.MILLISECONDS).and().pollInterval(pollMillis, TimeUnit.MILLISECONDS).await()
+        return Awaitility.catchUncaughtExceptions()
+                         .pollDelay(delayMillis, TimeUnit.MILLISECONDS)
+                         .pollInterval(pollMillis, TimeUnit.MILLISECONDS)
+                         .ignoreExceptions()
                          .atMost(atMostMillis, TimeUnit.MILLISECONDS);
     }
 

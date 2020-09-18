@@ -14,7 +14,7 @@
  */
 package org.kie.cloud.tests.core.constants;
 
-public final class SsoContants {
+public final class SsoConstants {
 
     public static final String SSO_URL = "SSO_URL";
     public static final String SSO_REALM = "SSO_REALM";
@@ -25,7 +25,7 @@ public final class SsoContants {
     public static final String SSO_KIE_SERVER_SSO_CLIENT = "KIE_SERVER_SSO_CLIENT";
     public static final String SSO_KIE_SERVER_SSO_SECRET = "KIE_SERVER_SSO_SECRET";
 
-    private SsoContants() {
+    private SsoConstants() {
 
     }
 }

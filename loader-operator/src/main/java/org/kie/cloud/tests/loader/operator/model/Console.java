@@ -34,6 +34,9 @@ public class Console {
     private Integer replicas;
     private SsoClient ssoClient;
     private Resources resources;
+    private String image;
+    private String imageTag;
+    private String imageUrl;
 
     public void addEnv(Env env) {
         this.env.add(env);
@@ -81,5 +84,29 @@ public class Console {
 
     public void setResources(Resources resources) {
         this.resources = resources;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public String getImageTag() {
+        return imageTag;
+    }
+
+    public void setImageTag(String imageTag) {
+        this.imageTag = imageTag;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 }

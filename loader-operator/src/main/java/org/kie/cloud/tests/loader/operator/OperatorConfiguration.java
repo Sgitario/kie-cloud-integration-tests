@@ -1,5 +1,6 @@
 package org.kie.cloud.tests.loader.operator;
 
+import java.util.List;
 import java.util.Map;
 
 import lombok.Data;
@@ -14,10 +15,11 @@ public class OperatorConfiguration {
 
     private String kieAppName;
     private boolean forceCrdUpdate;
+    private String useComponentsVersion;
     private Resource crd;
     private Resource serviceAccount;
-    private Resource role;
-    private Resource roleBinding;
+    private List<Resource> roles;
+    private List<Resource> roleBindings;
     private Resource definition;
     private Map<String, OperatorDefinition> definitions;
 }

@@ -20,6 +20,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -38,6 +40,7 @@ import org.hamcrest.Matchers;
 import org.kie.cloud.tests.core.context.Deployment;
 import org.kie.cloud.tests.core.context.Project;
 import org.kie.cloud.tests.environment.Environment;
+import org.kie.cloud.tests.utils.AwaitilityUtils;
 import org.kie.cloud.tests.utils.OpenshiftExtensionModelUtils;
 import org.kie.cloud.tests.utils.environment.OpenshiftEnvironment;
 import org.springframework.beans.factory.annotation.Value;
@@ -75,6 +78,29 @@ public class OpenshiftEnvironmentImpl implements OpenshiftEnvironment, Environme
         try (OpenShift openShift = OpenShifts.master()) {
             openShift.deleteProject(project.getName());
         }
+    }
+
+    @Override
+    public String getImageStreamUrlByVersion(Project project, String imageName, String imageStreamVersion) {
+        return getImageStreamsByImage(project, imageName).stream()
+                                                         .sorted()
+                                                         .filter(repoUrl -> repoUrl.contains(imageStreamVersion))
+                                                         .findFirst()
+                                                         .orElseGet(() -> {
+                                                             Assertions.fail("Image '" + imageName + "' not found");
+                                                             return null;
+                                                         });
+    }
+
+    @Override
+    public String getLatestImageStreamUrl(Project project, String imageName) {
+        return getImageStreamsByImage(project, imageName).stream()
+                                                         .sorted()
+                                                         .reduce((first, second) -> second) // get last
+                                                         .orElseGet(() -> {
+                                                             Assertions.fail("Image '" + imageName + "' not found");
+                                                             return null;
+                                                         });
     }
 
     @Override
@@ -203,6 +229,13 @@ public class OpenshiftEnvironmentImpl implements OpenshiftEnvironment, Environme
     }
 
     @Override
+    public void waitForRollout(Project project, Deployment deployment) {
+        try (OpenShift openShift = OpenShifts.master(project.getName())) {
+            waitForRollout(openShift, deployment);
+        }
+    }
+
+    @Override
     public void createRouteForService(Project project, String name, String host, String deploymentName) {
         try (OpenShift openShift = OpenShifts.master(project.getName())) {
             openShift.createRoute(new RouteBuilder(deploymentName + "-" + name).addLabel("service", deploymentName).forService(deploymentName).exposedAsHost(host).build());
@@ -247,7 +280,7 @@ public class OpenshiftEnvironmentImpl implements OpenshiftEnvironment, Environme
     }
 
     private int getReplicasCountByDeployment(OpenShift openShift, String name) {
-        return openShift.getDeploymentConfig(name).getSpec().getReplicas().intValue();
+        return AwaitilityUtils.awaitsLong().until(() -> Optional.ofNullable(openShift.getDeploymentConfig(name)).map(dc -> dc.getSpec()).map(spec -> spec.getReplicas()).orElse(null), Objects::nonNull);
     }
 
     private Deployment loadDeployment(OpenShift openShift, String name) {
@@ -264,7 +297,6 @@ public class OpenshiftEnvironmentImpl implements OpenshiftEnvironment, Environme
                 variables.putAll(openShift.getDeploymentConfigEnvVars(name));
                 return true;
             } catch (Exception ex) {
-
                 log.warn("Error loading config properties. Cause: " + ex.getMessage());
             }
 
@@ -301,6 +333,18 @@ public class OpenshiftEnvironmentImpl implements OpenshiftEnvironment, Environme
                      .waitFor();
         } catch (AssertionError e) {
             Assertions.fail("Timeout while waiting for pods to start for service '" + name + "'");
+        }
+    }
+
+    private List<String> getImageStreamsByImage(Project project, String imageName) {
+        try (OpenShift openShift = OpenShifts.master(project.getName())) {
+            return openShift.getImageStreams()
+                            .stream()
+                            .filter(image -> StringUtils.equals(image.getMetadata().getName(), imageName))
+                            .flatMap(image -> {
+                                String repo = image.getStatus().getDockerImageRepository();
+                                return image.getSpec().getTags().stream().map(tag -> repo + ":" + tag.getName());
+                            }).collect(Collectors.toList());
         }
     }
 }

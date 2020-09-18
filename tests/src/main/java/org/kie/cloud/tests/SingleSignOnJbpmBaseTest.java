@@ -24,14 +24,14 @@ import org.kie.cloud.tests.clients.sso.SsoClient;
 import org.kie.cloud.tests.utils.Deployments;
 import org.kie.cloud.tests.utils.Parties;
 
-import static org.kie.cloud.tests.core.constants.SsoContants.SSO_BUSINESS_CENTRAL_SSO_CLIENT;
-import static org.kie.cloud.tests.core.constants.SsoContants.SSO_BUSINESS_CENTRAL_SSO_SECRET;
-import static org.kie.cloud.tests.core.constants.SsoContants.SSO_KIE_SERVER_SSO_CLIENT;
-import static org.kie.cloud.tests.core.constants.SsoContants.SSO_KIE_SERVER_SSO_SECRET;
-import static org.kie.cloud.tests.core.constants.SsoContants.SSO_PASSWORD;
-import static org.kie.cloud.tests.core.constants.SsoContants.SSO_REALM;
-import static org.kie.cloud.tests.core.constants.SsoContants.SSO_URL;
-import static org.kie.cloud.tests.core.constants.SsoContants.SSO_USERNAME;
+import static org.kie.cloud.tests.core.constants.SsoConstants.SSO_BUSINESS_CENTRAL_SSO_CLIENT;
+import static org.kie.cloud.tests.core.constants.SsoConstants.SSO_BUSINESS_CENTRAL_SSO_SECRET;
+import static org.kie.cloud.tests.core.constants.SsoConstants.SSO_KIE_SERVER_SSO_CLIENT;
+import static org.kie.cloud.tests.core.constants.SsoConstants.SSO_KIE_SERVER_SSO_SECRET;
+import static org.kie.cloud.tests.core.constants.SsoConstants.SSO_PASSWORD;
+import static org.kie.cloud.tests.core.constants.SsoConstants.SSO_REALM;
+import static org.kie.cloud.tests.core.constants.SsoConstants.SSO_URL;
+import static org.kie.cloud.tests.core.constants.SsoConstants.SSO_USERNAME;
 
 @Slf4j
 @Tag("auth-sso")

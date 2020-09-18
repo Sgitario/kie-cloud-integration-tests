@@ -50,4 +50,19 @@ public interface OpenshiftEnvironment {
      */
     List<Deployment> createTemplate(Project project, InputStream content, Map<String, String> parameters);
 
+    /**
+     * Get latest image stream URL
+     */
+    String getLatestImageStreamUrl(Project project, String imageName);
+
+    /**
+     * Get image stream URL by version
+     */
+    String getImageStreamUrlByVersion(Project project, String imageName, String imageStreamVersion);
+
+    /**
+     * Wait for rollout a deployment.
+     */
+    void waitForRollout(Project project, Deployment deployment);
+
 }

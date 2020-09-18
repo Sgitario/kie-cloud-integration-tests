@@ -38,7 +38,6 @@ public class ExternalDatabaseKieAppPopulator extends KieAppPopulator {
     private static final String KIE_SERVER_EXTERNALDB_USER = "KIE_SERVER_EXTERNALDB_USER";
     private static final String KIE_SERVER_EXTERNALDB_PWD = "KIE_SERVER_EXTERNALDB_PWD";
     private static final String KIE_SERVER_EXTERNALDB_DB = "KIE_SERVER_EXTERNALDB_DB";
-    private static final String KIE_SERVER_EXTERNALDB_JNDI = "KIE_SERVER_EXTERNALDB_JNDI";
 
     @Override
     public void populate(KieApp app, Map<String, String> extraParams) {
