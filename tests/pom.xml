@@ -13,7 +13,7 @@
 
  <properties>
   <keycloak.version>7.0.1</keycloak.version>
-  <resteasy.version>3.9.3.Final</resteasy.version>
+  <resteasy.version>4.5.7.Final</resteasy.version>
  </properties>
 
  <profiles>
